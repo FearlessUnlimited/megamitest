@@ -1,0 +1,887 @@
+<title>Megami Sushi Valparaíso</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
+<style>
+/* Layout: carta de local nocturno. Hero con el sol rojo del koi, carta navegable por categorías, armador de rolls y pedido que termina en WhatsApp. Un solo tema oscuro, por marca. */
+:root {
+  color-scheme: dark;
+  --ink: #0f0c0c;        /* fondo, negro cálido de las láminas */
+  --ink-2: #181313;      /* superficies */
+  --ink-3: #241c1b;      /* superficies elevadas, chips */
+  --line: #3b2d2b;       /* bordes */
+  --rice: #f3ece2;       /* texto principal, papel de arroz */
+  --muted: #ab9d93;      /* texto secundario */
+  --shu: #c0201c;        /* rojo laca del logo: precios, botones */
+  --shu-hi: #ff6b5e;     /* rojo para texto sobre fondo oscuro */
+  --ok: #6fcf8e;         /* abierto */
+  --display: "Dela Gothic One", "Zen Kaku Gothic New", system-ui, sans-serif;
+  --body: "Zen Kaku Gothic New", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --gutter: clamp(16px, 4vw, 40px);
+  --max: 1120px;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 128px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; animation: none !important; } }
+body { background: var(--ink); color: var(--rice); font-family: var(--body); font-size: 16px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+h1, h2, h3 { font-family: var(--display); font-weight: 400; line-height: 1.1; text-wrap: balance; margin: 0; }
+p { margin: 0; }
+a { color: inherit; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--shu-hi); outline-offset: 2px; }
+.wrap { max-width: var(--max); margin-inline: auto; padding-inline: var(--gutter); }
+.photo { mix-blend-mode: lighten; display: block; }
+.num { font-variant-numeric: tabular-nums; }
+.price { font-family: var(--display); background: var(--shu); color: var(--rice); border-radius: 999px; padding: 2px 12px 3px; white-space: nowrap; font-size: 15px; letter-spacing: .02em; font-variant-numeric: tabular-nums; }
+.price s { opacity: .6; font-size: 12px; margin-right: 6px; }
+.eyebrow { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--shu-hi); font-weight: 700; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 0; border-radius: 999px; padding: 12px 20px; font-weight: 700; text-decoration: none; cursor: pointer; transition: transform .15s, background .15s; }
+.btn:active { transform: scale(.97); }
+.btn-red { background: var(--shu); color: var(--rice); }
+.btn-red:hover { background: #d52a24; }
+.btn-ghost { background: transparent; color: var(--rice); box-shadow: inset 0 0 0 1.5px var(--line); }
+.btn-ghost:hover { box-shadow: inset 0 0 0 1.5px var(--rice); }
+.add { border: 0; background: var(--ink-3); color: var(--rice); border-radius: 999px; width: 36px; height: 36px; flex: none; font-size: 22px; line-height: 1; cursor: pointer; display: grid; place-items: center; transition: background .15s; }
+.add:hover { background: var(--shu); }
+
+/* Barra superior */
+.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 30; background: color-mix(in srgb, var(--ink) 88%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+.top .wrap { display: flex; align-items: center; gap: 12px; padding-block: 10px; }
+.top img { height: 34px; width: auto; }
+.status { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--muted); }
+.status::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--muted); }
+.status.open::before { background: var(--ok); box-shadow: 0 0 0 3px color-mix(in srgb, var(--ok) 25%, transparent); }
+.top .spacer { flex: 1; }
+.top .btn { padding: 8px 16px; font-size: 14px; }
+.badge { background: var(--rice); color: var(--ink); border-radius: 999px; min-width: 20px; height: 20px; font-size: 12px; display: inline-grid; place-items: center; padding-inline: 6px; }
+@media (max-width: 520px) { .status-text-long { display: none; } }
+
+/* Hero */
+.hero { position: relative; overflow: hidden; padding-block: clamp(40px, 8vw, 88px) clamp(32px, 6vw, 64px); }
+.hero .wrap { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: 32px; align-items: center; }
+.hero h1 { font-size: clamp(38px, 6.4vw, 76px); letter-spacing: -.01em; }
+.hero h1 em { font-style: normal; color: var(--shu-hi); }
+.hero .lede { margin-top: 18px; font-size: clamp(17px, 2vw, 19px); color: var(--muted); max-width: 46ch; }
+.hero .ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+.facts { display: flex; flex-wrap: wrap; gap: 10px 28px; margin-top: 36px; padding-top: 20px; border-top: 1px solid var(--line); }
+.facts div { display: grid; }
+.facts b { font-family: var(--display); font-weight: 400; font-size: 22px; }
+.facts span { font-size: 13px; color: var(--muted); }
+.sun { position: relative; aspect-ratio: 1; max-width: 440px; width: 100%; justify-self: center; }
+.sun::before { content: ""; position: absolute; inset: 6% 6% 6% 6%; border-radius: 50%; background: radial-gradient(circle at 38% 34%, #d8302a, var(--shu) 55%, #8d1411); }
+.sun img { position: absolute; width: 88%; left: -4%; bottom: 8%; filter: drop-shadow(0 18px 24px rgba(0,0,0,.55)); animation: float 6s ease-in-out infinite; }
+.kanji { position: absolute; right: 0; top: 2%; writing-mode: vertical-rl; font-family: var(--display); font-size: clamp(44px, 7vw, 80px); line-height: 1; color: transparent; -webkit-text-stroke: 1.5px var(--rice); opacity: .9; }
+.kanji-note { position: absolute; right: 0; bottom: 0; font-size: 12px; color: var(--muted); text-align: right; }
+@keyframes float { 50% { transform: translateY(-8px) rotate(-1.5deg); } }
+@media (max-width: 760px) {
+  .hero .wrap { grid-template-columns: 1fr; }
+  .sun { max-width: 300px; order: -1; }
+}
+
+/* Secciones */
+section { padding-block: clamp(48px, 7vw, 80px); }
+.sec-head { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 8px 24px; margin-bottom: 28px; }
+.sec-head h2 { font-size: clamp(28px, 4vw, 42px); }
+.sec-head p { color: var(--muted); max-width: 52ch; }
+
+/* Promos */
+.promos { background: linear-gradient(180deg, var(--ink-2), var(--ink)); }
+.promo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+.promo { background: var(--ink); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; display: grid; grid-template-rows: 170px auto; }
+.promo .pic { display: grid; place-items: center; background: var(--ink); overflow: hidden; }
+.promo .pic img { max-height: 160px; max-width: 92%; object-fit: contain; }
+.promo .pic img.cover { width: 100%; height: 170px; max-width: none; max-height: none; object-fit: cover; }
+.promo .body { padding: 16px; display: grid; gap: 10px; }
+.promo h3 { font-size: 20px; }
+.promo p { color: var(--muted); font-size: 14px; }
+.promo .row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.promo select { min-width: 0; }
+.note { font-size: 13px; color: var(--muted); margin-top: 16px; }
+
+/* Navegación de carta */
+.catnav { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 55px); z-index: 20; background: color-mix(in srgb, var(--ink) 92%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+.catnav .wrap { display: flex; gap: 8px; overflow-x: auto; padding-block: 10px; scrollbar-width: none; }
+.catnav .wrap::-webkit-scrollbar { display: none; }
+.catnav a { flex: none; text-decoration: none; font-size: 14px; padding: 7px 14px; border-radius: 999px; background: var(--ink-3); color: var(--muted); transition: background .15s, color .15s; }
+.catnav a.on, .catnav a:hover { background: var(--rice); color: var(--ink); }
+
+.cat { padding-block: 44px 8px; }
+.cat-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px 20px; align-items: end; margin-bottom: 20px; }
+.cat-head h2 { font-size: clamp(26px, 3.6vw, 36px); }
+.cat-head p { grid-column: 1; color: var(--muted); font-size: 15px; }
+.cat-head img { grid-row: 1 / span 2; grid-column: 2; max-height: 110px; max-width: 180px; object-fit: contain; }
+
+/* Tablas */
+.tabs { display: inline-flex; gap: 4px; background: var(--ink-2); border: 1px solid var(--line); padding: 4px; border-radius: 999px; margin-bottom: 20px; flex-wrap: wrap; }
+.tabs button { border: 0; background: transparent; padding: 8px 16px; border-radius: 999px; cursor: pointer; color: var(--muted); font-weight: 500; }
+.tabs button[aria-selected="true"] { background: var(--shu); color: var(--rice); }
+.tabla-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 14px; }
+.tabla { background: var(--ink-2); border: 1px solid var(--line); border-radius: 14px; padding: 18px; display: grid; grid-template-rows: auto 1fr auto; gap: 14px; }
+.tabla .n { display: flex; align-items: baseline; gap: 8px; }
+.tabla .n b { font-family: var(--display); font-weight: 400; font-size: 46px; line-height: 1; }
+.tabla .n span { color: var(--muted); }
+.tabla ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; font-size: 14px; }
+.tabla li { display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 6px; }
+.tabla li i { font-style: normal; color: var(--shu-hi); font-weight: 700; font-variant-numeric: tabular-nums; }
+.tabla li small { color: var(--muted); font-size: 13px; }
+.tabla .foot { display: flex; align-items: center; justify-content: space-between; border-top: 1px dashed var(--line); padding-top: 14px; }
+
+/* Listas con precio */
+.list { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 0 32px; }
+.item { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: 12px; padding-block: 14px; border-bottom: 1px solid var(--line); }
+.item h3 { font-family: var(--body); font-weight: 700; font-size: 17px; }
+.item p { color: var(--muted); font-size: 14px; margin-top: 2px; }
+.item select { margin-top: 6px; }
+select, input[type="text"], textarea { background: var(--ink-3); color: var(--rice); border: 1px solid var(--line); border-radius: 8px; padding: 7px 10px; font: inherit; font-size: 14px; max-width: 100%; }
+textarea { width: 100%; resize: vertical; min-height: 60px; }
+
+/* Para picar */
+.bites { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; }
+.bite { background: var(--ink-2); border: 1px solid var(--line); border-radius: 14px; padding: 14px; display: grid; gap: 8px; grid-template-rows: 120px auto auto auto; }
+.bite .pic { display: grid; place-items: center; }
+.bite .pic img { max-height: 116px; max-width: 100%; object-fit: contain; }
+.bite h3 { font-size: 19px; }
+.bite p { font-size: 13px; color: var(--muted); }
+.bite .row { display: flex; gap: 8px; align-items: center; justify-content: space-between; }
+.bite select { flex: 1; min-width: 0; }
+
+/* Armador */
+.builder { background: var(--ink-2); border-block: 1px solid var(--line); }
+.builder-grid { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 32px; align-items: start; }
+.step { padding-block: 18px; border-bottom: 1px solid var(--line); }
+.step:first-child { padding-top: 0; }
+.step h3 { font-family: var(--body); font-weight: 700; font-size: 16px; display: flex; gap: 10px; align-items: baseline; margin-bottom: 12px; }
+.step h3 .k { font-family: var(--display); font-weight: 400; color: var(--shu-hi); font-size: 14px; }
+.step h3 small { font-family: var(--body); font-weight: 400; color: var(--muted); font-size: 13px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { border: 1px solid var(--line); background: var(--ink); color: var(--rice); border-radius: 999px; padding: 7px 14px; cursor: pointer; font-size: 14px; display: inline-flex; gap: 8px; align-items: baseline; transition: background .15s, border-color .15s; }
+.chip small { color: var(--muted); font-size: 12px; font-variant-numeric: tabular-nums; }
+.chip[aria-pressed="true"] { background: var(--shu); border-color: var(--shu); }
+.chip[aria-pressed="true"] small { color: var(--rice); }
+.chip:disabled { opacity: .38; cursor: not-allowed; }
+.sublabel { font-size: 12px; color: var(--muted); margin: 14px 0 8px; letter-spacing: .08em; text-transform: uppercase; }
+.receipt { position: sticky; top: 140px; background: var(--rice); color: var(--ink); border-radius: 4px; padding: 22px 20px; font-size: 14px; box-shadow: 0 20px 40px rgba(0,0,0,.4); }
+.receipt::after { content: ""; position: absolute; left: 0; right: 0; bottom: -10px; height: 10px; background: radial-gradient(circle at 6px 0, transparent 6px, var(--rice) 6.5px) 0 0 / 12px 10px repeat-x; transform: scaleY(-1); }
+.receipt h3 { font-size: 20px; margin-bottom: 4px; }
+.receipt .rl { display: flex; justify-content: space-between; gap: 12px; padding-block: 6px; border-bottom: 1px dashed #c9bdae; }
+.receipt .rl span:first-child { color: #5a4c45; }
+.receipt .tot { display: flex; justify-content: space-between; align-items: baseline; margin-top: 12px; font-family: var(--display); font-size: 24px; }
+.receipt .msg { font-size: 13px; color: #8a2a1d; min-height: 20px; margin-top: 8px; }
+.receipt .btn { width: 100%; margin-top: 8px; }
+.receipt .btn:disabled { opacity: .45; cursor: not-allowed; }
+.mode { display: inline-flex; gap: 4px; background: var(--ink); border: 1px solid var(--line); padding: 4px; border-radius: 999px; margin-bottom: 18px; }
+.mode button { border: 0; background: transparent; padding: 8px 16px; border-radius: 999px; cursor: pointer; color: var(--muted); }
+.mode button[aria-pressed="true"] { background: var(--rice); color: var(--ink); font-weight: 700; }
+@media (max-width: 860px) { .builder-grid { grid-template-columns: 1fr; } .receipt { position: static; } }
+
+/* Cambios */
+.rules { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+.rule { border: 1.5px dashed var(--line); border-radius: 12px; padding: 18px; display: grid; gap: 12px; align-content: start; }
+.rule .price { justify-self: start; font-size: 20px; padding: 4px 16px; }
+.rule.free .price { background: var(--ink-3); }
+.rule ul { margin: 0; padding-left: 18px; display: grid; gap: 4px; }
+.callout { background: var(--ink-2); border: 1px solid var(--shu); border-radius: 12px; padding: 16px 18px; margin-bottom: 16px; display: grid; gap: 4px; }
+.callout b { font-size: 17px; }
+.callout p { color: var(--muted); }
+.kani { display: grid; gap: 6px; margin-bottom: 12px; padding: 10px; border-radius: 10px; background: var(--ink-3); font-size: 13px; }
+.kani label { color: var(--muted); }
+.kani.on { box-shadow: inset 0 0 0 1.5px var(--shu); }
+.kani select { width: 100%; }
+.proposal { border: 1.5px dashed var(--shu-hi); border-radius: 14px; padding: 16px 18px; margin-bottom: 18px; display: grid; gap: 6px; justify-items: start; background: color-mix(in srgb, var(--shu) 8%, var(--ink)); }
+.proposal .tag { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; font-weight: 700; color: var(--ink); background: var(--shu-hi); padding: 2px 8px; border-radius: 4px; }
+.proposal b { font-size: 18px; }
+.proposal p { color: var(--muted); max-width: 70ch; }
+.proposal .btn { margin-top: 6px; padding: 8px 16px; font-size: 14px; }
+.proposal .btn[aria-pressed="true"] { background: var(--shu); box-shadow: none; }
+.pitch { background: var(--rice); color: var(--ink); font-size: 14px; }
+.pitch .wrap { display: flex; flex-wrap: wrap; gap: 4px 16px; align-items: center; justify-content: center; padding-block: 8px; text-align: center; }
+.pitch a { font-weight: 700; color: #8d1411; }
+.ship { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+.ship > div { background: var(--ink-2); border: 1px solid var(--line); border-radius: 14px; padding: 20px; display: grid; gap: 10px; align-content: start; }
+.ship .price { justify-self: start; }
+.ship h3 { font-size: 20px; }
+.ship p { color: var(--muted); }
+.how { margin-top: 18px; color: var(--muted); font-size: 14px; max-width: 70ch; }
+
+/* Más allá del sushi */
+.more-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+.tile { position: relative; border-radius: 12px; overflow: hidden; aspect-ratio: 1; text-decoration: none; background: var(--ink-2); }
+.tile img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.06); transition: transform .3s; }
+.tile:hover img { transform: scale(1.12); }
+.tile span { position: absolute; left: 8px; bottom: 8px; right: 8px; background: var(--shu); color: var(--rice); font-weight: 700; font-size: 14px; padding: 4px 10px; border-radius: 6px; justify-self: start; width: fit-content; }
+
+/* Opiniones */
+.reviews { display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 40px; align-items: start; }
+.score b { font-family: var(--display); font-weight: 400; font-size: 72px; line-height: 1; }
+.score .of { color: var(--muted); }
+.bars { display: grid; gap: 6px; margin-top: 16px; font-size: 13px; }
+.bar { display: grid; grid-template-columns: 76px minmax(0, 1fr) 24px; gap: 10px; align-items: center; color: var(--muted); }
+.bar i { display: block; height: 8px; border-radius: 4px; background: var(--ink-3); position: relative; overflow: hidden; }
+.bar i::after { content: ""; position: absolute; inset: 0 auto 0 0; width: var(--w); background: var(--shu-hi); border-radius: 4px; }
+.bar span:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+.quotes { display: grid; gap: 14px; }
+.quote { background: var(--ink-2); border-left: 3px solid var(--shu); padding: 16px 18px; border-radius: 0 10px 10px 0; }
+.quote p { font-size: 16px; }
+.quote footer { margin-top: 8px; font-size: 13px; color: var(--muted); }
+@media (max-width: 760px) { .reviews { grid-template-columns: 1fr; } }
+
+/* Visítanos */
+.visit { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
+.visit > div { background: var(--ink-2); border: 1px solid var(--line); border-radius: 14px; padding: 20px; display: grid; gap: 8px; align-content: start; }
+.visit h3 { font-size: 18px; }
+.visit p { color: var(--muted); }
+.visit .sel { user-select: all; color: var(--rice); font-weight: 700; }
+.visit a { color: var(--shu-hi); font-weight: 700; text-decoration: none; }
+
+footer.site { border-top: 1px solid var(--line); padding-block: 32px 120px; color: var(--muted); font-size: 13px; }
+footer.site .wrap { display: flex; flex-wrap: wrap; gap: 12px 24px; justify-content: space-between; align-items: center; }
+footer.site img { height: 40px; width: auto; }
+
+/* Pedido */
+.cartbar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 40; padding: 10px var(--gutter) calc(10px + env(safe-area-inset-bottom, 0px)); background: color-mix(in srgb, var(--ink) 90%, transparent); backdrop-filter: blur(10px); border-top: 1px solid var(--line); transform: translateY(110%); transition: transform .25s; }
+.cartbar.show { transform: none; }
+.cartbar .btn { width: 100%; max-width: 560px; margin-inline: auto; display: flex; justify-content: space-between; }
+.drawer-bg { position: fixed; inset: 0; background: rgba(0,0,0,.6); z-index: 50; }
+.drawer { position: fixed; z-index: 60; right: 0; top: 0; bottom: 0; width: min(440px, 100%); background: var(--ink-2); border-left: 1px solid var(--line); display: grid; grid-template-rows: auto minmax(0, 1fr) auto; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+.drawer header { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid var(--line); }
+.drawer header h2 { font-size: 24px; }
+.x { border: 0; background: var(--ink-3); border-radius: 50%; width: 36px; height: 36px; cursor: pointer; font-size: 18px; }
+.lines { overflow-y: auto; padding: 8px 20px 20px; }
+.line { padding-block: 14px; border-bottom: 1px solid var(--line); display: grid; gap: 8px; }
+.line .t { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; }
+.line h4 { margin: 0; font-size: 15px; }
+.line .d { color: var(--muted); font-size: 13px; }
+.qty { display: inline-flex; align-items: center; gap: 2px; background: var(--ink-3); border-radius: 999px; }
+.qty button { border: 0; background: transparent; width: 30px; height: 30px; cursor: pointer; font-size: 16px; }
+.qty span { min-width: 18px; text-align: center; font-variant-numeric: tabular-nums; }
+.line .ctrl { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+.linkish { border: 0; background: none; color: var(--shu-hi); font-size: 13px; cursor: pointer; padding: 0; font-weight: 700; }
+.chg { display: flex; justify-content: space-between; gap: 8px; font-size: 13px; background: var(--ink); border-radius: 8px; padding: 6px 10px; }
+.chg button { border: 0; background: none; color: var(--muted); cursor: pointer; }
+.chgform { display: grid; gap: 8px; background: var(--ink); border-radius: 10px; padding: 10px; }
+.chgform .r { display: flex; gap: 8px; }
+.chgform input { flex: 1; min-width: 0; }
+.empty { color: var(--muted); padding: 24px 0; }
+.checkout { border-top: 1px solid var(--line); padding: 16px 20px; display: grid; gap: 10px; background: var(--ink); }
+.checkout .tot { display: flex; justify-content: space-between; align-items: baseline; font-family: var(--display); font-size: 22px; }
+.checkout .tot small { font-family: var(--body); font-size: 12px; color: var(--muted); }
+.checkout .mode { margin: 0; width: fit-content; }
+.checkout input[type="text"] { width: 100%; }
+.checkout .btn { width: 100%; }
+.checkout .ph { font-size: 12px; color: var(--muted); text-align: center; }
+
+.toast { position: fixed; left: 50%; bottom: 88px; transform: translate(-50%, 20px); opacity: 0; background: var(--rice); color: var(--ink); padding: 10px 18px; border-radius: 999px; font-weight: 700; font-size: 14px; z-index: 70; pointer-events: none; transition: opacity .2s, transform .2s; }
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+</style>
+
+<div class="pitch"><div class="wrap"><span>Propuesta de Fearless para Megami Sushi.</span><a href="propuesta.html">Ver qué hicimos y por qué →</a></div></div>
+
+<header class="top">
+  <div class="wrap">
+    <img src="img/logo.png" alt="Megami Sushi" class="photo">
+    <span class="status" id="status"><span id="statusText">Revisando horario…</span></span>
+    <span class="spacer"></span>
+    <button class="btn btn-red" id="openCart" type="button">Tu pedido <span class="badge" id="cartCount">0</span></button>
+  </div>
+</header>
+
+<main>
+  <div class="hero">
+    <div class="wrap">
+      <div>
+        <p class="eyebrow">Av. Alemania #6762 · Valparaíso</p>
+        <h1 style="margin-top:14px">La picada de sushi de <em>Avenida Alemania</em></h1>
+        <p class="lede">Tablas desde $9.990, rolls armados a tu gusto y delivery a todo Valparaíso. Elige, arma tu pedido y nos llega directo por WhatsApp.</p>
+        <div class="ctas">
+          <a class="btn btn-red" href="#carta">Ver la carta</a>
+          <a class="btn btn-ghost" href="#armador">Arma tu roll</a>
+        </div>
+        <div class="facts">
+          <div><b class="num">4,4</b><span>en TripAdvisor</span></div>
+          <div><b class="num">13–23 h</b><span>todos los días</span></div>
+          <div><b>Delivery</b><span>o retiro en el local</span></div>
+        </div>
+      </div>
+      <div class="sun" aria-hidden="true">
+        <span class="kanji">女神</span>
+        <img src="img/hot-roll.png" alt="">
+        <span class="kanji-note">Megami: diosa</span>
+      </div>
+    </div>
+  </div>
+
+  <section class="promos" id="promos">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <p class="eyebrow">Promos de hoy</p>
+          <h2 style="margin-top:8px">Lo que más sale esta semana</h2>
+        </div>
+        <p>Todas incluyen salsa soya y unagi. Válidas para retiro y delivery.</p>
+      </div>
+      <div class="promo-grid" id="promoGrid"></div>
+    </div>
+  </section>
+
+  <nav class="catnav" id="carta" aria-label="Categorías de la carta">
+    <div class="wrap" id="catnav"></div>
+  </nav>
+
+  <div class="wrap" id="menu"></div>
+
+  <section class="builder" id="armador">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <p class="eyebrow">Arma tu roll</p>
+          <h2 style="margin-top:8px">Tú eliges, nosotros enrollamos</h2>
+        </div>
+        <p>Cobertura, base y dos ingredientes. El precio se calcula mientras eliges.</p>
+      </div>
+      <div class="builder-grid">
+        <div>
+          <div class="mode" role="group" aria-label="Tipo de roll">
+            <button type="button" data-mode="arroz" aria-pressed="true">Con arroz</button>
+            <button type="button" data-mode="sinarroz" aria-pressed="false">Sin arroz · $6.490</button>
+          </div>
+          <div id="steps"></div>
+        </div>
+        <aside class="receipt" aria-live="polite">
+          <h3>Tu roll</h3>
+          <div id="receiptLines"></div>
+          <div class="tot"><span>Total</span><span class="num" id="receiptTotal">$0</span></div>
+          <p class="msg" id="receiptMsg"></p>
+          <button class="btn btn-red" type="button" id="addRoll" disabled>Agregar al pedido</button>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <section id="cambios">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <p class="eyebrow">Cambios</p>
+          <h2 style="margin-top:8px">Cambia lo que quieras, sabiendo cuánto cuesta</h2>
+        </div>
+        <p>Cada cambio tiene un valor fijo. Lo agregas desde tu pedido y el total ya lo incluye.</p>
+      </div>
+      <div class="callout">
+        <b>Los cambios también valen en las tablas y en las promos.</b>
+        <p>Por ejemplo, en cualquier tabla puedes cambiar el kanikama del california por pollo, camarón, salmón o atún por +$1.500.</p>
+      </div>
+      <div class="rules" id="rules"></div>
+      <p class="how">Proteínas: pollo, camarón, camarón furay, salmón, salmón ahumado y atún. Vegetales: aceituna, espárrago, cebollín, choclo, palmito, morrón, ají verde, ciboulette y cebolla morada.</p>
+    </div>
+  </section>
+
+  <section id="mas" style="background:var(--ink-2)">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <p class="eyebrow">Más allá del sushi</p>
+          <h2 style="margin-top:8px">Para los que no comen pescado crudo</h2>
+        </div>
+        <p>Completos, churrascos, chorrillana y más. Pregunta el precio del día por WhatsApp.</p>
+      </div>
+      <div class="more-grid" id="moreGrid"></div>
+    </div>
+  </section>
+
+  <section id="opiniones">
+    <div class="wrap reviews">
+      <div class="score">
+        <p class="eyebrow">Opiniones en TripAdvisor</p>
+        <p style="margin-top:10px"><b class="num">4,4</b> <span class="of">de 5 · 22 opiniones</span></p>
+        <div class="bars" id="bars"></div>
+      </div>
+      <div class="quotes">
+        <blockquote class="quote" style="margin:0"><p>Muy buena calidad del sushi y una atención rápida y atenta. El lugar está muy bien.</p><footer>Gloria del Mar S. · agosto 2026 · en familia</footer></blockquote>
+        <blockquote class="quote" style="margin:0"><p>Cruza desde Barón para comprar acá por el precio, el tamaño, el sabor y lo rápido que atienden.</p><footer>Daniela F. · enero 2018 · resumen de su opinión</footer></blockquote>
+        <blockquote class="quote" style="margin:0"><p>Recomienda la tabla grande: muy económica para lo que trae.</p><footer>xsantander · abril 2015 · resumen de su opinión</footer></blockquote>
+      </div>
+    </div>
+  </section>
+
+  <section id="despacho" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <p class="eyebrow">Despacho</p>
+          <h2 style="margin-top:8px">¿Cuánto cuesta que te lo llevemos?</h2>
+        </div>
+        <p>El despacho se cobra aparte del pedido y depende de dónde estés.</p>
+      </div>
+      <div class="ship">
+        <div><span class="price">Gratis</span><h3>Retiro en el local</h3><p>Pides por WhatsApp y lo pasas a buscar a Av. Alemania #6762. Te avisamos cuando esté listo.</p></div>
+        <div><span class="price">Según sector</span><h3>Delivery a todo Valparaíso</h3><p>El valor depende de la distancia a tu dirección. Te lo confirmamos por WhatsApp junto con el total antes de preparar tu pedido.</p></div>
+        <div><span class="price">Aparte</span><h3>Cómo se paga</h3><p>El total de esta página es solo la comida. El despacho se suma después, según tu sector.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="visitanos" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head"><h2>Visítanos o pide a domicilio</h2></div>
+      <div class="visit">
+        <div><h3>Dirección</h3><p class="sel">Av. Alemania #6762, Valparaíso</p><a href="https://www.google.com/maps/search/?api=1&query=Megami+Sushi+Avenida+Alemania+6762+Valparaiso" target="_blank" rel="noopener">Abrir en Google Maps →</a></div>
+        <div><h3>Horario</h3><p>Todos los días de 13:00 a 23:00.</p><p>Delivery a todo Valparaíso y retiro en el local.</p></div>
+        <div><h3>WhatsApp</h3><p class="sel">+56 9 5064 6715</p><a href="https://wa.me/56950646715" target="_blank" rel="noopener">Escribir por WhatsApp →</a></div>
+        <div><h3>Instagram</h3><p class="sel">@megamisushi_valpo</p><a href="https://www.instagram.com/megamisushi_valpo/" target="_blank" rel="noopener">Ver promos del día →</a></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <img src="img/logo.png" alt="Megami Sushi" class="photo">
+    <p>Propuesta de diseño para Megami Sushi, por Fearless. Precios según la carta publicada en Instagram; el local confirma el total al responder. <a href="propuesta.html" style="color:var(--shu-hi)">Ver la propuesta completa</a></p>
+  </div>
+</footer>
+
+<div class="cartbar" id="cartbar">
+  <button class="btn btn-red" type="button" id="openCart2"><span>Ver pedido · <span id="cartCount2">0</span></span><span class="num" id="cartTotal2">$0</span></button>
+</div>
+
+<div class="drawer-bg" id="drawerBg" hidden></div>
+<aside class="drawer" id="drawer" hidden aria-label="Tu pedido">
+  <header><h2>Tu pedido</h2><button class="x" type="button" id="closeCart" aria-label="Cerrar">✕</button></header>
+  <div class="lines" id="lines"></div>
+  <div class="checkout">
+    <div class="tot"><span>Total <small>despacho aparte</small></span><span class="num" id="cartTotal">$0</span></div>
+    <div class="mode" role="group" aria-label="Entrega">
+      <button type="button" data-ship="retiro" aria-pressed="true">Retiro en local</button>
+      <button type="button" data-ship="delivery" aria-pressed="false">Delivery</button>
+    </div>
+    <input type="text" id="addr" placeholder="Dirección de entrega" autocomplete="street-address" hidden>
+    <input type="text" id="cname" placeholder="Tu nombre" autocomplete="name">
+    <textarea id="cnote" placeholder="Nota para el local (opcional)"></textarea>
+    <a class="btn btn-red" id="sendWa" href="https://wa.me/56950646715" target="_blank" rel="noopener">Enviar pedido por WhatsApp</a>
+    <p class="ph" id="shipNote">Retiro sin costo en Av. Alemania #6762.</p>
+    <p class="ph">Se abre WhatsApp con tu pedido escrito, al +56 9 5064 6715.</p>
+  </div>
+</aside>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+const WA = "56950646715";
+const clp = n => "$" + Math.round(n).toLocaleString("es-CL");
+
+/* ---------- Carta (fuente: historias destacadas de Instagram) ---------- */
+const PROMOS = [
+  { id: "promo-hand3", name: "3 handrolls", desc: "Pollo, queso y palta", price: 11990, img: "img/x-sushi.jpg" },
+  { id: "promo-burger2", name: "2 sushi burger", desc: "Pollo o camarón, a elección", price: 11490, img: "img/burger.jpg", opts: ["Pollo", "Camarón", "Una de cada una"] },
+  { id: "promo-tabla70", name: "Tabla 70 piezas mixtas", desc: "Siete variedades, 10 piezas de cada una", price: 21990, img: "img/tabla-roll.jpg", kani: true },
+  { id: "promo-completo2", name: "2 completos", desc: "Con palta y mayo", price: 4000, img: "img/completo.jpg", cover: true, noChanges: true },
+];
+
+const R = {
+  hotPollo: ["Hot pollo", "pollo, queso, cebollín"],
+  hotCam: ["Hot camarón", "camarón, palta, cebollín"],
+  cheeseCam: ["Cheese camarón", "camarón, palta, cebollín"],
+  caliKani: ["California kani", "kanikama, queso, cebollín"],
+  hoso: ["Hosomaki", "palta, queso"],
+  cheeseVeg: ["Cheese vegetariano", "morrón, palta, cebollín"],
+  cheese: ["Cheese", "morrón, palta, cebollín"],
+  avocado: ["Avocado", "camarón, queso, cebollín"],
+  tempura: ["Tempura", "pollo, queso, nuez"],
+  amapola: ["Amapola", "palmito, queso, palta"],
+};
+const T = (n, price, rolls) => ({ n, price, rolls });
+const TABLAS = {
+  mixtas: { label: "Mixtas", items: [
+    T(20, 9990, [R.hotPollo, R.cheeseCam]),
+    T(30, 12990, [R.hotPollo, R.cheeseCam, R.caliKani]),
+    T(40, 14490, [R.hotPollo, R.cheeseCam, R.caliKani, R.hoso]),
+    T(50, 16990, [R.hotPollo, R.hotCam, R.caliKani, R.cheeseVeg, R.hoso]),
+    T(60, 19490, [R.hotPollo, R.hotCam, R.caliKani, R.cheese, R.avocado, R.hoso]),
+    T(70, 21990, [R.hotPollo, R.hotCam, R.tempura, R.caliKani, R.cheese, R.avocado, R.hoso]),
+    T(80, 24990, [R.hotPollo, R.hotCam, R.tempura, R.caliKani, R.cheese, R.avocado, R.hoso, R.amapola]),
+  ]},
+  hot: { label: "Hot", items: [
+    T(20, 9990, [["Hot", "pollo, queso, cebollín"], ["Hot", "camarón, queso, cebollín"]]),
+    T(30, 12990, [["Hot", "pollo, queso, cebollín"], ["Hot", "camarón, queso, cebollín"], ["Hot", "kanikama, queso, cebollín"]]),
+    T(40, 14990, [["Hot", "pollo, queso, cebollín"], ["Hot", "camarón, queso, cebollín"], ["Hot", "kanikama, queso, cebollín"], ["Hot", "champiñón, queso, cebollín"]]),
+    T(50, 16990, [["Hot", "pollo, queso, cebollín"], ["Hot", "camarón, queso, cebollín"], ["Hot", "kanikama, queso, cebollín"], ["Hot", "champiñón, queso, cebollín"], ["Hot", "salmón, queso, palta"]]),
+  ]},
+  veggie: { label: "Veggie y vegan", items: [
+    Object.assign(T(30, 13990, [["Hot", "champiñón, queso, cebollín"], ["California", "espárrago, queso, morrón"], ["Avocado", "palmito, queso, aceituna"]]), { name: "veggie" }),
+    Object.assign(T(30, 13990, [["California", "palmito, palta, aceituna"], ["Nori", "choclo, palta, cebollín"], ["Avocado", "espárrago, morrón, cebollín"]]), { name: "vegan" }),
+  ]},
+};
+
+const ESPECIALES = [
+  ["Hot pollo", "Pollo y queso cheddar", 4990],
+  ["Hot acevichado", "Pollo, queso y cebollín en panko, cubierto de ceviche Megami", 6990],
+  ["Hot pollo fries", "Pollo, queso y cebollín en tempura, cubierto de papas al hilo", 6990],
+  ["Mango roll", "Camarón furay, queso y palta, envuelto en mango", 6990],
+  ["Guacamole roll", "Pollo, queso y cebollín, cubierto de guacamole", 6990],
+  ["Avocado acevichado", "Camarón furay, queso y cebollín envuelto en palta, cubierto de ceviche Megami", 7990],
+  ["Hot fusion roll", "Atún, salmón, camarón, queso y palta, envuelto en nori tempura", 7990],
+];
+
+const CATS = [
+  { id: "tablas", name: "Tablas" },
+  { id: "especiales", name: "Rolls especiales", img: "img/avocado-roll.jpg", desc: "Las recetas de la casa." },
+  { id: "handrolls", name: "Handrolls", img: "img/hot-rolls.jpg", desc: "Base de arroz, queso y palta o cebollín.", cover: ["Panko", "Nori", "Sésamo"],
+    items: [["Pollo", 4590], ["Camarón", 4890], ["Camarón furay", 5290], ["Salmón", 4990], ["Salmón ahumado", 4990], ["Salmón furay", 5490], ["Kanikama", 4590], ["Champiñón", 4590], ["Atún", 5990]] },
+  { id: "gohan", name: "Gohan", img: "img/gohan.jpg", desc: "Bowl con base de arroz, palta, queso, sésamo y cebollín.",
+    items: [["Pollo furay", 5490], ["Camarón furay", 5490], ["Champiñón", 5490], ["Salmón", 5990], ["Mixto", 5990]] },
+  { id: "burger", name: "Sushi burger", img: "img/burger.jpg", desc: "Pan de arroz con palta, queso y cebollín.",
+    items: [["Pollo", 5990], ["Camarón", 5990], ["Champiñón", 5990], ["Camarón furay", 6490], ["Salmón", 6490], ["Salmón ahumado", 6990], ["Atún", 6990]] },
+  { id: "picar", name: "Para picar" },
+  { id: "toppings", name: "Toppings", desc: "Para cubrir cualquier roll.",
+    items: [["Papas al hilo", 1990], ["Mousse de palta", 2490], ["Guacamole", 2990], ["Acevichado", 3490]] },
+];
+
+const PICAR = [
+  { name: "Arrollados", u: 5, price: 3490, img: "img/arrollados.jpg", opts: ["Primavera", "Jamón queso"] },
+  { name: "Korokes", u: 6, price: 4490, img: "img/korokes.jpg", opts: ["Pollo", "Camarón", "Champiñón", "Palmito"] },
+  { name: "Gyozas", u: 5, price: 3490, img: "img/gyozas.jpg", opts: ["Pollo", "Camarón", "Vegetariana", "Cerdo"] },
+  { name: "Nigiri", u: 3, price: 3990, img: "img/nigiri.jpg", opts: ["Camarón", "Salmón", "Atún"] },
+  { name: "Furay", u: 5, price: 3990, img: "img/furay.jpg", opts: ["Camarón", "Salmón", "Pollo"] },
+  { name: "Sashimi", u: 5, price: 4990, img: "img/sashimi.jpg", opts: ["Camarón", "Salmón", "Atún"] },
+];
+
+const CAMBIOS = [
+  { id: "veg-prot", label: "Vegetal a proteína", price: 1500 },
+  { id: "kani-prot", label: "Kanikama a proteína", price: 1500 },
+  { id: "prot-prot", label: "Proteína a otra proteína", price: 1500 },
+  { id: "veg-palta", label: "Vegetal a palta o champiñón", price: 1500 },
+  { id: "sin-nori", label: "Sin nori", price: 1000 },
+  { id: "cobertura", label: "Cambio de cobertura", price: 1000 },
+  { id: "veg-veg", label: "Vegetal por otro vegetal", price: 0 },
+];
+
+const MORE = [["Completos", "x-completos"], ["Hamburguesas", "x-hamburguesa"], ["Churrascos", "x-churrascos"], ["Chorrillana", "x-chorrillana"], ["Papas fritas", "x-papas"], ["Empanadas", "x-empanadas"], ["Fajitas", "x-fajitas"]];
+
+/* Armador */
+const COB_CLASICAS = ["Panko", "Tempura", "Sésamo", "Nori", "Amapola"];
+const COB_ESPECIALES = [["Envuelto en palta", 5590], ["Envuelto en queso", 5590], ["Envuelto en palta y queso", 5990], ["Envuelto en queso y nuez", 5790], ["Envuelto en queso y almendra", 5790], ["Envuelto en salmón", 6490], ["Envuelto en salmón ahumado", 6490]];
+const BASES = [["Pollo teriyaki", 4990], ["Camarón", 4990], ["Camarón furay", 5490], ["Salmón", 5490], ["Salmón ahumado", 5490], ["Kanikama", 4490], ["Champiñón", 4490]];
+const INGREDIENTES = ["Aceituna", "Espárrago", "Cebollín", "Choclo", "Nuez", "Queso crema", "Palta", "Palmito", "Champiñón", "Morrón", "Ají verde", "Ciboulette", "Cebolla morada"];
+const COB_SIN_ARROZ = ["Panko", "Nori", "Palta", "Queso"];
+const SIN_ARROZ_PRICE = 6490;
+
+/* ---------- Pedido ---------- */
+let cart = [];
+let ship = "retiro";
+try { const s = JSON.parse(localStorage.getItem("megami-cart") || "null"); if (s && Array.isArray(s.cart)) { cart = s.cart; ship = s.ship || "retiro"; } } catch (e) {}
+const save = () => { try { localStorage.setItem("megami-cart", JSON.stringify({ cart, ship })); } catch (e) {} };
+const unit = l => l.price + (l.changes || []).reduce((a, c) => a + c.price, 0);
+const total = () => cart.reduce((a, l) => a + unit(l) * l.qty, 0);
+
+function addToCart(name, detail, price, opts = {}) {
+  const key = name + "|" + (detail || "");
+  const changes = opts.changes || [];
+  const ex = !changes.length && cart.find(l => l.key === key && !(l.changes || []).length);
+  if (ex) ex.qty++;
+  else cart.push({ key: key + (changes.length ? "|" + Date.now() : ""), name, detail: detail || "", price, qty: 1, changes, noChanges: !!opts.noChanges });
+  save(); renderCart(); toast(name + " agregado al pedido");
+}
+
+const $ = s => document.querySelector(s);
+const el = (tag, attrs = {}, html = "") => { const e = document.createElement(tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (html) e.innerHTML = html; return e; };
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+let tTimer;
+function toast(msg) { const t = $("#toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(tTimer); tTimer = setTimeout(() => t.classList.remove("show"), 1800); }
+
+/* ---------- Cambio de kanikama en tablas y promos ---------- */
+const PROTEINAS = ["Pollo", "Camarón", "Camarón furay", "Salmón", "Salmón ahumado", "Atún"];
+const KANI = CAMBIOS.find(c => c.id === "kani-prot");
+let kaniSeq = 0;
+let PROPOSAL = false; // propuesta: kanikama a pollo sin costo
+const kaniCost = v => !v ? 0 : (PROPOSAL && v === "Pollo" ? 0 : KANI.price);
+function kaniPicker() {
+  const id = "kani-" + (++kaniSeq);
+  return `<div class="kani"><label for="${id}">¿Sin kanikama? Cámbialo por otra proteína</label>
+    <select id="${id}" data-kani><option value="">Mantener kanikama</option>${PROTEINAS.map(p => `<option value="${p}">${p}${PROPOSAL && p === "Pollo" ? " · sin costo" : ""}</option>`).join("")}</select></div>`;
+}
+function wireKani(card, base) {
+  const s = card.querySelector("[data-kani]"); if (!s) return;
+  s.onchange = () => { card.querySelector(".foot .price").textContent = clp(base + kaniCost(s.value)); s.closest(".kani").classList.toggle("on", !!s.value); };
+}
+function kaniChanges(card) {
+  const s = card.querySelector("[data-kani]");
+  if (!s || !s.value) return [];
+  const free = kaniCost(s.value) === 0;
+  return [{ label: free ? "Kanikama a pollo (propuesta, sin costo)" : KANI.label, price: kaniCost(s.value), note: free ? "" : "kanikama por " + s.value.toLowerCase() }];
+}
+
+/* ---------- Promos ---------- */
+PROMOS.forEach(p => {
+  const sel = p.opts ? `<select id="${p.id}-opt" aria-label="Opción">${p.opts.map(o => `<option>${o}</option>`).join("")}</select>` : "";
+  const card = el("article", { class: "promo" }, `
+    <div class="pic"><img class="photo${p.cover ? " cover" : ""}" src="${p.img}" alt="${esc(p.name)}" loading="lazy"></div>
+    <div class="body">
+      <h3>${p.name}</h3><p>${p.desc}</p>${sel}${p.kani ? kaniPicker() : ""}
+      <div class="row foot"><span class="price num">${clp(p.price)}</span><button class="add" type="button" aria-label="Agregar ${esc(p.name)}">+</button></div>
+    </div>`);
+  wireKani(card, p.price);
+  card.querySelector(".add").onclick = () => addToCart(p.name, p.opts ? $("#" + p.id + "-opt").value : p.desc, p.price, { noChanges: p.noChanges, changes: kaniChanges(card) });
+  $("#promoGrid").append(card);
+});
+
+/* ---------- Carta ---------- */
+const nav = $("#catnav"), menu = $("#menu");
+
+CATS.forEach(c => nav.append(el("a", { href: "#" + c.id }, c.name)));
+nav.append(el("a", { href: "#armador" }, "Arma tu roll"));
+nav.append(el("a", { href: "#cambios" }, "Cambios"));
+nav.append(el("a", { href: "#mas" }, "Más allá del sushi"));
+nav.append(el("a", { href: "#despacho" }, "Despacho"));
+
+function catHead(c) {
+  return `<div class="cat-head"><h2>${c.name}</h2>${c.desc ? `<p>${c.desc}</p>` : ""}${c.img ? `<img class="photo" src="${c.img}" alt="" loading="lazy">` : ""}</div>`;
+}
+
+CATS.forEach(c => {
+  const sec = el("div", { class: "cat", id: c.id });
+  if (c.id === "tablas") {
+    sec.innerHTML = `<div class="cat-head"><h2>Tablas</h2><p>Cada variedad trae 10 piezas. ¿No te gusta el kanikama? Cámbialo por pollo, camarón, salmón o atún directo en la tabla.</p><img class="photo" src="img/sesamo-roll.jpg" alt="" loading="lazy"></div>
+      <div class="tabs" role="tablist" aria-label="Tipo de tabla">${Object.entries(TABLAS).map(([k, v], i) => `<button role="tab" type="button" data-tab="${k}" aria-selected="${i === 0}">${v.label}</button>`).join("")}</div>
+      <div class="proposal">
+        <span class="tag">Propuesta para el local</span>
+        <b>Tablas sin kanikama, al mismo precio</b>
+        <p>Hoy cambiar el kanikama cuesta +$1.500. La idea es que quien no quiere kanikama pueda pedir pollo en su lugar sin pagar más, en todas las tablas y promos.</p>
+        <button type="button" class="btn btn-ghost" id="propToggle" aria-pressed="false">Ver cómo quedaría</button>
+      </div>
+      <div class="tabla-grid" id="tablaGrid"></div>`;
+    menu.append(sec);
+    $("#propToggle").onclick = e => {
+      PROPOSAL = !PROPOSAL;
+      e.currentTarget.setAttribute("aria-pressed", PROPOSAL);
+      e.currentTarget.textContent = PROPOSAL ? "Volver a la regla actual" : "Ver cómo quedaría";
+      document.querySelectorAll("[data-kani]").forEach(s => { s.querySelector('option[value="Pollo"]').textContent = PROPOSAL ? "Pollo · sin costo" : "Pollo"; s.onchange && s.onchange(); });
+      toast(PROPOSAL ? "Propuesta activada: pollo en vez de kanikama sin costo" : "De vuelta a la regla actual");
+    };
+    sec.querySelectorAll("[data-tab]").forEach(b => b.onclick = () => { sec.querySelectorAll("[data-tab]").forEach(x => x.setAttribute("aria-selected", x === b)); renderTablas(b.dataset.tab); });
+    return;
+  }
+  if (c.id === "especiales") {
+    sec.innerHTML = catHead(c) + `<div class="list">${ESPECIALES.map((e, i) => `
+      <div class="item"><div><h3>${e[0]}</h3><p>${e[1]}</p></div><span class="price">${clp(e[2])}</span><button class="add" type="button" data-esp="${i}" aria-label="Agregar ${esc(e[0])}">+</button></div>`).join("")}</div>`;
+    sec.querySelectorAll("[data-esp]").forEach(b => b.onclick = () => { const e = ESPECIALES[b.dataset.esp]; addToCart(e[0], "Roll especial", e[2]); });
+    menu.append(sec); return;
+  }
+  if (c.id === "picar") {
+    sec.innerHTML = `<div class="cat-head"><h2>Para picar</h2><p>Mientras llega la tabla.</p></div><div class="bites">${PICAR.map((p, i) => `
+      <div class="bite"><div class="pic"><img class="photo" src="${p.img}" alt="${p.name}" loading="lazy"></div>
+        <h3>${p.name}</h3><p>${p.u} unidades</p>
+        <div class="row"><select id="picar-${i}" aria-label="Sabor de ${p.name}">${p.opts.map(o => `<option>${o}</option>`).join("")}</select><span class="price">${clp(p.price)}</span><button class="add" type="button" data-pic="${i}" aria-label="Agregar ${p.name}">+</button></div>
+      </div>`).join("")}</div>`;
+    sec.querySelectorAll("[data-pic]").forEach(b => b.onclick = () => { const p = PICAR[b.dataset.pic]; addToCart(p.name + " · " + p.u + " u.", $("#picar-" + b.dataset.pic).value, p.price, { noChanges: true }); });
+    menu.append(sec); return;
+  }
+  const coverSel = c.cover ? `<select id="cov-${c.id}" aria-label="Cobertura">${c.cover.map(o => `<option>${o}</option>`).join("")}</select>` : "";
+  sec.innerHTML = catHead(c) + (c.cover ? `<p style="margin:-8px 0 12px;color:var(--muted);font-size:14px">Cobertura: ${coverSel}</p>` : "") +
+    `<div class="list">${c.items.map((it, i) => `
+      <div class="item"><div><h3>${c.id === "toppings" ? it[0] : c.name.replace(/s$/, "") + " " + it[0].toLowerCase()}</h3></div><span class="price">${clp(it[1])}</span><button class="add" type="button" data-i="${i}" aria-label="Agregar">+</button></div>`).join("")}</div>`;
+  sec.querySelectorAll("[data-i]").forEach(b => b.onclick = () => {
+    const it = c.items[b.dataset.i];
+    if (c.id === "toppings") return addToCart("Topping " + it[0].toLowerCase(), "", it[1], { noChanges: true });
+    const name = c.name.replace(/s$/, "") + " " + it[0].toLowerCase();
+    addToCart(name, c.cover ? "Cobertura " + $("#cov-" + c.id).value.toLowerCase() : "", it[1]);
+  });
+  menu.append(sec);
+});
+
+function renderTablas(kind) {
+  const g = $("#tablaGrid"); g.innerHTML = "";
+  TABLAS[kind].items.forEach(t => {
+    const title = "Tabla " + (t.name ? t.name + " " : (kind === "hot" ? "hot " : "mixta ")) + t.n + " piezas";
+    const hasKani = t.rolls.some(r => r[1].includes("kanikama"));
+    const card = el("article", { class: "tabla" }, `
+      <div class="n"><b class="num">${t.n}</b><span>piezas${t.name ? " · " + t.name : ""}</span></div>
+      <ul>${t.rolls.map(r => `<li><i>10</i><span>${r[0]} <small>${r[1]}</small></span></li>`).join("")}</ul>
+      <div>${hasKani ? kaniPicker() : ""}
+      <div class="foot"><span class="price num">${clp(t.price)}</span><button class="add" type="button" aria-label="Agregar ${esc(title)}">+</button></div></div>`);
+    wireKani(card, t.price);
+    card.querySelector(".add").onclick = () => addToCart(title, "", t.price, { changes: kaniChanges(card) });
+    g.append(card);
+  });
+}
+renderTablas("mixtas");
+
+/* ---------- Cambios ---------- */
+const groups = [[1500, "Cada cambio", "a proteína o palta", CAMBIOS.filter(c => c.price === 1500)], [1000, "Cada cambio", "de cobertura", CAMBIOS.filter(c => c.price === 1000)], [0, "Sin costo", "", CAMBIOS.filter(c => c.price === 0)]];
+groups.forEach(([p, , , list]) => {
+  $("#rules").append(el("div", { class: "rule" + (p === 0 ? " free" : "") }, `<span class="price">${p ? "+" + clp(p) : "Gratis"}</span><ul>${list.map(c => `<li>${c.label}</li>`).join("")}</ul>`));
+});
+
+/* ---------- Más allá del sushi ---------- */
+MORE.forEach(([n, img]) => {
+  const msg = encodeURIComponent(`Hola Megami, ¿qué ${n.toLowerCase()} tienen hoy y a qué precio?`);
+  $("#moreGrid").append(el("a", { class: "tile", href: `https://wa.me/${WA}?text=${msg}`, target: "_blank", rel: "noopener" }, `<img src="img/${img}.jpg" alt="" loading="lazy"><span>${n}</span>`));
+});
+
+/* ---------- Opiniones ---------- */
+[["Excelente", 13], ["Muy bueno", 6], ["Promedio", 2], ["Malo", 1], ["Horrible", 0]].forEach(([l, n]) => {
+  $("#bars").append(el("div", { class: "bar" }, `<span>${l}</span><i style="--w:${(n / 22 * 100).toFixed(1)}%"></i><span>${n}</span>`));
+});
+
+/* ---------- Armador ---------- */
+const B = { mode: "arroz", cob: null, esp: null, bases: [], ing: [], top: [] };
+const TOPS = CATS.find(c => c.id === "toppings").items;
+
+function chip(label, pressed, data, sub = "", disabled = false) {
+  return `<button type="button" class="chip" aria-pressed="${pressed}" ${data} ${disabled ? "disabled" : ""}>${label}${sub ? `<small>${sub}</small>` : ""}</button>`;
+}
+function renderSteps() {
+  const arroz = B.mode === "arroz";
+  const maxBases = arroz ? 1 : 2;
+  let h = `<div class="step"><h3><span class="k">1</span> Escoge una cobertura</h3><div class="chips">` +
+    (arroz ? COB_CLASICAS : COB_SIN_ARROZ).map(c => chip(c, B.cob === c, `data-cob="${c}"`)).join("") + `</div>`;
+  if (arroz) h += `<p class="sublabel">Coberturas especiales · precio fijo</p><div class="chips">` + COB_ESPECIALES.map(([c, p]) => chip(c.replace("Envuelto en ", ""), B.esp === c, `data-esp="${c}"`, clp(p))).join("") + `</div>`;
+  h += `</div><div class="step"><h3><span class="k">2</span> Escoge ${arroz ? "una base" : "dos bases"} <small>${arroz && !B.esp ? "define el precio" : ""}</small></h3><div class="chips">` +
+    BASES.map(([b, p]) => { const on = B.bases.includes(b); return chip(b, on, `data-base="${b}"`, arroz && !B.esp ? clp(p) : "", !on && B.bases.length >= maxBases && maxBases > 1); }).join("") + `</div></div>`;
+  h += `<div class="step"><h3><span class="k">3</span> Escoge 2 ingredientes <small>${B.ing.length}/2</small></h3><div class="chips">` +
+    INGREDIENTES.map(i => { const on = B.ing.includes(i); return chip(i, on, `data-ing="${i}"`, "", !on && B.ing.length >= 2); }).join("") + `</div></div>`;
+  h += `<div class="step"><h3><span class="k">4</span> ¿Algún topping? <small>opcional</small></h3><div class="chips">` +
+    TOPS.map(([t, p]) => chip(t, B.top.includes(t), `data-top="${t}"`, "+" + clp(p))).join("") + `</div></div>`;
+  $("#steps").innerHTML = h;
+  $("#steps").querySelectorAll("[data-cob]").forEach(b => b.onclick = () => { B.cob = B.cob === b.dataset.cob ? null : b.dataset.cob; B.esp = null; renderSteps(); });
+  $("#steps").querySelectorAll("[data-esp]").forEach(b => b.onclick = () => { B.esp = B.esp === b.dataset.esp ? null : b.dataset.esp; B.cob = null; renderSteps(); });
+  $("#steps").querySelectorAll("[data-base]").forEach(b => b.onclick = () => {
+    const v = b.dataset.base;
+    if (B.bases.includes(v)) B.bases = B.bases.filter(x => x !== v);
+    else if (maxBases === 1) B.bases = [v];
+    else if (B.bases.length < 2) B.bases.push(v);
+    renderSteps();
+  });
+  $("#steps").querySelectorAll("[data-ing]").forEach(b => b.onclick = () => { const v = b.dataset.ing; B.ing = B.ing.includes(v) ? B.ing.filter(x => x !== v) : B.ing.length < 2 ? [...B.ing, v] : B.ing; renderSteps(); });
+  $("#steps").querySelectorAll("[data-top]").forEach(b => b.onclick = () => { const v = b.dataset.top; B.top = B.top.includes(v) ? B.top.filter(x => x !== v) : [...B.top, v]; renderSteps(); });
+  renderReceipt();
+}
+function rollPrice() {
+  let base = 0;
+  if (B.mode === "sinarroz") base = SIN_ARROZ_PRICE;
+  else if (B.esp) base = COB_ESPECIALES.find(e => e[0] === B.esp)[1];
+  else if (B.bases[0]) base = BASES.find(b => b[0] === B.bases[0])[1];
+  return base + B.top.reduce((a, t) => a + TOPS.find(x => x[0] === t)[1], 0);
+}
+function rollMissing() {
+  const needBases = B.mode === "arroz" ? 1 : 2;
+  if (!B.cob && !B.esp) return "Falta elegir la cobertura.";
+  if (B.bases.length < needBases) return needBases === 1 ? "Falta elegir la base." : `Faltan ${needBases - B.bases.length === 2 ? "dos bases" : "una base"}.`;
+  if (B.ing.length < 2) return B.ing.length ? "Falta un ingrediente." : "Faltan dos ingredientes.";
+  return "";
+}
+function renderReceipt() {
+  const rows = [];
+  if (B.mode === "sinarroz") rows.push(["Roll sin arroz", clp(SIN_ARROZ_PRICE)]);
+  rows.push(["Cobertura", B.esp ? B.esp.replace("Envuelto en ", "") + (B.mode === "arroz" ? " · " + clp(COB_ESPECIALES.find(e => e[0] === B.esp)[1]) : "") : (B.cob || "—")]);
+  rows.push([B.mode === "arroz" ? "Base" : "Bases", B.bases.length ? B.bases.join(" y ") + (B.mode === "arroz" && !B.esp ? " · " + clp(BASES.find(b => b[0] === B.bases[0])[1]) : "") : "—"]);
+  rows.push(["Ingredientes", B.ing.length ? B.ing.join(" y ") : "—"]);
+  B.top.forEach(t => rows.push(["Topping " + t.toLowerCase(), "+" + clp(TOPS.find(x => x[0] === t)[1])]));
+  $("#receiptLines").innerHTML = rows.map(([a, b]) => `<div class="rl"><span>${a}</span><span>${b}</span></div>`).join("");
+  const miss = rollMissing();
+  $("#receiptTotal").textContent = clp(rollPrice());
+  $("#receiptMsg").textContent = miss;
+  $("#addRoll").disabled = !!miss;
+}
+document.querySelectorAll("[data-mode]").forEach(b => b.onclick = () => {
+  B.mode = b.dataset.mode; B.cob = null; B.esp = null; B.bases = [];
+  document.querySelectorAll("[data-mode]").forEach(x => x.setAttribute("aria-pressed", x === b));
+  renderSteps();
+});
+$("#addRoll").onclick = () => {
+  const cob = B.esp ? B.esp.toLowerCase() : B.cob.toLowerCase();
+  const name = B.mode === "arroz" ? "Roll armado" : "Roll sin arroz";
+  const detail = [cob, B.bases.join(" y ").toLowerCase(), B.ing.join(" y ").toLowerCase(), ...B.top.map(t => "topping " + t.toLowerCase())].join(" · ");
+  addToCart(name, detail, rollPrice());
+  B.cob = null; B.esp = null; B.bases = []; B.ing = []; B.top = []; renderSteps();
+};
+// Estado inicial de ejemplo: un roll a medio armar, para que se entienda la herramienta.
+B.cob = "Panko"; B.bases = ["Salmón"]; B.ing = ["Queso crema"];
+renderSteps();
+
+/* ---------- Drawer del pedido ---------- */
+let openForm = null;
+function renderCart() {
+  const n = cart.reduce((a, l) => a + l.qty, 0);
+  $("#cartCount").textContent = n; $("#cartCount2").textContent = n;
+  $("#cartTotal").textContent = clp(total()); $("#cartTotal2").textContent = clp(total());
+  $("#cartbar").classList.toggle("show", n > 0 && $("#drawer").hidden);
+  const L = $("#lines");
+  if (!cart.length) { L.innerHTML = `<p class="empty">Aún no agregas nada. Toca + en cualquier plato de la carta.</p>`; updateWa(); return; }
+  L.innerHTML = cart.map((l, i) => `
+    <div class="line">
+      <div class="t"><div><h4>${esc(l.name)}</h4>${l.detail ? `<div class="d">${esc(l.detail)}</div>` : ""}</div><span class="num">${clp(unit(l) * l.qty)}</span></div>
+      ${(l.changes || []).map((c, j) => `<div class="chg"><span>${esc(c.label)}${c.note ? ": " + esc(c.note) : ""} · ${c.price ? "+" + clp(c.price) : "gratis"}</span><button type="button" data-rmchg="${i}-${j}" aria-label="Quitar cambio">✕</button></div>`).join("")}
+      ${openForm === i ? `<div class="chgform">
+          <select id="chgType" aria-label="Tipo de cambio">${CAMBIOS.map(c => `<option value="${c.id}">${c.label} (${c.price ? "+" + clp(c.price) : "gratis"})</option>`).join("")}</select>
+          <div class="r"><input type="text" id="chgNote" placeholder="Ej: cebollín por salmón"><button class="btn btn-red" type="button" style="padding:7px 14px" data-savechg="${i}">Agregar</button></div>
+        </div>` : ""}
+      <div class="ctrl">
+        <span class="qty"><button type="button" data-dec="${i}" aria-label="Quitar uno">−</button><span>${l.qty}</span><button type="button" data-inc="${i}" aria-label="Agregar uno">+</button></span>
+        ${l.noChanges ? "" : `<button class="linkish" type="button" data-chg="${i}">${openForm === i ? "Cancelar" : "+ Cambio"}</button>`}
+      </div>
+    </div>`).join("");
+  L.querySelectorAll("[data-inc]").forEach(b => b.onclick = () => { cart[b.dataset.inc].qty++; save(); renderCart(); });
+  L.querySelectorAll("[data-dec]").forEach(b => b.onclick = () => { const l = cart[b.dataset.dec]; l.qty--; if (l.qty <= 0) { cart.splice(b.dataset.dec, 1); openForm = null; } save(); renderCart(); });
+  L.querySelectorAll("[data-chg]").forEach(b => b.onclick = () => { openForm = openForm === +b.dataset.chg ? null : +b.dataset.chg; renderCart(); });
+  L.querySelectorAll("[data-savechg]").forEach(b => b.onclick = () => {
+    const c = CAMBIOS.find(x => x.id === $("#chgType").value);
+    cart[b.dataset.savechg].changes.push({ label: c.label, price: c.price, note: $("#chgNote").value.trim() });
+    openForm = null; save(); renderCart();
+  });
+  L.querySelectorAll("[data-rmchg]").forEach(b => b.onclick = () => { const [i, j] = b.dataset.rmchg.split("-").map(Number); cart[i].changes.splice(j, 1); save(); renderCart(); });
+  updateWa();
+}
+function updateWa() {
+  const lines = ["Hola Megami, quiero hacer un pedido:", ""];
+  cart.forEach(l => {
+    lines.push(`${l.qty} × ${l.name}${l.detail ? " (" + l.detail + ")" : ""}: ${clp(unit(l) * l.qty)}`);
+    (l.changes || []).forEach(c => lines.push(`   Cambio: ${c.label.toLowerCase()}${c.note ? ", " + c.note : ""} (${c.price ? "+" + clp(c.price) : "sin costo"})`));
+  });
+  lines.push("", `Total: ${clp(total())} (despacho aparte)`);
+  const addr = $("#addr").value.trim(), nm = $("#cname").value.trim(), note = $("#cnote").value.trim();
+  lines.push(ship === "delivery" ? `Entrega: delivery${addr ? " a " + addr : ""}` : "Entrega: retiro en el local");
+  if (nm) lines.push(`Nombre: ${nm}`);
+  if (note) lines.push(`Nota: ${note}`);
+  $("#sendWa").href = `https://wa.me/${WA}?text=${encodeURIComponent(lines.join("\n"))}`;
+  $("#sendWa").setAttribute("aria-disabled", cart.length ? "false" : "true");
+  $("#sendWa").style.opacity = cart.length ? "" : ".45";
+  $("#sendWa").style.pointerEvents = cart.length ? "" : "none";
+}
+document.querySelectorAll("[data-ship]").forEach(b => b.onclick = () => {
+  ship = b.dataset.ship;
+  document.querySelectorAll("[data-ship]").forEach(x => x.setAttribute("aria-pressed", x === b));
+  $("#addr").hidden = ship !== "delivery"; shipNote(); save(); updateWa();
+});
+function shipNote() { $("#shipNote").textContent = ship === "delivery" ? "El despacho se cobra aparte según tu sector. Te lo confirmamos por WhatsApp." : "Retiro sin costo en Av. Alemania #6762."; }
+document.querySelectorAll("[data-ship]").forEach(x => x.setAttribute("aria-pressed", x.dataset.ship === ship));
+$("#addr").hidden = ship !== "delivery"; shipNote();
+["#addr", "#cname", "#cnote"].forEach(s => $(s).addEventListener("input", updateWa));
+
+function openDrawer() { $("#drawer").hidden = false; $("#drawerBg").hidden = false; renderCart(); $("#closeCart").focus(); }
+function closeDrawer() { $("#drawer").hidden = true; $("#drawerBg").hidden = true; openForm = null; renderCart(); }
+$("#openCart").onclick = openDrawer; $("#openCart2").onclick = openDrawer;
+$("#closeCart").onclick = closeDrawer; $("#drawerBg").onclick = closeDrawer;
+document.addEventListener("keydown", e => { if (e.key === "Escape" && !$("#drawer").hidden) closeDrawer(); });
+renderCart();
+
+/* ---------- Horario (hora de Chile) ---------- */
+function updateStatus() {
+  let h;
+  try { h = Number(new Intl.DateTimeFormat("es-CL", { timeZone: "America/Santiago", hour: "numeric", hour12: false }).format(new Date())); } catch (e) { h = new Date().getHours(); }
+  const open = h >= 13 && h < 23;
+  $("#status").classList.toggle("open", open);
+  $("#statusText").innerHTML = open ? `Abierto<span class="status-text-long"> · cierra a las 23:00</span>` : `Cerrado<span class="status-text-long"> · abre a las 13:00</span>`;
+}
+updateStatus(); setInterval(updateStatus, 60000);
+
+/* ---------- Categoría activa en la navegación ---------- */
+const links = [...nav.querySelectorAll("a")];
+const io = new IntersectionObserver(es => es.forEach(e => {
+  if (!e.isIntersecting) return;
+  links.forEach(a => a.classList.toggle("on", a.getAttribute("href") === "#" + e.target.id));
+  const on = links.find(a => a.classList.contains("on"));
+  if (on) nav.scrollTo({ left: on.offsetLeft - 16, behavior: "smooth" });
+}), { rootMargin: "-40% 0px -55% 0px" });
+[...CATS.map(c => document.getElementById(c.id)), $("#armador"), $("#cambios"), $("#mas"), $("#despacho")].forEach(s => s && io.observe(s));
+</script>

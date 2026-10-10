@@ -1,0 +1,471 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Propuesta Megami Sushi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
+<style>
+/* Layout: documento de propuesta de una columna de lectura, con bandas de antes/después y una hoja de ruta por fases. Mismo mundo visual que la landing. */
+:root {
+  color-scheme: dark;
+  --ink: #0f0c0c;
+  --ink-2: #181313;
+  --ink-3: #241c1b;
+  --line: #3b2d2b;
+  --rice: #f3ece2;
+  --muted: #ab9d93;
+  --shu: #c0201c;
+  --shu-hi: #ff6b5e;
+  --display: "Dela Gothic One", "Zen Kaku Gothic New", system-ui, sans-serif;
+  --body: "Zen Kaku Gothic New", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --gutter: clamp(16px, 4vw, 40px);
+}
+* { box-sizing: border-box; }
+html { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body { margin: 0; background: var(--ink); color: var(--rice); font-family: var(--body); font-size: 17px; line-height: 1.65; -webkit-font-smoothing: antialiased; }
+img { max-width: 100%; display: block; }
+h1, h2, h3 { font-family: var(--display); font-weight: 400; line-height: 1.12; text-wrap: balance; margin: 0; }
+p { margin: 0; }
+a { color: var(--shu-hi); }
+:focus-visible { outline: 2px solid var(--shu-hi); outline-offset: 2px; }
+.wrap { max-width: 1040px; margin-inline: auto; padding-inline: var(--gutter); }
+.read { max-width: 68ch; }
+.eyebrow { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--shu-hi); font-weight: 700; }
+.muted { color: var(--muted); }
+.photo { mix-blend-mode: lighten; }
+.btn { display: inline-flex; align-items: center; gap: 8px; border-radius: 999px; padding: 12px 20px; font-weight: 700; text-decoration: none; background: var(--shu); color: var(--rice); }
+.btn-ghost { background: transparent; box-shadow: inset 0 0 0 1.5px var(--line); color: var(--rice); }
+.num { font-variant-numeric: tabular-nums; }
+
+.cover { padding-block: clamp(40px, 8vw, 96px) 40px; border-bottom: 1px solid var(--line); }
+.cover .logo { height: 64px; width: auto; margin-bottom: 36px; }
+.cover h1 { font-size: clamp(36px, 6vw, 68px); max-width: 16ch; }
+.cover h1 em { font-style: normal; color: var(--shu-hi); }
+.cover .lede { margin-top: 20px; font-size: clamp(18px, 2.2vw, 21px); color: var(--muted); max-width: 56ch; }
+.cover .meta { margin-top: 24px; font-size: 14px; color: var(--muted); }
+.cover .ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0; border-bottom: 1px solid var(--line); }
+.stats div { padding: 28px 20px 28px 0; display: grid; gap: 4px; }
+.stats b { font-family: var(--display); font-weight: 400; font-size: clamp(30px, 4vw, 40px); line-height: 1.1; }
+.stats span { color: var(--muted); font-size: 15px; }
+
+section { padding-block: clamp(48px, 7vw, 88px); border-bottom: 1px solid var(--line); }
+.sec-title { display: grid; gap: 10px; margin-bottom: 32px; }
+.sec-title h2 { font-size: clamp(28px, 4vw, 42px); }
+.sec-title p { color: var(--muted); max-width: 62ch; }
+
+.findings { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; }
+.finding { background: var(--ink-2); border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px; display: grid; gap: 6px; align-content: start; }
+.finding h3 { font-family: var(--body); font-weight: 700; font-size: 17px; }
+.finding p { color: var(--muted); font-size: 15px; }
+
+.work { display: grid; gap: 56px; }
+.block { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 40px; align-items: start; }
+.block.flip > :first-child { order: 2; }
+.block h3 { font-size: clamp(22px, 2.8vw, 28px); margin-bottom: 12px; }
+.block .tagline { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); font-weight: 700; margin-bottom: 8px; }
+.block ul { margin: 14px 0 0; padding-left: 20px; display: grid; gap: 6px; }
+.block li::marker { color: var(--shu-hi); }
+@media (max-width: 780px) { .block { grid-template-columns: 1fr; gap: 20px; } .block.flip > :first-child { order: 0; } }
+
+.ba { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; }
+.ba figure { margin: 0; display: grid; gap: 8px; align-content: start; }
+.ba figcaption { font-size: 12px; letter-spacing: .1em; text-transform: uppercase; font-weight: 700; color: var(--muted); }
+.ba figure:last-child figcaption { color: var(--shu-hi); }
+.ba img.slide { border-radius: 10px; border: 1px solid var(--line); max-height: 460px; width: 100%; object-fit: cover; object-position: top; }
+.mock { background: var(--ink-2); border: 1px solid var(--line); border-radius: 10px; padding: 14px; font-size: 13px; display: grid; gap: 8px; }
+.mock .n { font-family: var(--display); font-size: 34px; line-height: 1; }
+.mock ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.mock li { display: grid; grid-template-columns: 22px 1fr; }
+.mock li i { font-style: normal; color: var(--shu-hi); font-weight: 700; }
+.mock small { color: var(--muted); }
+.mock .row { display: flex; justify-content: space-between; align-items: center; border-top: 1px dashed var(--line); padding-top: 8px; }
+.pill { font-family: var(--display); background: var(--shu); border-radius: 999px; padding: 1px 10px; font-size: 13px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.pill.free { background: var(--ink-3); }
+.mock .sel { background: var(--ink-3); border-radius: 8px; padding: 6px 8px; color: var(--muted); }
+.mock .sel b { color: var(--rice); }
+
+.wa { background: #0b141a; border-radius: 14px; padding: 16px; border: 1px solid var(--line); }
+.wa .bubble { background: #005c4b; color: #e9edef; border-radius: 10px 10px 2px 10px; padding: 10px 12px; font-size: 14px; line-height: 1.5; white-space: pre-wrap; margin-left: auto; max-width: 94%; font-family: var(--body); }
+.wa .who { font-size: 12px; color: #8696a0; margin-bottom: 8px; }
+
+.cutout { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: end; }
+.cutout figure { margin: 0; display: grid; gap: 8px; }
+.cutout .a { background: #000; border-radius: 10px; padding: 10px; border: 1px solid var(--line); }
+.cutout .b { background: radial-gradient(circle at 40% 40%, #d8302a, var(--shu) 60%, #8d1411); border-radius: 50%; aspect-ratio: 1; display: grid; place-items: center; padding: 12%; }
+.cutout figcaption { font-size: 12px; letter-spacing: .1em; text-transform: uppercase; font-weight: 700; color: var(--muted); }
+
+.flow { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; }
+.flow > div { border-radius: 14px; padding: 22px; display: grid; gap: 14px; align-content: start; }
+.flow .before { background: var(--ink-2); border: 1px solid var(--line); }
+.flow .after { background: color-mix(in srgb, var(--shu) 10%, var(--ink)); border: 1.5px solid var(--shu); }
+.flow h3 { font-size: 20px; }
+.flow ol { margin: 0; padding: 0; list-style: none; counter-reset: s; display: grid; gap: 10px; }
+.flow li { counter-increment: s; display: grid; grid-template-columns: 30px 1fr; gap: 8px; font-size: 15px; }
+.flow li::before { content: counter(s); font-family: var(--display); color: var(--muted); font-size: 15px; }
+.flow .after li::before { color: var(--shu-hi); }
+.flow li small { display: block; color: var(--muted); font-size: 13px; }
+.flow .sum { font-size: 14px; color: var(--muted); border-top: 1px dashed var(--line); padding-top: 12px; }
+@media (max-width: 780px) { .flow { grid-template-columns: 1fr; } }
+
+.phases { display: grid; gap: 14px; }
+.phase { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 24px; background: var(--ink-2); border: 1px solid var(--line); border-radius: 14px; padding: 22px; }
+.phase .k { display: grid; gap: 4px; align-content: start; }
+.phase .k b { font-family: var(--display); font-weight: 400; font-size: 15px; color: var(--shu-hi); }
+.phase .k span { font-size: 13px; color: var(--muted); }
+.phase h3 { font-size: 22px; margin-bottom: 8px; }
+.phase p { color: var(--muted); }
+.phase ul { margin: 12px 0 0; padding-left: 20px; display: grid; gap: 4px; font-size: 15px; }
+.phase li::marker { color: var(--shu-hi); }
+.phase.now { border-color: var(--shu); }
+@media (max-width: 640px) { .phase { grid-template-columns: 1fr; gap: 10px; } }
+
+.need { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 10px 32px; padding: 0; margin: 0; list-style: none; }
+.need li { padding: 12px 0; border-bottom: 1px solid var(--line); display: grid; grid-template-columns: 26px 1fr; gap: 6px; }
+.need li::before { content: "□"; color: var(--shu-hi); font-weight: 700; }
+.need small { display: block; color: var(--muted); font-size: 14px; }
+
+.close { border-bottom: 0; }
+.close h2 { font-size: clamp(30px, 4.6vw, 48px); max-width: 20ch; }
+.close .ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+footer { padding-block: 24px 40px; color: var(--muted); font-size: 13px; border-top: 1px solid var(--line); }
+</style>
+</head>
+<body>
+
+<header class="cover">
+  <div class="wrap">
+    <img class="logo photo" src="img/logo.png" alt="Megami Sushi">
+    <p class="eyebrow">Propuesta digital · octubre 2026</p>
+    <h1 style="margin-top:14px">Del chat de Instagram a un <em>pedido completo</em> en un solo mensaje</h1>
+    <p class="lede">Megami tiene buen producto, buenos precios y clientes fieles. Lo que hoy cuesta es encontrar la carta, entender los cambios y saber cuánto sale el despacho. Esta propuesta ordena todo eso en una página propia, y deja el camino listo para crecer.</p>
+    <p class="meta">Preparada por Fearless para Megami Sushi, Av. Alemania #6762, Valparaíso.</p>
+    <div class="ctas">
+      <a class="btn" href="./">Ver la landing propuesta →</a>
+      <a class="btn btn-ghost" href="#hoja-de-ruta">Ir a la hoja de ruta</a>
+    </div>
+  </div>
+</header>
+
+<div class="wrap stats">
+  <div><b class="num">15 → 1</b><span>historias de Instagram convertidas en una sola página</span></div>
+  <div><b class="num">55</b><span>productos con precio, ordenados en 8 categorías</span></div>
+  <div><b class="num">7</b><span>tipos de cambio con su valor a la vista</span></div>
+  <div><b class="num">1</b><span>mensaje de WhatsApp con el pedido completo</span></div>
+</div>
+
+<main>
+  <section id="diagnostico">
+    <div class="wrap">
+      <div class="sec-title">
+        <p class="eyebrow">Lo que encontramos</p>
+        <h2>Dónde se pierde hoy un pedido</h2>
+        <p>Revisamos la destacada "Carta" de Instagram, el catálogo de WhatsApp Business, las promos recientes y las 22 opiniones de TripAdvisor.</p>
+      </div>
+      <div class="findings">
+        <div class="finding"><h3>La carta está repartida en 15 historias</h3><p>Para comparar dos tablas hay que ir y volver entre imágenes. El catálogo de WhatsApp solo abre dentro de la app.</p></div>
+        <div class="finding"><h3>Los cambios generan roces</h3><p>La lámina de cambios no dice que valen en las tablas ni cómo se cobran varios cambios. La única opinión negativa en TripAdvisor (2022) es justamente por un cobro de cambios.</p></div>
+        <div class="finding"><h3>Pocos saben que el kanikama se puede cambiar</h3><p>Quien no quiere kanikama descarta la tabla completa, cuando podría pedirla con otra proteína.</p></div>
+        <div class="finding"><h3>El despacho no se explica en ninguna parte</h3><p>El cliente no sabe si cuesta, cuánto ni de qué depende hasta que pregunta por chat.</p></div>
+        <div class="finding"><h3>Cada pedido es una conversación larga</h3><p>Precios, sabores, cambios, dirección y total se resuelven mensaje a mensaje, en horario punta.</p></div>
+        <div class="finding"><h3>Datos que no calzan</h3><p>Una lámina dice Av. Ecuador 35 y el perfil Av. Alemania #6762. La tabla de 70 aparece a $21.490 en la promo y a $21.990 en la carta. Las láminas son de septiembre de 2024.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="trabajo">
+    <div class="wrap">
+      <div class="sec-title">
+        <p class="eyebrow">Lo que hicimos</p>
+        <h2>Seis mejoras concretas en la landing</h2>
+        <p>Todo lo que ves en la landing usa la carta real de Megami. No hay precios ni productos inventados.</p>
+      </div>
+      <div class="work">
+
+        <div class="block">
+          <div>
+            <p class="tagline">1 · Carta</p>
+            <h3>Toda la carta en una página que se recorre con el pulgar</h3>
+            <p class="muted">Transcribimos las 15 láminas, una por una, a una carta con barra de categorías fija: tablas, rolls especiales, handrolls, gohan, sushi burger, para picar y toppings.</p>
+            <ul>
+              <li>Las tablas se comparan lado a lado: piezas, rolls que trae cada una y precio.</li>
+              <li>Mixtas, hot y veggie/vegan en pestañas, sin bajar por historias.</li>
+              <li>Texto legible en celular: sin letras espaciadas ni mayúsculas sostenidas.</li>
+              <li>Corregimos erratas de las láminas ("Hor camarón", "Envuto").</li>
+            </ul>
+          </div>
+          <div class="ba">
+            <figure><figcaption>Antes</figcaption><img class="slide" src="img/antes-tablas.jpg" alt="Lámina de tablas mixtas en Instagram" loading="lazy"></figure>
+            <figure><figcaption>Ahora</figcaption>
+              <div class="mock">
+                <div><span class="n num">60</span> <small>piezas</small></div>
+                <ul>
+                  <li><i>10</i><span>Hot pollo <small>pollo, queso, cebollín</small></span></li>
+                  <li><i>10</i><span>Hot camarón <small>camarón, palta, cebollín</small></span></li>
+                  <li><i>10</i><span>California kani <small>kanikama, queso, cebollín</small></span></li>
+                  <li><i>10</i><span>Cheese <small>morrón, palta, cebollín</small></span></li>
+                  <li><i>10</i><span>Avocado <small>camarón, queso, cebollín</small></span></li>
+                  <li><i>10</i><span>Hosomaki <small>palta, queso</small></span></li>
+                </ul>
+                <div class="sel">¿Sin kanikama? <b>Salmón</b></div>
+                <div class="row"><span class="pill">$20.990</span><span>＋</span></div>
+              </div>
+            </figure>
+          </div>
+        </div>
+
+        <div class="block flip">
+          <div>
+            <p class="tagline">2 · Lógica de pedido</p>
+            <h3>El pedido se arma solo y llega completo por WhatsApp</h3>
+            <p class="muted">Cada plato tiene un botón para agregarlo. El cliente ve su pedido, ajusta cantidades, agrega cambios y elige retiro o delivery. Al final se abre WhatsApp con el pedido ya escrito.</p>
+            <ul>
+              <li>Arma tu roll paso a paso: cobertura, base y dos ingredientes. No deja avanzar si falta algo.</li>
+              <li>El precio se calcula en vivo, incluidas coberturas especiales a precio fijo y toppings.</li>
+              <li>Rolls sin arroz con su propia regla: dos bases y dos ingredientes a $6.490.</li>
+              <li>El local recibe un mensaje ordenado, con total, entrega, nombre y nota.</li>
+            </ul>
+          </div>
+          <div class="wa">
+            <p class="who">Mensaje que recibe el local</p>
+            <div class="bubble">Hola Megami, quiero hacer un pedido:
+
+1 × Tabla mixta 40 piezas: $15.990
+   Cambio: kanikama a proteína, kanikama por salmón (+$1.500)
+2 × Handroll pollo (cobertura panko): $9.180
+1 × Roll armado (panko · salmón · queso crema y palta): $5.490
+
+Total: $30.660 (despacho aparte)
+Entrega: delivery a Av. Alemania 5100, depto 23
+Nombre: Camila</div>
+          </div>
+        </div>
+
+        <div class="block">
+          <div>
+            <p class="tagline">3 · Cambios</p>
+            <h3>Cambios claros, con precio, también en tablas y promos</h3>
+            <p class="muted">La regla de cambios ahora está escrita en una tabla simple y se aplica desde el mismo pedido, así el cliente sabe cuánto suma antes de enviar. Esto apunta directo a la queja que hoy aparece en TripAdvisor.</p>
+            <ul>
+              <li>+$1.500: vegetal, kanikama u otra proteína a proteína; vegetal a palta o champiñón.</li>
+              <li>+$1.000: sin nori o cambio de cobertura.</li>
+              <li>Sin costo: un vegetal por otro.</li>
+              <li>Cada tabla y promo con kanikama trae un selector para cambiarlo por otra proteína.</li>
+            </ul>
+          </div>
+          <div class="ba">
+            <figure><figcaption>Antes</figcaption><img class="slide" src="img/antes-cambios.jpg" alt="Lámina de cambios en Instagram" loading="lazy"></figure>
+            <figure><figcaption>Ahora</figcaption>
+              <div class="mock">
+                <span class="pill" style="justify-self:start">+$1.500</span>
+                <small>Vegetal a proteína · kanikama a proteína · proteína a proteína · vegetal a palta o champiñón</small>
+                <span class="pill" style="justify-self:start">+$1.000</span>
+                <small>Sin nori · cambio de cobertura</small>
+                <span class="pill free" style="justify-self:start">Gratis</span>
+                <small>Vegetal por otro vegetal</small>
+                <div class="sel"><b>También valen en las tablas y en las promos.</b></div>
+              </div>
+            </figure>
+          </div>
+        </div>
+
+        <div class="block flip">
+          <div>
+            <p class="tagline">4 · Propuesta comercial</p>
+            <h3>Tablas sin kanikama, al mismo precio</h3>
+            <p class="muted">Hay clientes que evitan el kanikama y por eso no piden tabla. Proponemos que en todas las tablas y promos puedan elegir pollo en su lugar sin pagar más. En la landing está como un botón de prueba, marcado como propuesta, para que lo veas funcionando antes de decidir.</p>
+            <ul>
+              <li>Quita una razón para no comprar la tabla, que es el producto de mayor ticket.</li>
+              <li>En la carta actual, la base de pollo teriyaki cuesta $500 más que la de kanikama: una diferencia acotada.</li>
+              <li>Mejora la percepción de calidad sin tocar el precio de lista.</li>
+            </ul>
+          </div>
+          <div class="mock" style="align-self:center">
+            <small style="letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--shu-hi)">Propuesta para el local</small>
+            <b style="font-size:16px">¿Sin kanikama? Pide pollo</b>
+            <div class="sel">Kanikama → <b>Pollo · sin costo</b></div>
+            <div class="row"><span>Tabla mixta 50 piezas</span><span class="pill">$16.990</span></div>
+          </div>
+        </div>
+
+        <div class="block">
+          <div>
+            <p class="tagline">5 · Despacho</p>
+            <h3>El despacho explicado antes de pedir</h3>
+            <p class="muted">Agregamos una sección que deja claro que el retiro es gratis, que el delivery se cobra aparte según el sector y que el valor se confirma por WhatsApp junto con el total. El pedido muestra "despacho aparte" en todo momento.</p>
+            <ul>
+              <li>Menos preguntas repetidas por chat.</li>
+              <li>Listo para mostrar una tabla de tarifas por sector cuando el local la defina.</li>
+            </ul>
+          </div>
+          <div class="mock">
+            <div class="row" style="border:0;padding:0"><b>Retiro en el local</b><span class="pill free">Gratis</span></div>
+            <div class="row"><b>Delivery a todo Valparaíso</b><span class="pill">Según sector</span></div>
+            <small>El despacho se cobra aparte según tu sector. Te lo confirmamos por WhatsApp.</small>
+          </div>
+        </div>
+
+        <div class="block flip">
+          <div>
+            <p class="tagline">6 · Imagen</p>
+            <h3>Las fotos que ya existían, con retoques</h3>
+            <p class="muted">Para esta propuesta usamos las fotos que ya estaban en las láminas. Las recortamos, las integramos sobre el fondo negro de la marca para que no se vean cuadros, y al roll principal le quitamos el fondo para ponerlo sobre el sol rojo del koi.</p>
+            <ul>
+              <li>Paleta tomada del logo: negro, rojo laca y blanco arroz.</li>
+              <li>Tipografía de cartel japonés para títulos y precios, y una de lectura para el resto.</li>
+              <li>El siguiente nivel: retomar las fotos del producto real, con mejor encuadre, luz y fondo, y tratarlas con IA para que cada plato se vea profesional y apetitoso.</li>
+            </ul>
+          </div>
+          <div class="cutout">
+            <figure><figcaption>Foto de la lámina</figcaption><div class="a"><img src="img/hot-roll.jpg" alt="Roll con fondo negro, tal como viene en la lámina" loading="lazy"></div></figure>
+            <figure><figcaption>Recorte para la landing</figcaption><div class="b"><img src="img/hot-roll.png" alt="El mismo roll recortado sobre el sol rojo" loading="lazy"></div></figure>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section id="flujo">
+    <div class="wrap">
+      <div class="sec-title">
+        <p class="eyebrow">Flujo de pedidos</p>
+        <h2>Menos idas y vueltas por cada pedido</h2>
+        <p>Así se compara el camino de un cliente hoy y con la landing.</p>
+      </div>
+      <div class="flow">
+        <div class="before">
+          <h3>Hoy</h3>
+          <ol>
+            <li><span>Entra a Instagram y busca la destacada "Carta"<small>15 historias que pasan solas</small></span></li>
+            <li><span>Escribe por WhatsApp para preguntar precios o sabores</span></li>
+            <li><span>Pregunta si se puede cambiar algo y cuánto cuesta</span></li>
+            <li><span>Arma el pedido en varios mensajes</span></li>
+            <li><span>Pregunta por el despacho</span></li>
+            <li><span>El local suma todo a mano y confirma el total</span></li>
+          </ol>
+          <p class="sum">Varias rondas de mensajes por pedido, con riesgo de errores en el total.</p>
+        </div>
+        <div class="after">
+          <h3>Con la landing</h3>
+          <ol>
+            <li><span>Abre el link de la bio o de Google<small>la carta completa en una página</small></span></li>
+            <li><span>Agrega platos, arma su roll y elige cambios con precio a la vista</span></li>
+            <li><span>Elige retiro o delivery y escribe su dirección</span></li>
+            <li><span>Envía un solo mensaje con el pedido completo</span></li>
+            <li><span>El local responde con el despacho y el total final</span></li>
+          </ol>
+          <p class="sum">Un mensaje del cliente y una respuesta del local.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="hoja-de-ruta">
+    <div class="wrap">
+      <div class="sec-title">
+        <p class="eyebrow">Hasta dónde podemos llegar</p>
+        <h2>Todo lo que es posible construir sobre esta base</h2>
+        <p>Esto no es un plan cerrado, es el abanico de lo que se puede hacer. Cada etapa funciona por sí sola, y el local decide qué activar, cuándo y en qué orden.</p>
+      </div>
+      <div class="phases">
+        <div class="phase now">
+          <div class="k"><b>Etapa 1</b><span>Lo primero</span></div>
+          <div>
+            <h3>Landing oficial, 100% fiel al local</h3>
+            <p>Esta propuesta convertida en el sitio real de Megami, con la carta y las reglas que el dueño apruebe.</p>
+            <ul>
+              <li>Carta y precios vigentes validados con el local.</li>
+              <li>Cambios premium y reglas finales de cambios.</li>
+              <li>Tarifas de despacho por sector.</li>
+              <li>Dominio propio, link en la bio de Instagram y ficha de Google actualizada.</li>
+              <li>Fotos reales del producto.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="phase">
+          <div class="k"><b>Etapa 2</b><span>Crecer</span></div>
+          <div>
+            <h3>App instalable (PWA)</h3>
+            <p>La landing se instala en el celular como una app, con su ícono en la pantalla de inicio, sin pasar por App Store ni Google Play.</p>
+            <ul>
+              <li>Repetir el último pedido con un toque.</li>
+              <li>Promos del día que el local publica solo, desde un panel simple.</li>
+              <li>Cambio de precios y productos sin depender de un diseñador.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="phase">
+          <div class="k"><b>Etapa 3</b><span>Operación</span></div>
+          <div>
+            <h3>Integración con cocina</h3>
+            <p>Los pedidos llegan ordenados a cocina en vez de copiarse desde el chat.</p>
+            <ul>
+              <li>Comanda en pantalla o impresa, con cambios destacados.</li>
+              <li>Estados del pedido: recibido, en preparación, listo, en camino.</li>
+              <li>Registro de ventas por producto y por día.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="phase">
+          <div class="k"><b>Etapa 4</b><span>Automatizar</span></div>
+          <div>
+            <h3>Asistente de WhatsApp</h3>
+            <p>Un chatbot que atiende las preguntas repetidas y toma pedidos, y pasa a una persona cuando hace falta.</p>
+            <ul>
+              <li>Responde carta, horario, cambios y valor de despacho por sector.</li>
+              <li>Recibe pedidos de la landing y los confirma.</li>
+              <li>Avisa al cliente cuando su pedido sale.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <h3 style="font-size:22px;margin:40px 0 16px">Otras ideas que se pueden sumar</h3>
+      <div class="findings">
+        <div class="finding"><h3>Fotos de producto con IA</h3><p>Sesión con el producto real y retoque con IA para lograr fotos de nivel publicitario sin estudio.</p></div>
+        <div class="finding"><h3>Despacho calculado en un mapa</h3><p>El cliente marca su dirección y ve al tiro el valor del despacho según su sector.</p></div>
+        <div class="finding"><h3>Pago en línea</h3><p>Transferencia o tarjeta al momento de pedir, con el pedido confirmado automáticamente.</p></div>
+        <div class="finding"><h3>Clientes frecuentes</h3><p>Puntos o cupones por pedido, y promos que llegan a quienes más compran.</p></div>
+        <div class="finding"><h3>Más reseñas en Google</h3><p>Un mensaje después de cada entrega que invita a dejar una opinión.</p></div>
+        <div class="finding"><h3>Números del negocio</h3><p>Qué se vende más, qué día y a qué hora, para planificar compras y promos.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="necesitamos">
+    <div class="wrap">
+      <div class="sec-title">
+        <p class="eyebrow">Para dejarla fiel al local</p>
+        <h2>Lo que necesitamos de Megami</h2>
+      </div>
+      <ul class="need">
+        <li><span>Carta con precios vigentes<small>Las láminas actuales son de septiembre de 2024.</small></span></li>
+        <li><span>Cambios premium<small>Qué proteínas o coberturas tienen valor adicional.</small></span></li>
+        <li><span>Tarifas de despacho<small>Sectores y valores, aunque sean aproximados.</small></span></li>
+        <li><span>Decisión sobre el kanikama<small>Si se aplica la propuesta de pollo sin costo en tablas.</small></span></li>
+        <li><span>Dirección y horario confirmados<small>Av. Alemania #6762, de 13:00 a 23:00.</small></span></li>
+        <li><span>Medios de pago<small>Efectivo, transferencia, tarjeta.</small></span></li>
+        <li><span>Productos fuera del sushi<small>Completos, churrascos, chorrillana y otros, con precio.</small></span></li>
+        <li><span>Fotos o sesión de fotos<small>Del producto real del local.</small></span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="close">
+    <div class="wrap">
+      <p class="eyebrow">Siguiente paso</p>
+      <h2 style="margin-top:12px">Revisemos juntos la landing y elijamos por dónde partir</h2>
+      <p class="muted read" style="margin-top:16px">Con tu visto bueno y la información de arriba, dejamos la landing lista como sitio oficial de Megami, con tus ajustes. Lo demás se suma cuando tú quieras.</p>
+      <div class="ctas"><a class="btn" href="./">Ver la landing propuesta →</a></div>
+    </div>
+  </section>
+</main>
+
+<footer><div class="wrap">Propuesta preparada por Fearless para Megami Sushi. Fuentes: carta en la destacada de Instagram (@megamisushi_valpo), promos publicadas en octubre de 2026 y opiniones de TripAdvisor.</div></footer>
+</body>
+</html>
