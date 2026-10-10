@@ -640,7 +640,7 @@ PROMOS.forEach(p => {
       <div class="row foot"><span class="price num">${clp(p.price)}</span><button class="add" type="button" aria-label="Agregar ${esc(p.name)}">+</button></div>
     </div>`);
   wireKani(card, p.price);
-  card.querySelector(".add").onclick = () => addToCart(p.name, p.opts ? pickDetail([...card.querySelectorAll("[data-pick]")].map(s => s.value)) : p.desc, p.price, { noChanges: p.noChanges, changes: kaniChanges(card), quitables: p.sin });
+  card.querySelector(".add").onclick = () => addToCart(p.name, p.opts ? pickDetail([...card.querySelectorAll("[data-pick]")].map(s => s.value)) : "", p.price, { noChanges: p.noChanges, changes: kaniChanges(card), quitables: p.sin });
   $("#promoGrid").append(card);
 });
 
