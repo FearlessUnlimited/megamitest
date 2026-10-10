@@ -292,6 +292,10 @@ footer.site img { height: 40px; width: auto; }
 .drinks .row span:first-child { flex: 1; }
 .drinks .add { width: 30px; height: 30px; font-size: 18px; }
 .drinks p { font-size: 12px; color: var(--muted); font-style: italic; margin-top: 6px; }
+.target { display: grid; gap: 4px; margin-top: 6px; font-size: 13px; color: var(--muted); }
+.target select { width: 100%; }
+.target.missing select { border-color: var(--shu-hi); }
+.target.missing span { color: var(--shu-hi); font-weight: 700; }
 .chg { display: flex; justify-content: space-between; gap: 8px; font-size: 13px; background: var(--ink); border-radius: 8px; padding: 6px 10px; }
 .chg button { border: 0; background: none; color: var(--muted); cursor: pointer; }
 .chgform { display: grid; gap: 8px; background: var(--ink); border-radius: 10px; padding: 10px; }
@@ -584,10 +588,12 @@ const total = () => cart.reduce((a, l) => a + unit(l) * l.qty, 0);
 function addToCart(name, detail, price, opts = {}) {
   const key = name + "|" + (detail || "");
   const changes = opts.changes || [];
-  const ex = !changes.length && cart.find(l => l.key === key && !(l.changes || []).length);
+  const own = changes.length || opts.topping;
+  const ex = !own && cart.find(l => l.key === key && !(l.changes || []).length);
   if (ex) ex.qty++;
-  else cart.push({ key: key + (changes.length ? "|" + Date.now() : ""), name, detail: detail || "", price, qty: 1, changes, noChanges: !!opts.noChanges });
-  save(); renderCart(); toast(name + " agregado al pedido");
+  else cart.push({ key: key + (own ? "|" + Date.now() + Math.random() : ""), name, detail: detail || "", price, qty: 1, changes, noChanges: !!opts.noChanges, rolls: opts.rolls || null, topping: !!opts.topping, target: "" });
+  save(); renderCart();
+  toast(opts.topping ? name + " agregado. Indica en qué roll va, en tu pedido." : name + " agregado al pedido", opts.topping ? 3500 : 1800);
 }
 
 
@@ -693,7 +699,7 @@ CATS.forEach(c => {
       <div class="item"><div><h3>${esc(it[0])}</h3></div><span class="price">${clp(it[1])}</span><button class="add" type="button" data-i="${i}" aria-label="Agregar">+</button></div>`).join("")}</div>`;
   sec.querySelectorAll("[data-i]").forEach(b => b.onclick = () => {
     const it = c.items[b.dataset.i];
-    if (c.id === "toppings") return addToCart("Topping " + it[0].toLowerCase(), "", it[1], { noChanges: true });
+    if (c.id === "toppings") return addToCart("Topping " + it[0].toLowerCase(), "", it[1], { noChanges: true, topping: true });
     addToCart(it[0], c.cover ? "Cobertura " + $("#cov-" + c.id).value.toLowerCase() : "", it[1]);
   });
   menu.append(sec);
@@ -710,7 +716,7 @@ function renderTablas(kind) {
       <div>${hasKani ? kaniPicker() : ""}
       <div class="foot"><span class="price num">${clp(t.price)}</span><button class="add" type="button" aria-label="Agregar ${esc(title)}">+</button></div></div>`);
     wireKani(card, t.price);
-    card.querySelector(".add").onclick = () => addToCart(title, "", t.price, { changes: kaniChanges(card) });
+    card.querySelector(".add").onclick = () => addToCart(title, "", t.price, { changes: kaniChanges(card), rolls: t.rolls.map(r => `${r[0]} (${r[1]})`) });
     g.append(card);
   });
 }
@@ -811,6 +817,23 @@ renderSteps();
 
 /* ---------- Drawer del pedido ---------- */
 let openForm = null;
+// Rolls del pedido donde puede ir un topping: cada roll de una tabla por separado, o el producto completo.
+function rollTargets() {
+  const t = [];
+  cart.forEach(l => {
+    if (l.topping || (l.noChanges && !l.rolls)) return;
+    if (l.rolls && l.rolls.length) l.rolls.forEach(r => t.push(`${l.name} · ${r}`));
+    else t.push(l.name + (l.detail ? ` (${l.detail})` : ""));
+  });
+  return [...new Set(t)];
+}
+function targetSelect(l, i) {
+  const opts = rollTargets();
+  if (l.target && !opts.includes(l.target)) l.target = "";
+  const miss = !l.target;
+  return `<label class="target${miss ? " missing" : ""}"><span>${miss ? "¿En qué roll va? Elige uno" : "Va en:"}</span>
+    <select data-target="${i}" aria-label="Roll donde va el topping"><option value="">${opts.length ? "Elige un roll" : "Primero agrega un roll"}</option>${opts.map(o => `<option ${o === l.target ? "selected" : ""}>${esc(o)}</option>`).join("")}</select></label>`;
+}
 let drinksOpen = false;
 function extrasHtml() {
   const top = CATS.find(c => c.id === "toppings").items;
@@ -836,7 +859,7 @@ function wireExtras(L) {
   L.querySelectorAll("[data-salsa]").forEach(b => b.onclick = () => { acomp.salsa = b.dataset.salsa; save(); renderCart(); });
   L.querySelectorAll("[data-pal]").forEach(b => b.onclick = () => { acomp.palitos = Math.max(0, Math.min(20, acomp.palitos + +b.dataset.pal)); save(); renderCart(); });
   L.querySelectorAll("[data-opc]").forEach(c => c.onchange = () => { acomp.opcionales = c.checked ? [...acomp.opcionales, c.dataset.opc] : acomp.opcionales.filter(x => x !== c.dataset.opc); save(); updateWa(); });
-  L.querySelectorAll("[data-top-add]").forEach(b => b.onclick = () => { const t = top.find(x => x[0] === b.dataset.topAdd); addToCart("Topping " + t[0].toLowerCase(), "", t[1], { noChanges: true }); });
+  L.querySelectorAll("[data-top-add]").forEach(b => b.onclick = () => { const t = top.find(x => x[0] === b.dataset.topAdd); addToCart("Topping " + t[0].toLowerCase(), "", t[1], { noChanges: true, topping: true }); });
   L.querySelectorAll("[data-drink]").forEach(b => b.onclick = () => { const d = BEBIDAS[b.dataset.drink]; drinksOpen = true; addToCart(d.name, "", d.price, { noChanges: true }); });
   const det = L.querySelector(".drinks"); if (det) det.ontoggle = () => { drinksOpen = det.open; };
 }
@@ -850,7 +873,7 @@ function renderCart() {
   if (!cart.length) { L.innerHTML = `<p class="empty">Aún no agregas nada. Toca + en cualquier plato de la carta.</p>`; updateWa(); return; }
   L.innerHTML = cart.map((l, i) => `
     <div class="line">
-      <div class="t"><div><h4><b class="q">${l.qty}×</b> ${esc(l.name)}</h4>${l.detail ? `<div class="d">${esc(l.detail)}</div>` : ""}</div><span class="num">${clp(unit(l) * l.qty)}</span></div>
+      <div class="t"><div><h4><b class="q">${l.qty}×</b> ${esc(l.name)}</h4>${l.detail ? `<div class="d">${esc(l.detail)}</div>` : ""}${l.topping ? targetSelect(l, i) : ""}</div><span class="num">${clp(unit(l) * l.qty)}</span></div>
       ${(l.changes || []).map((c, j) => `<div class="chg"><span>${esc(c.label)}${c.note ? ": " + esc(c.note) : ""} · ${c.price ? "+" + clp(c.price) : "gratis"}</span><button type="button" data-rmchg="${i}-${j}" aria-label="Quitar cambio">✕</button></div>`).join("")}
       ${openForm === i ? `<div class="chgform">
           <select id="chgType" aria-label="Tipo de cambio">${CAMBIOS.map(c => `<option value="${c.id}">${c.label} (${c.price ? "+" + clp(c.price) : "gratis"})</option>`).join("")}</select>
@@ -862,6 +885,7 @@ function renderCart() {
       </div>
     </div>`).join("") + extrasHtml();
   wireExtras(L);
+  L.querySelectorAll("[data-target]").forEach(sel => sel.onchange = () => { cart[sel.dataset.target].target = sel.value; save(); renderCart(); });
   L.querySelectorAll("[data-inc]").forEach(b => b.onclick = () => { cart[b.dataset.inc].qty++; save(); renderCart(); });
   L.querySelectorAll("[data-dec]").forEach(b => b.onclick = () => { const l = cart[b.dataset.dec]; l.qty--; if (l.qty <= 0) { cart.splice(b.dataset.dec, 1); openForm = null; } save(); renderCart(); });
   L.querySelectorAll("[data-chg]").forEach(b => b.onclick = () => { openForm = openForm === +b.dataset.chg ? null : +b.dataset.chg; renderCart(); });
@@ -876,7 +900,8 @@ function renderCart() {
 function updateWa() {
   const lines = ["Hola Megami, quiero hacer un pedido:", ""];
   cart.forEach(l => {
-    lines.push(`*${l.qty}×* ${l.name}${l.detail ? " (" + l.detail + ")" : ""}: ${clp(unit(l) * l.qty)}`);
+    const det = l.topping ? (l.target ? "en " + l.target : "falta indicar en qué roll") : l.detail;
+    lines.push(`*${l.qty}×* ${l.name}${det ? " (" + det + ")" : ""}: ${clp(unit(l) * l.qty)}`);
     (l.changes || []).forEach(c => lines.push(`   _Cambio: ${c.label.toLowerCase()}${c.note ? ", " + c.note : ""} (${c.price ? "+" + clp(c.price) : "sin costo"})_`));
   });
   const ops = ACOMP.opcionales.map(o => acomp.opcionales.includes(o) ? o.toLowerCase() : "sin " + o.toLowerCase());
