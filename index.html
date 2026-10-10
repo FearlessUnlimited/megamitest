@@ -540,6 +540,9 @@ const el = (tag, attrs = {}, html = "") => { const e = document.createElement(ta
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
 function boot() {
+// La carta llegó: se quitan los avisos de carga antes de dibujarla.
+$("#promoGrid").innerHTML = ""; $("#menu").innerHTML = "";
+
 /* ---------- Pedido ---------- */
 let cart = [];
 let ship = "retiro";
