@@ -95,6 +95,7 @@ section { padding-block: clamp(48px, 7vw, 80px); }
 
 /* Promos */
 .promos { background: linear-gradient(180deg, var(--ink-2), var(--ink)); }
+.loading { color: var(--muted); padding-block: 24px; }
 .promo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
 .promo { background: var(--ink); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; display: grid; grid-template-rows: 170px auto; }
 .promo .pic { display: grid; place-items: center; background: var(--ink); overflow: hidden; }
@@ -330,7 +331,7 @@ footer.site img { height: 40px; width: auto; }
         </div>
         <p>Todas incluyen salsa soya y unagi. Válidas para retiro y delivery.</p>
       </div>
-      <div class="promo-grid" id="promoGrid"></div>
+      <div class="promo-grid" id="promoGrid"><p class="loading">Cargando promos…</p></div>
     </div>
   </section>
 
@@ -338,7 +339,7 @@ footer.site img { height: 40px; width: auto; }
     <div class="wrap" id="catnav"></div>
   </nav>
 
-  <div class="wrap" id="menu"></div>
+  <div class="wrap" id="menu"><p class="loading">Cargando la carta…</p></div>
 
   <section class="builder" id="armador">
     <div class="wrap">
@@ -355,7 +356,7 @@ footer.site img { height: 40px; width: auto; }
             <button type="button" data-mode="arroz" aria-pressed="true">Con arroz</button>
             <button type="button" data-mode="sinarroz" aria-pressed="false">Sin arroz · $6.490</button>
           </div>
-          <div id="steps"></div>
+          <div id="steps"><p class="loading">Cargando opciones…</p></div>
         </div>
         <aside class="receipt" aria-live="polite">
           <h3>Tu roll</h3>
@@ -480,102 +481,65 @@ footer.site img { height: 40px; width: auto; }
 const WA = "56950646715";
 const clp = n => "$" + Math.round(n).toLocaleString("es-CL");
 
-/* ---------- Carta (fuente: historias destacadas de Instagram) ---------- */
-const PROMOS = [
-  { id: "promo-hand3", name: "3 handrolls", desc: "Pollo, queso y palta", price: 11990, img: "img/x-sushi.jpg" },
-  { id: "promo-burger2", name: "2 sushi burger", desc: "Pollo o camarón, a elección", price: 11490, img: "img/burger.jpg", opts: ["Pollo", "Camarón", "Una de cada una"] },
-  { id: "promo-tabla70", name: "Tabla 70 piezas mixtas", desc: "Siete variedades, 10 piezas de cada una", price: 21990, img: "img/tabla-roll.jpg", kani: true },
-  { id: "promo-completo2", name: "2 completos", desc: "Con palta y mayo", price: 4000, img: "img/completo.jpg", cover: true, noChanges: true },
-];
+/* ---------- Carta ---------- */
+// "local": lee data/carta.json (mockup, generado desde las migraciones con scripts/carta-json.js).
+// "supabase": lee la función carta_publica() del proyecto; completar URL y clave pública (anon).
+const CARTA_FUENTE = "local";
+const SUPABASE_URL = "";
+const SUPABASE_ANON_KEY = "";
+let PROMOS, TABLAS, ESPECIALES, CATS, PICAR, CAMBIOS, MORE, COB_CLASICAS, COB_ESPECIALES, BASES, INGREDIENTES, COB_SIN_ARROZ, SIN_ARROZ_PRICE, PROTEINAS, PROP;
 
-const R = {
-  hotPollo: ["Hot pollo", "pollo, queso, cebollín"],
-  hotCam: ["Hot camarón", "camarón, palta, cebollín"],
-  cheeseCam: ["Cheese camarón", "camarón, palta, cebollín"],
-  caliKani: ["California kani", "kanikama, queso, cebollín"],
-  hoso: ["Hosomaki", "palta, queso"],
-  cheeseVeg: ["Cheese vegetariano", "morrón, palta, cebollín"],
-  cheese: ["Cheese", "morrón, palta, cebollín"],
-  avocado: ["Avocado", "camarón, queso, cebollín"],
-  tempura: ["Tempura", "pollo, queso, nuez"],
-  amapola: ["Amapola", "palmito, queso, palta"],
-};
-const T = (n, price, rolls) => ({ n, price, rolls });
-const TABLAS = {
-  mixtas: { label: "Mixtas", items: [
-    T(20, 9990, [R.hotPollo, R.cheeseCam]),
-    T(30, 12990, [R.hotPollo, R.cheeseCam, R.caliKani]),
-    T(40, 14490, [R.hotPollo, R.cheeseCam, R.caliKani, R.hoso]),
-    T(50, 16990, [R.hotPollo, R.hotCam, R.caliKani, R.cheeseVeg, R.hoso]),
-    T(60, 19490, [R.hotPollo, R.hotCam, R.caliKani, R.cheese, R.avocado, R.hoso]),
-    T(70, 21990, [R.hotPollo, R.hotCam, R.tempura, R.caliKani, R.cheese, R.avocado, R.hoso]),
-    T(80, 24990, [R.hotPollo, R.hotCam, R.tempura, R.caliKani, R.cheese, R.avocado, R.hoso, R.amapola]),
-  ]},
-  hot: { label: "Hot", items: [
-    T(20, 9990, [["Hot", "pollo, queso, cebollín"], ["Hot", "camarón, queso, cebollín"]]),
-    T(30, 12990, [["Hot", "pollo, queso, cebollín"], ["Hot", "camarón, queso, cebollín"], ["Hot", "kanikama, queso, cebollín"]]),
-    T(40, 14990, [["Hot", "pollo, queso, cebollín"], ["Hot", "camarón, queso, cebollín"], ["Hot", "kanikama, queso, cebollín"], ["Hot", "champiñón, queso, cebollín"]]),
-    T(50, 16990, [["Hot", "pollo, queso, cebollín"], ["Hot", "camarón, queso, cebollín"], ["Hot", "kanikama, queso, cebollín"], ["Hot", "champiñón, queso, cebollín"], ["Hot", "salmón, queso, palta"]]),
-  ]},
-  veggie: { label: "Veggie y vegan", items: [
-    Object.assign(T(30, 13990, [["Hot", "champiñón, queso, cebollín"], ["California", "espárrago, queso, morrón"], ["Avocado", "palmito, queso, aceituna"]]), { name: "veggie" }),
-    Object.assign(T(30, 13990, [["California", "palmito, palta, aceituna"], ["Nori", "choclo, palta, cebollín"], ["Avocado", "espárrago, morrón, cebollín"]]), { name: "vegan" }),
-  ]},
-};
+async function fetchCarta() {
+  if (CARTA_FUENTE === "local") {
+    const r = await fetch("data/carta.json", { cache: "no-cache" });
+    if (!r.ok) throw new Error("data/carta.json respondió " + r.status);
+    return r.json();
+  }
+  if (CARTA_FUENTE !== "supabase") throw new Error("CARTA_FUENTE desconocida: " + CARTA_FUENTE);
+  if (!SUPABASE_URL || !SUPABASE_ANON_KEY) throw new Error("Falta SUPABASE_URL o SUPABASE_ANON_KEY");
+  const r = await fetch(SUPABASE_URL + "/rest/v1/rpc/carta_publica", {
+    method: "POST",
+    headers: { apikey: SUPABASE_ANON_KEY, Authorization: "Bearer " + SUPABASE_ANON_KEY, "Content-Type": "application/json" },
+    body: "{}",
+  });
+  if (!r.ok) throw new Error("Supabase respondió " + r.status);
+  return r.json();
+}
 
-const ESPECIALES = [
-  ["Hot pollo", "Pollo y queso cheddar", 4990],
-  ["Hot acevichado", "Pollo, queso y cebollín en panko, cubierto de ceviche Megami", 6990],
-  ["Hot pollo fries", "Pollo, queso y cebollín en tempura, cubierto de papas al hilo", 6990],
-  ["Mango roll", "Camarón furay, queso y palta, envuelto en mango", 6990],
-  ["Guacamole roll", "Pollo, queso y cebollín, cubierto de guacamole", 6990],
-  ["Avocado acevichado", "Camarón furay, queso y cebollín envuelto en palta, cubierto de ceviche Megami", 7990],
-  ["Hot fusion roll", "Atún, salmón, camarón, queso y palta, envuelto en nori tempura", 7990],
-];
+function adaptCarta(d) {
+  const de = id => d.productos.filter(p => p.categoria_id === id);
+  PROMOS = de("promos").map(p => ({ id: p.id, name: p.nombre, desc: p.descripcion || "", price: p.precio, img: p.imagen, cover: p.imagen_ajuste === "cover", noChanges: !p.admite_cambios, kani: p.tiene_kanikama, opts: p.opciones.length ? p.opciones : null }));
+  const tabla = p => ({ title: p.nombre, n: p.piezas, price: p.precio, kani: p.tiene_kanikama, name: p.subtipo === "veggie" || p.subtipo === "vegan" ? p.subtipo : "", rolls: p.rolls.map(r => [r.nombre, r.ingredientes]) });
+  const tablas = de("tablas");
+  TABLAS = {
+    mixtas: { label: "Mixtas", items: tablas.filter(p => p.subtipo === "mixta").map(tabla) },
+    hot: { label: "Hot", items: tablas.filter(p => p.subtipo === "hot").map(tabla) },
+    veggie: { label: "Veggie y vegan", items: tablas.filter(p => p.subtipo === "veggie" || p.subtipo === "vegan").map(tabla) },
+  };
+  ESPECIALES = de("especiales").map(p => [p.nombre, p.descripcion || "", p.precio]);
+  const listas = ["handrolls", "gohan", "burger", "toppings"];
+  CATS = d.categorias.filter(c => c.id !== "promos" && c.id !== "mas_alla").map(c => ({ id: c.id, name: c.nombre, desc: c.descripcion, img: c.imagen, cover: c.coberturas.length ? c.coberturas : null, items: listas.includes(c.id) ? de(c.id).map(p => [p.nombre, p.precio]) : undefined }));
+  PICAR = de("picar").map(p => ({ name: p.nombre, u: p.unidades, price: p.precio, img: p.imagen, opts: p.opciones }));
+  CAMBIOS = d.cambios.map(c => ({ id: c.id, label: c.etiqueta, price: c.precio }));
+  MORE = de("mas_alla").map(p => [p.nombre, p.imagen]);
+  const cob = d.armador.coberturas;
+  COB_CLASICAS = cob.filter(c => c.modo === "con_arroz" && !c.especial).map(c => c.nombre);
+  COB_ESPECIALES = cob.filter(c => c.modo === "con_arroz" && c.especial).map(c => [c.nombre, c.precio]);
+  COB_SIN_ARROZ = cob.filter(c => c.modo === "sin_arroz").map(c => c.nombre);
+  BASES = d.armador.bases.map(b => [b.nombre, b.precio]);
+  INGREDIENTES = d.armador.ingredientes.map(i => i.nombre);
+  PROTEINAS = d.proteinas;
+  SIN_ARROZ_PRICE = d.config.sin_arroz_precio;
+  PROP = d.config.propuesta_kanikama;
+  const faltan = [["sin_arroz_precio", SIN_ARROZ_PRICE], ["propuesta_kanikama", PROP], ["cambio kani-prot", CAMBIOS.find(c => c.id === "kani-prot")], ["categoría toppings", CATS.find(c => c.id === "toppings")]].filter(x => x[1] == null).map(x => x[0]);
+  if (faltan.length) throw new Error("La carta en Supabase está incompleta: falta " + faltan.join(", "));
+}
 
-const CATS = [
-  { id: "tablas", name: "Tablas" },
-  { id: "especiales", name: "Rolls especiales", img: "img/avocado-roll.jpg", desc: "Las recetas de la casa." },
-  { id: "handrolls", name: "Handrolls", img: "img/hot-rolls.jpg", desc: "Base de arroz, queso y palta o cebollín.", cover: ["Panko", "Nori", "Sésamo"],
-    items: [["Pollo", 4590], ["Camarón", 4890], ["Camarón furay", 5290], ["Salmón", 4990], ["Salmón ahumado", 4990], ["Salmón furay", 5490], ["Kanikama", 4590], ["Champiñón", 4590], ["Atún", 5990]] },
-  { id: "gohan", name: "Gohan", img: "img/gohan.jpg", desc: "Bowl con base de arroz, palta, queso, sésamo y cebollín.",
-    items: [["Pollo furay", 5490], ["Camarón furay", 5490], ["Champiñón", 5490], ["Salmón", 5990], ["Mixto", 5990]] },
-  { id: "burger", name: "Sushi burger", img: "img/burger.jpg", desc: "Pan de arroz con palta, queso y cebollín.",
-    items: [["Pollo", 5990], ["Camarón", 5990], ["Champiñón", 5990], ["Camarón furay", 6490], ["Salmón", 6490], ["Salmón ahumado", 6990], ["Atún", 6990]] },
-  { id: "picar", name: "Para picar" },
-  { id: "toppings", name: "Toppings", desc: "Para cubrir cualquier roll.",
-    items: [["Papas al hilo", 1990], ["Mousse de palta", 2490], ["Guacamole", 2990], ["Acevichado", 3490]] },
-];
+const $ = s => document.querySelector(s);
+const el = (tag, attrs = {}, html = "") => { const e = document.createElement(tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (html) e.innerHTML = html; return e; };
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
-const PICAR = [
-  { name: "Arrollados", u: 5, price: 3490, img: "img/arrollados.jpg", opts: ["Primavera", "Jamón queso"] },
-  { name: "Korokes", u: 6, price: 4490, img: "img/korokes.jpg", opts: ["Pollo", "Camarón", "Champiñón", "Palmito"] },
-  { name: "Gyozas", u: 5, price: 3490, img: "img/gyozas.jpg", opts: ["Pollo", "Camarón", "Vegetariana", "Cerdo"] },
-  { name: "Nigiri", u: 3, price: 3990, img: "img/nigiri.jpg", opts: ["Camarón", "Salmón", "Atún"] },
-  { name: "Furay", u: 5, price: 3990, img: "img/furay.jpg", opts: ["Camarón", "Salmón", "Pollo"] },
-  { name: "Sashimi", u: 5, price: 4990, img: "img/sashimi.jpg", opts: ["Camarón", "Salmón", "Atún"] },
-];
-
-const CAMBIOS = [
-  { id: "veg-prot", label: "Vegetal a proteína", price: 1500 },
-  { id: "kani-prot", label: "Kanikama a proteína", price: 1500 },
-  { id: "prot-prot", label: "Proteína a otra proteína", price: 1500 },
-  { id: "veg-palta", label: "Vegetal a palta o champiñón", price: 1500 },
-  { id: "sin-nori", label: "Sin nori", price: 1000 },
-  { id: "cobertura", label: "Cambio de cobertura", price: 1000 },
-  { id: "veg-veg", label: "Vegetal por otro vegetal", price: 0 },
-];
-
-const MORE = [["Completos", "x-completos"], ["Hamburguesas", "x-hamburguesa"], ["Churrascos", "x-churrascos"], ["Chorrillana", "x-chorrillana"], ["Papas fritas", "x-papas"], ["Empanadas", "x-empanadas"], ["Fajitas", "x-fajitas"]];
-
-/* Armador */
-const COB_CLASICAS = ["Panko", "Tempura", "Sésamo", "Nori", "Amapola"];
-const COB_ESPECIALES = [["Envuelto en palta", 5590], ["Envuelto en queso", 5590], ["Envuelto en palta y queso", 5990], ["Envuelto en queso y nuez", 5790], ["Envuelto en queso y almendra", 5790], ["Envuelto en salmón", 6490], ["Envuelto en salmón ahumado", 6490]];
-const BASES = [["Pollo teriyaki", 4990], ["Camarón", 4990], ["Camarón furay", 5490], ["Salmón", 5490], ["Salmón ahumado", 5490], ["Kanikama", 4490], ["Champiñón", 4490]];
-const INGREDIENTES = ["Aceituna", "Espárrago", "Cebollín", "Choclo", "Nuez", "Queso crema", "Palta", "Palmito", "Champiñón", "Morrón", "Ají verde", "Ciboulette", "Cebolla morada"];
-const COB_SIN_ARROZ = ["Panko", "Nori", "Palta", "Queso"];
-const SIN_ARROZ_PRICE = 6490;
-
+function boot() {
 /* ---------- Pedido ---------- */
 let cart = [];
 let ship = "retiro";
@@ -593,23 +557,20 @@ function addToCart(name, detail, price, opts = {}) {
   save(); renderCart(); toast(name + " agregado al pedido");
 }
 
-const $ = s => document.querySelector(s);
-const el = (tag, attrs = {}, html = "") => { const e = document.createElement(tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (html) e.innerHTML = html; return e; };
-const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
 let tTimer;
 function toast(msg) { const t = $("#toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(tTimer); tTimer = setTimeout(() => t.classList.remove("show"), 1800); }
 
 /* ---------- Cambio de kanikama en tablas y promos ---------- */
-const PROTEINAS = ["Pollo", "Camarón", "Camarón furay", "Salmón", "Salmón ahumado", "Atún"];
 const KANI = CAMBIOS.find(c => c.id === "kani-prot");
 let kaniSeq = 0;
 let PROPOSAL = false; // propuesta: kanikama a pollo sin costo
-const kaniCost = v => !v ? 0 : (PROPOSAL && v === "Pollo" ? 0 : KANI.price);
+const enPropuesta = v => PROPOSAL && v === PROP.proteina;
+const kaniCost = v => !v ? 0 : (enPropuesta(v) ? PROP.precio : KANI.price);
 function kaniPicker() {
   const id = "kani-" + (++kaniSeq);
   return `<div class="kani"><label for="${id}">¿Sin kanikama? Cámbialo por otra proteína</label>
-    <select id="${id}" data-kani><option value="">Mantener kanikama</option>${PROTEINAS.map(p => `<option value="${p}">${p}${PROPOSAL && p === "Pollo" ? " · sin costo" : ""}</option>`).join("")}</select></div>`;
+    <select id="${id}" data-kani><option value="">Mantener kanikama</option>${PROTEINAS.map(p => `<option value="${p}">${p}${enPropuesta(p) ? " · sin costo" : ""}</option>`).join("")}</select></div>`;
 }
 function wireKani(card, base) {
   const s = card.querySelector("[data-kani]"); if (!s) return;
@@ -618,8 +579,8 @@ function wireKani(card, base) {
 function kaniChanges(card) {
   const s = card.querySelector("[data-kani]");
   if (!s || !s.value) return [];
-  const free = kaniCost(s.value) === 0;
-  return [{ label: free ? "Kanikama a pollo (propuesta, sin costo)" : KANI.label, price: kaniCost(s.value), note: free ? "" : "kanikama por " + s.value.toLowerCase() }];
+  const prop = enPropuesta(s.value);
+  return [{ label: prop ? `Kanikama a ${PROP.proteina.toLowerCase()} (propuesta)` : KANI.label, price: kaniCost(s.value), note: prop ? "" : "kanikama por " + s.value.toLowerCase() }];
 }
 
 /* ---------- Promos ---------- */
@@ -652,7 +613,7 @@ function catHead(c) {
 CATS.forEach(c => {
   const sec = el("div", { class: "cat", id: c.id });
   if (c.id === "tablas") {
-    sec.innerHTML = `<div class="cat-head"><h2>Tablas</h2><p>Cada variedad trae 10 piezas. ¿No te gusta el kanikama? Cámbialo por pollo, camarón, salmón o atún directo en la tabla.</p><img class="photo" src="img/sesamo-roll.jpg" alt="" loading="lazy"></div>
+    sec.innerHTML = `${catHead(c)}
       <div class="tabs" role="tablist" aria-label="Tipo de tabla">${Object.entries(TABLAS).map(([k, v], i) => `<button role="tab" type="button" data-tab="${k}" aria-selected="${i === 0}">${v.label}</button>`).join("")}</div>
       <div class="proposal">
         <span class="tag">Propuesta para el local</span>
@@ -666,8 +627,8 @@ CATS.forEach(c => {
       PROPOSAL = !PROPOSAL;
       e.currentTarget.setAttribute("aria-pressed", PROPOSAL);
       e.currentTarget.textContent = PROPOSAL ? "Volver a la regla actual" : "Ver cómo quedaría";
-      document.querySelectorAll("[data-kani]").forEach(s => { s.querySelector('option[value="Pollo"]').textContent = PROPOSAL ? "Pollo · sin costo" : "Pollo"; s.onchange && s.onchange(); });
-      toast(PROPOSAL ? "Propuesta activada: pollo en vez de kanikama sin costo" : "De vuelta a la regla actual");
+      document.querySelectorAll("[data-kani]").forEach(s => { const o = s.querySelector(`option[value="${PROP.proteina}"]`); if (o) o.textContent = PROP.proteina + (PROPOSAL ? " · sin costo" : ""); s.onchange && s.onchange(); });
+      toast(PROPOSAL ? `Propuesta activada: ${PROP.proteina.toLowerCase()} en vez de kanikama, sin costo` : "De vuelta a la regla actual");
     };
     sec.querySelectorAll("[data-tab]").forEach(b => b.onclick = () => { sec.querySelectorAll("[data-tab]").forEach(x => x.setAttribute("aria-selected", x === b)); renderTablas(b.dataset.tab); });
     return;
@@ -679,7 +640,7 @@ CATS.forEach(c => {
     menu.append(sec); return;
   }
   if (c.id === "picar") {
-    sec.innerHTML = `<div class="cat-head"><h2>Para picar</h2><p>Mientras llega la tabla.</p></div><div class="bites">${PICAR.map((p, i) => `
+    sec.innerHTML = `${catHead(c)}<div class="bites">${PICAR.map((p, i) => `
       <div class="bite"><div class="pic"><img class="photo" src="${p.img}" alt="${p.name}" loading="lazy"></div>
         <h3>${p.name}</h3><p>${p.u} unidades</p>
         <div class="row"><select id="picar-${i}" aria-label="Sabor de ${p.name}">${p.opts.map(o => `<option>${o}</option>`).join("")}</select><span class="price">${clp(p.price)}</span><button class="add" type="button" data-pic="${i}" aria-label="Agregar ${p.name}">+</button></div>
@@ -690,12 +651,11 @@ CATS.forEach(c => {
   const coverSel = c.cover ? `<select id="cov-${c.id}" aria-label="Cobertura">${c.cover.map(o => `<option>${o}</option>`).join("")}</select>` : "";
   sec.innerHTML = catHead(c) + (c.cover ? `<p style="margin:-8px 0 12px;color:var(--muted);font-size:14px">Cobertura: ${coverSel}</p>` : "") +
     `<div class="list">${c.items.map((it, i) => `
-      <div class="item"><div><h3>${c.id === "toppings" ? it[0] : c.name.replace(/s$/, "") + " " + it[0].toLowerCase()}</h3></div><span class="price">${clp(it[1])}</span><button class="add" type="button" data-i="${i}" aria-label="Agregar">+</button></div>`).join("")}</div>`;
+      <div class="item"><div><h3>${esc(it[0])}</h3></div><span class="price">${clp(it[1])}</span><button class="add" type="button" data-i="${i}" aria-label="Agregar">+</button></div>`).join("")}</div>`;
   sec.querySelectorAll("[data-i]").forEach(b => b.onclick = () => {
     const it = c.items[b.dataset.i];
     if (c.id === "toppings") return addToCart("Topping " + it[0].toLowerCase(), "", it[1], { noChanges: true });
-    const name = c.name.replace(/s$/, "") + " " + it[0].toLowerCase();
-    addToCart(name, c.cover ? "Cobertura " + $("#cov-" + c.id).value.toLowerCase() : "", it[1]);
+    addToCart(it[0], c.cover ? "Cobertura " + $("#cov-" + c.id).value.toLowerCase() : "", it[1]);
   });
   menu.append(sec);
 });
@@ -703,8 +663,8 @@ CATS.forEach(c => {
 function renderTablas(kind) {
   const g = $("#tablaGrid"); g.innerHTML = "";
   TABLAS[kind].items.forEach(t => {
-    const title = "Tabla " + (t.name ? t.name + " " : (kind === "hot" ? "hot " : "mixta ")) + t.n + " piezas";
-    const hasKani = t.rolls.some(r => r[1].includes("kanikama"));
+    const title = t.title;
+    const hasKani = t.kani;
     const card = el("article", { class: "tabla" }, `
       <div class="n"><b class="num">${t.n}</b><span>piezas${t.name ? " · " + t.name : ""}</span></div>
       <ul>${t.rolls.map(r => `<li><i>10</i><span>${r[0]} <small>${r[1]}</small></span></li>`).join("")}</ul>
@@ -726,7 +686,7 @@ groups.forEach(([p, , , list]) => {
 /* ---------- Más allá del sushi ---------- */
 MORE.forEach(([n, img]) => {
   const msg = encodeURIComponent(`Hola Megami, ¿qué ${n.toLowerCase()} tienen hoy y a qué precio?`);
-  $("#moreGrid").append(el("a", { class: "tile", href: `https://wa.me/${WA}?text=${msg}`, target: "_blank", rel: "noopener" }, `<img src="img/${img}.jpg" alt="" loading="lazy"><span>${n}</span>`));
+  $("#moreGrid").append(el("a", { class: "tile", href: `https://wa.me/${WA}?text=${msg}`, target: "_blank", rel: "noopener" }, `<img src="${img}" alt="" loading="lazy"><span>${n}</span>`));
 });
 
 /* ---------- Opiniones ---------- */
@@ -876,6 +836,17 @@ $("#closeCart").onclick = closeDrawer; $("#drawerBg").onclick = closeDrawer;
 document.addEventListener("keydown", e => { if (e.key === "Escape" && !$("#drawer").hidden) closeDrawer(); });
 renderCart();
 
+/* ---------- Categoría activa en la navegación ---------- */
+const links = [...nav.querySelectorAll("a")];
+const io = new IntersectionObserver(es => es.forEach(e => {
+  if (!e.isIntersecting) return;
+  links.forEach(a => a.classList.toggle("on", a.getAttribute("href") === "#" + e.target.id));
+  const on = links.find(a => a.classList.contains("on"));
+  if (on) nav.scrollTo({ left: on.offsetLeft - nav.offsetLeft - 16, behavior: "smooth" });
+}), { rootMargin: "-40% 0px -55% 0px" });
+[...CATS.map(c => document.getElementById(c.id)), $("#armador"), $("#cambios"), $("#mas"), $("#despacho")].forEach(s => s && io.observe(s));
+}
+
 /* ---------- Horario (hora de Chile) ---------- */
 function updateStatus() {
   let h;
@@ -886,15 +857,13 @@ function updateStatus() {
 }
 updateStatus(); setInterval(updateStatus, 60000);
 
-/* ---------- Categoría activa en la navegación ---------- */
-const links = [...nav.querySelectorAll("a")];
-const io = new IntersectionObserver(es => es.forEach(e => {
-  if (!e.isIntersecting) return;
-  links.forEach(a => a.classList.toggle("on", a.getAttribute("href") === "#" + e.target.id));
-  const on = links.find(a => a.classList.contains("on"));
-  if (on) nav.scrollTo({ left: on.offsetLeft - nav.offsetLeft - 16, behavior: "smooth" });
-}), { rootMargin: "-40% 0px -55% 0px" });
-[...CATS.map(c => document.getElementById(c.id)), $("#armador"), $("#cambios"), $("#mas"), $("#despacho")].forEach(s => s && io.observe(s));
+function showCartaError(err) {
+  console.error(err);
+  const msg = `<p class="loading">No pudimos cargar la carta. Recarga la página o escríbenos por WhatsApp al <b>+56 9 5064 6715</b>.</p>`;
+  $("#menu").innerHTML = msg; $("#promoGrid").innerHTML = msg; $("#steps").innerHTML = msg;
+}
+fetchCarta().then(d => { adaptCarta(d); boot(); }).catch(showCartaError);
+
 </script>
 </body>
 </html>

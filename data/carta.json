@@ -1,0 +1,1732 @@
+{
+ "categorias": [
+  {
+   "id": "promos",
+   "nombre": "Promos de hoy",
+   "descripcion": "Todas incluyen salsa soya y unagi. Válidas para retiro y delivery.",
+   "imagen": null,
+   "coberturas": [],
+   "orden": 0
+  },
+  {
+   "id": "tablas",
+   "nombre": "Tablas",
+   "descripcion": "Cada variedad trae 10 piezas. ¿No te gusta el kanikama? Cámbialo por pollo, camarón, salmón o atún directo en la tabla.",
+   "imagen": "img/sesamo-roll.jpg",
+   "coberturas": [],
+   "orden": 1
+  },
+  {
+   "id": "especiales",
+   "nombre": "Rolls especiales",
+   "descripcion": "Las recetas de la casa.",
+   "imagen": "img/avocado-roll.jpg",
+   "coberturas": [],
+   "orden": 2
+  },
+  {
+   "id": "handrolls",
+   "nombre": "Handrolls",
+   "descripcion": "Base de arroz, queso y palta o cebollín.",
+   "imagen": "img/hot-rolls.jpg",
+   "coberturas": [
+    "Panko",
+    "Nori",
+    "Sésamo"
+   ],
+   "orden": 3
+  },
+  {
+   "id": "gohan",
+   "nombre": "Gohan",
+   "descripcion": "Bowl con base de arroz, palta, queso, sésamo y cebollín.",
+   "imagen": "img/gohan.jpg",
+   "coberturas": [],
+   "orden": 4
+  },
+  {
+   "id": "burger",
+   "nombre": "Sushi burger",
+   "descripcion": "Pan de arroz con palta, queso y cebollín.",
+   "imagen": "img/burger.jpg",
+   "coberturas": [],
+   "orden": 5
+  },
+  {
+   "id": "picar",
+   "nombre": "Para picar",
+   "descripcion": "Mientras llega la tabla.",
+   "imagen": null,
+   "coberturas": [],
+   "orden": 6
+  },
+  {
+   "id": "toppings",
+   "nombre": "Toppings",
+   "descripcion": "Para cubrir cualquier roll.",
+   "imagen": null,
+   "coberturas": [],
+   "orden": 7
+  },
+  {
+   "id": "mas_alla",
+   "nombre": "Más allá del sushi",
+   "descripcion": "Completos, churrascos, chorrillana y más. Pregunta el precio del día por WhatsApp.",
+   "imagen": null,
+   "coberturas": [],
+   "orden": 8
+  }
+ ],
+ "productos": [
+  {
+   "id": "promo-hand3",
+   "categoria_id": "promos",
+   "nombre": "3 handrolls",
+   "descripcion": "Pollo, queso y palta",
+   "precio": 11990,
+   "unidades": null,
+   "piezas": null,
+   "subtipo": null,
+   "opciones": [],
+   "imagen": "img/x-sushi.jpg",
+   "imagen_ajuste": "contain",
+   "admite_cambios": true,
+   "tiene_kanikama": false,
+   "orden": 0,
+   "rolls": []
+  },
+  {
+   "id": "promo-burger2",
+   "categoria_id": "promos",
+   "nombre": "2 sushi burger",
+   "descripcion": "Pollo o camarón, a elección",
+   "precio": 11490,
+   "unidades": null,
+   "piezas": null,
+   "subtipo": null,
+   "opciones": [
+    "Pollo",
+    "Camarón",
+    "Una de cada una"
+   ],
+   "imagen": "img/burger.jpg",
+   "imagen_ajuste": "contain",
+   "admite_cambios": true,
+   "tiene_kanikama": false,
+   "orden": 1,
+   "rolls": []
+  },
+  {
+   "id": "promo-tabla70",
+   "categoria_id": "promos",
+   "nombre": "Tabla 70 piezas mixtas",
+   "descripcion": "Siete variedades, 10 piezas de cada una",
+   "precio": 21990,
+   "unidades": null,
+   "piezas": null,
+   "subtipo": null,
+   "opciones": [],
+   "imagen": "img/tabla-roll.jpg",
+   "imagen_ajuste": "contain",
+   "admite_cambios": true,
+   "tiene_kanikama": true,
+   "orden": 2,
+   "rolls": []
+  },
+  {
+   "id": "promo-completo2",
+   "categoria_id": "promos",
+   "nombre": "2 completos",
+   "descripcion": "Con palta y mayo",
+   "precio": 4000,
+   "unidades": null,
+   "piezas": null,
+   "subtipo": null,
+   "opciones": [],
+   "imagen": "img/completo.jpg",
+   "imagen_ajuste": "cover",
+   "admite_cambios": false,
+   "tiene_kanikama": false,
+   "orden": 3,
+   "rolls": []
+  },
+  {
+   "id": "tabla-mixta-20",
+   "categoria_id": "tablas",
+   "nombre": "Tabla mixta 20 piezas",
+   "descripcion": null,
+   "precio": 9990,
+   "unidades": null,
+   "piezas": 20,
+   "subtipo": "mixta",
+   "opciones": [],
+   "imagen": null,
+   "imagen_ajuste": "contain",
+   "admite_cambios": true,
+   "tiene_kanikama": false,
+   "orden": 0,
+   "rolls": [
+    {
+     "nombre": "Hot pollo",
+     "ingredientes": "pollo, queso, cebollín",
+     "cantidad": 10
+    },
+    {
+     "nombre": "Cheese camarón",
+     "ingredientes": "camarón, palta, cebollín",
+     "cantidad": 10
+    }
+   ]
+  },
+  {
+   "id": "tabla-mixta-30",
+   "categoria_id": "tablas",
+   "nombre": "Tabla mixta 30 piezas",
+   "descripcion": null,
+   "precio": 12990,
+   "unidades": null,
+   "piezas": 30,
+   "subtipo": "mixta",
+   "opciones": [],
+   "imagen": null,
+   "imagen_ajuste": "contain",
+   "admite_cambios": true,
+   "tiene_kanikama": true,
+   "orden": 1,
+   "rolls": [
+    {
+     "nombre": "Hot pollo",
+     "ingredientes": "pollo, queso, cebollín",
+     "cantidad": 10
+    },
+    {
+     "nombre": "Cheese camarón",
+     "ingredientes": "camarón, palta, cebollín",
+     "cantidad": 10
+    },
+    {
+     "nombre": "California kani",
+     "ingredientes": "kanikama, queso, cebollín",
+     "cantidad": 10
+    }
+   ]
+  },
+  {
+   "id": "tabla-mixta-40",
+   "categoria_id": "tablas",
+   "nombre": "Tabla mixta 40 piezas",
+   "descripcion": null,
+   "precio": 14490,
+   "unidades": null,
+   "piezas": 40,
+   "subtipo": "mixta",
+   "opciones": [],
+   "imagen": null,
+   "imagen_ajuste": "contain",
+   "admite_cambios": true,
+   "tiene_kanikama": true,
+   "orden": 2,
+   "rolls": [
+    {
+     "nombre": "Hot pollo",
+     "ingredientes": "pollo, queso, cebollín",
+     "cantidad": 10
+    },
+    {
+     "nombre": "Cheese camarón",
+     "ingredientes": "camarón, palta, cebollín",
+     "cantidad": 10
+    },
+    {
+     "nombre": "California kani",
+     "ingredientes": "kanikama, queso, cebollín",
+     "cantidad": 10
+    },
+    {
+     "nombre": "Hosomaki",
+     "ingredientes": "palta, queso",
+     "cantidad": 10
+    }
+   ]
+  },
+  {
+   "id": "tabla-mixta-50",
+   "categoria_id": "tablas",
+   "nombre": "Tabla mixta 50 piezas",
+   "descripcion": null,
+   "precio": 16990,
+   "unidades": null,
+   "piezas": 50,
+   "subtipo": "mixta",
+   "opciones": [],
+   "imagen": null,
+   "imagen_ajuste": "contain",
+   "admite_cambios": true,
+   "tiene_kanikama": true,
+   "orden": 3,
+   "rolls": [
+    {
+     "nombre": "Hot pollo",
+     "ingredientes": "pollo, queso, cebollín",
+     "cantidad": 10
+    },
+    {
+     "nombre": "Hot camarón",
+     "ingredientes": "camarón, palta, cebollín",
+     "cantidad": 10
+    },
+    {
+     "nombre": "California kani",
+     "ingredientes": "kanikama, queso, cebollín",
+     "cantidad": 10
+    },
+    {
+     "nombre": "Cheese vegetariano",
+     "ingredientes": "morrón, palta, cebollín",
+     "cantidad": 10
+    },
+    {
+     "nombre": "Hosomaki",
+     "ingredientes": "palta, queso",
+     "cantidad": 10
+    }
+   ]
+  },
+  {
+   "id": "tabla-mixta-60",
+   "categoria_id": "tablas",
+   "nombre": "Tabla mixta 60 piezas",
+   "descripcion": null,
+   "precio": 19490,
+   "unidades": null,
+   "piezas": 60,
+   "subtipo": "mixta",
+   "opciones": [],
+   "imagen": null,
+   "imagen_ajuste": "contain",
+   "admite_cambios": true,
+   "tiene_kanikama": true,
+   "orden": 4,
+   "rolls": [
+    {
+     "nombre": "Hot pollo",
+     "ingredientes": "pollo, queso, cebollín",
+     "cantidad": 10
+    },
+    {
+     "nombre": "Hot camarón",
+     "ingredientes": "camarón, palta, cebollín",
+     "cantidad": 10
+    },
+    {
+     "nombre": "California kani",
+     "ingredientes": "kanikama, queso, cebollín",
+     "cantidad": 10
+    },
+    {
+     "nombre": "Cheese",
+     "ingredientes": "morrón, palta, cebollín",
+     "cantidad": 10
+    },
+    {
+     "nombre": "Avocado",
+     "ingredientes": "camarón, queso, cebollín",
+     "cantidad": 10
+    },
+    {
+     "nombre": "Hosomaki",
+     "ingredientes": "palta, queso",
+     "cantidad": 10
+    }
+   ]
+  },
+  {
+   "id": "tabla-mixta-70",
+   "categoria_id": "tablas",
+   "nombre": "Tabla mixta 70 piezas",
+   "descripcion": null,
+   "precio": 21990,
+   "unidades": null,
+   "piezas": 70,
+   "subtipo": "mixta",
+   "opciones": [],
+   "imagen": null,
+   "imagen_ajuste": "contain",
+   "admite_cambios": true,
+   "tiene_kanikama": true,
+   "orden": 5,
+   "rolls": [
+    {
+     "nombre": "Hot pollo",
+     "ingredientes": "pollo, queso, cebollín",
+     "cantidad": 10
+    },
+    {
+     "nombre": "Hot camarón",
+     "ingredientes": "camarón, palta, cebollín",
+     "cantidad": 10
+    },
+    {
+     "nombre": "Tempura",
+     "ingredientes": "pollo, queso, nuez",
+     "cantidad": 10
+    },
+    {
+     "nombre": "California kani",
+     "ingredientes": "kanikama, queso, cebollín",
+     "cantidad": 10
+    },
+    {
+     "nombre": "Cheese",
+     "ingredientes": "morrón, palta, cebollín",
+     "cantidad": 10
+    },
+    {
+     "nombre": "Avocado",
+     "ingredientes": "camarón, queso, cebollín",
+     "cantidad": 10
+    },
+    {
+     "nombre": "Hosomaki",
+     "ingredientes": "palta, queso",
+     "cantidad": 10
+    }
+   ]
+  },
+  {
+   "id": "tabla-mixta-80",
+   "categoria_id": "tablas",
+   "nombre": "Tabla mixta 80 piezas",
+   "descripcion": null,
+   "precio": 24990,
+   "unidades": null,
+   "piezas": 80,
+   "subtipo": "mixta",
+   "opciones": [],
+   "imagen": null,
+   "imagen_ajuste": "contain",
+   "admite_cambios": true,
+   "tiene_kanikama": true,
+   "orden": 6,
+   "rolls": [
+    {
+     "nombre": "Hot pollo",
+     "ingredientes": "pollo, queso, cebollín",
+     "cantidad": 10
+    },
+    {
+     "nombre": "Hot camarón",
+     "ingredientes": "camarón, palta, cebollín",
+     "cantidad": 10
+    },
+    {
+     "nombre": "Tempura",
+     "ingredientes": "pollo, queso, nuez",
+     "cantidad": 10
+    },
+    {
+     "nombre": "California kani",
+     "ingredientes": "kanikama, queso, cebollín",
+     "cantidad": 10
+    },
+    {
+     "nombre": "Cheese",
+     "ingredientes": "morrón, palta, cebollín",
+     "cantidad": 10
+    },
+    {
+     "nombre": "Avocado",
+     "ingredientes": "camarón, queso, cebollín",
+     "cantidad": 10
+    },
+    {
+     "nombre": "Hosomaki",
+     "ingredientes": "palta, queso",
+     "cantidad": 10
+    },
+    {
+     "nombre": "Amapola",
+     "ingredientes": "palmito, queso, palta",
+     "cantidad": 10
+    }
+   ]
+  },
+  {
+   "id": "tabla-hot-20",
+   "categoria_id": "tablas",
+   "nombre": "Tabla hot 20 piezas",
+   "descripcion": null,
+   "precio": 9990,
+   "unidades": null,
+   "piezas": 20,
+   "subtipo": "hot",
+   "opciones": [],
+   "imagen": null,
+   "imagen_ajuste": "contain",
+   "admite_cambios": true,
+   "tiene_kanikama": false,
+   "orden": 7,
+   "rolls": [
+    {
+     "nombre": "Hot",
+     "ingredientes": "pollo, queso, cebollín",
+     "cantidad": 10
+    },
+    {
+     "nombre": "Hot",
+     "ingredientes": "camarón, queso, cebollín",
+     "cantidad": 10
+    }
+   ]
+  },
+  {
+   "id": "tabla-hot-30",
+   "categoria_id": "tablas",
+   "nombre": "Tabla hot 30 piezas",
+   "descripcion": null,
+   "precio": 12990,
+   "unidades": null,
+   "piezas": 30,
+   "subtipo": "hot",
+   "opciones": [],
+   "imagen": null,
+   "imagen_ajuste": "contain",
+   "admite_cambios": true,
+   "tiene_kanikama": true,
+   "orden": 8,
+   "rolls": [
+    {
+     "nombre": "Hot",
+     "ingredientes": "pollo, queso, cebollín",
+     "cantidad": 10
+    },
+    {
+     "nombre": "Hot",
+     "ingredientes": "camarón, queso, cebollín",
+     "cantidad": 10
+    },
+    {
+     "nombre": "Hot",
+     "ingredientes": "kanikama, queso, cebollín",
+     "cantidad": 10
+    }
+   ]
+  },
+  {
+   "id": "tabla-hot-40",
+   "categoria_id": "tablas",
+   "nombre": "Tabla hot 40 piezas",
+   "descripcion": null,
+   "precio": 14990,
+   "unidades": null,
+   "piezas": 40,
+   "subtipo": "hot",
+   "opciones": [],
+   "imagen": null,
+   "imagen_ajuste": "contain",
+   "admite_cambios": true,
+   "tiene_kanikama": true,
+   "orden": 9,
+   "rolls": [
+    {
+     "nombre": "Hot",
+     "ingredientes": "pollo, queso, cebollín",
+     "cantidad": 10
+    },
+    {
+     "nombre": "Hot",
+     "ingredientes": "camarón, queso, cebollín",
+     "cantidad": 10
+    },
+    {
+     "nombre": "Hot",
+     "ingredientes": "kanikama, queso, cebollín",
+     "cantidad": 10
+    },
+    {
+     "nombre": "Hot",
+     "ingredientes": "champiñón, queso, cebollín",
+     "cantidad": 10
+    }
+   ]
+  },
+  {
+   "id": "tabla-hot-50",
+   "categoria_id": "tablas",
+   "nombre": "Tabla hot 50 piezas",
+   "descripcion": null,
+   "precio": 16990,
+   "unidades": null,
+   "piezas": 50,
+   "subtipo": "hot",
+   "opciones": [],
+   "imagen": null,
+   "imagen_ajuste": "contain",
+   "admite_cambios": true,
+   "tiene_kanikama": true,
+   "orden": 10,
+   "rolls": [
+    {
+     "nombre": "Hot",
+     "ingredientes": "pollo, queso, cebollín",
+     "cantidad": 10
+    },
+    {
+     "nombre": "Hot",
+     "ingredientes": "camarón, queso, cebollín",
+     "cantidad": 10
+    },
+    {
+     "nombre": "Hot",
+     "ingredientes": "kanikama, queso, cebollín",
+     "cantidad": 10
+    },
+    {
+     "nombre": "Hot",
+     "ingredientes": "champiñón, queso, cebollín",
+     "cantidad": 10
+    },
+    {
+     "nombre": "Hot",
+     "ingredientes": "salmón, queso, palta",
+     "cantidad": 10
+    }
+   ]
+  },
+  {
+   "id": "tabla-veggie-30",
+   "categoria_id": "tablas",
+   "nombre": "Tabla veggie 30 piezas",
+   "descripcion": null,
+   "precio": 13990,
+   "unidades": null,
+   "piezas": 30,
+   "subtipo": "veggie",
+   "opciones": [],
+   "imagen": null,
+   "imagen_ajuste": "contain",
+   "admite_cambios": true,
+   "tiene_kanikama": false,
+   "orden": 11,
+   "rolls": [
+    {
+     "nombre": "Hot",
+     "ingredientes": "champiñón, queso, cebollín",
+     "cantidad": 10
+    },
+    {
+     "nombre": "California",
+     "ingredientes": "espárrago, queso, morrón",
+     "cantidad": 10
+    },
+    {
+     "nombre": "Avocado",
+     "ingredientes": "palmito, queso, aceituna",
+     "cantidad": 10
+    }
+   ]
+  },
+  {
+   "id": "tabla-vegan-30",
+   "categoria_id": "tablas",
+   "nombre": "Tabla vegan 30 piezas",
+   "descripcion": null,
+   "precio": 13990,
+   "unidades": null,
+   "piezas": 30,
+   "subtipo": "vegan",
+   "opciones": [],
+   "imagen": null,
+   "imagen_ajuste": "contain",
+   "admite_cambios": true,
+   "tiene_kanikama": false,
+   "orden": 12,
+   "rolls": [
+    {
+     "nombre": "California",
+     "ingredientes": "palmito, palta, aceituna",
+     "cantidad": 10
+    },
+    {
+     "nombre": "Nori",
+     "ingredientes": "choclo, palta, cebollín",
+     "cantidad": 10
+    },
+    {
+     "nombre": "Avocado",
+     "ingredientes": "espárrago, morrón, cebollín",
+     "cantidad": 10
+    }
+   ]
+  },
+  {
+   "id": "especial-hot-pollo",
+   "categoria_id": "especiales",
+   "nombre": "Hot pollo",
+   "descripcion": "Pollo y queso cheddar",
+   "precio": 4990,
+   "unidades": null,
+   "piezas": null,
+   "subtipo": null,
+   "opciones": [],
+   "imagen": null,
+   "imagen_ajuste": "contain",
+   "admite_cambios": true,
+   "tiene_kanikama": false,
+   "orden": 0,
+   "rolls": []
+  },
+  {
+   "id": "especial-hot-acevichado",
+   "categoria_id": "especiales",
+   "nombre": "Hot acevichado",
+   "descripcion": "Pollo, queso y cebollín en panko, cubierto de ceviche Megami",
+   "precio": 6990,
+   "unidades": null,
+   "piezas": null,
+   "subtipo": null,
+   "opciones": [],
+   "imagen": null,
+   "imagen_ajuste": "contain",
+   "admite_cambios": true,
+   "tiene_kanikama": false,
+   "orden": 1,
+   "rolls": []
+  },
+  {
+   "id": "especial-hot-pollo-fries",
+   "categoria_id": "especiales",
+   "nombre": "Hot pollo fries",
+   "descripcion": "Pollo, queso y cebollín en tempura, cubierto de papas al hilo",
+   "precio": 6990,
+   "unidades": null,
+   "piezas": null,
+   "subtipo": null,
+   "opciones": [],
+   "imagen": null,
+   "imagen_ajuste": "contain",
+   "admite_cambios": true,
+   "tiene_kanikama": false,
+   "orden": 2,
+   "rolls": []
+  },
+  {
+   "id": "especial-mango-roll",
+   "categoria_id": "especiales",
+   "nombre": "Mango roll",
+   "descripcion": "Camarón furay, queso y palta, envuelto en mango",
+   "precio": 6990,
+   "unidades": null,
+   "piezas": null,
+   "subtipo": null,
+   "opciones": [],
+   "imagen": null,
+   "imagen_ajuste": "contain",
+   "admite_cambios": true,
+   "tiene_kanikama": false,
+   "orden": 3,
+   "rolls": []
+  },
+  {
+   "id": "especial-guacamole-roll",
+   "categoria_id": "especiales",
+   "nombre": "Guacamole roll",
+   "descripcion": "Pollo, queso y cebollín, cubierto de guacamole",
+   "precio": 6990,
+   "unidades": null,
+   "piezas": null,
+   "subtipo": null,
+   "opciones": [],
+   "imagen": null,
+   "imagen_ajuste": "contain",
+   "admite_cambios": true,
+   "tiene_kanikama": false,
+   "orden": 4,
+   "rolls": []
+  },
+  {
+   "id": "especial-avocado-acevichado",
+   "categoria_id": "especiales",
+   "nombre": "Avocado acevichado",
+   "descripcion": "Camarón furay, queso y cebollín envuelto en palta, cubierto de ceviche Megami",
+   "precio": 7990,
+   "unidades": null,
+   "piezas": null,
+   "subtipo": null,
+   "opciones": [],
+   "imagen": null,
+   "imagen_ajuste": "contain",
+   "admite_cambios": true,
+   "tiene_kanikama": false,
+   "orden": 5,
+   "rolls": []
+  },
+  {
+   "id": "especial-hot-fusion-roll",
+   "categoria_id": "especiales",
+   "nombre": "Hot fusion roll",
+   "descripcion": "Atún, salmón, camarón, queso y palta, envuelto en nori tempura",
+   "precio": 7990,
+   "unidades": null,
+   "piezas": null,
+   "subtipo": null,
+   "opciones": [],
+   "imagen": null,
+   "imagen_ajuste": "contain",
+   "admite_cambios": true,
+   "tiene_kanikama": false,
+   "orden": 6,
+   "rolls": []
+  },
+  {
+   "id": "handroll-pollo",
+   "categoria_id": "handrolls",
+   "nombre": "Handroll pollo",
+   "descripcion": null,
+   "precio": 4590,
+   "unidades": null,
+   "piezas": null,
+   "subtipo": null,
+   "opciones": [],
+   "imagen": null,
+   "imagen_ajuste": "contain",
+   "admite_cambios": true,
+   "tiene_kanikama": false,
+   "orden": 0,
+   "rolls": []
+  },
+  {
+   "id": "handroll-camaron",
+   "categoria_id": "handrolls",
+   "nombre": "Handroll camarón",
+   "descripcion": null,
+   "precio": 4890,
+   "unidades": null,
+   "piezas": null,
+   "subtipo": null,
+   "opciones": [],
+   "imagen": null,
+   "imagen_ajuste": "contain",
+   "admite_cambios": true,
+   "tiene_kanikama": false,
+   "orden": 1,
+   "rolls": []
+  },
+  {
+   "id": "handroll-camaron-furay",
+   "categoria_id": "handrolls",
+   "nombre": "Handroll camarón furay",
+   "descripcion": null,
+   "precio": 5290,
+   "unidades": null,
+   "piezas": null,
+   "subtipo": null,
+   "opciones": [],
+   "imagen": null,
+   "imagen_ajuste": "contain",
+   "admite_cambios": true,
+   "tiene_kanikama": false,
+   "orden": 2,
+   "rolls": []
+  },
+  {
+   "id": "handroll-salmon",
+   "categoria_id": "handrolls",
+   "nombre": "Handroll salmón",
+   "descripcion": null,
+   "precio": 4990,
+   "unidades": null,
+   "piezas": null,
+   "subtipo": null,
+   "opciones": [],
+   "imagen": null,
+   "imagen_ajuste": "contain",
+   "admite_cambios": true,
+   "tiene_kanikama": false,
+   "orden": 3,
+   "rolls": []
+  },
+  {
+   "id": "handroll-salmon-ahumado",
+   "categoria_id": "handrolls",
+   "nombre": "Handroll salmón ahumado",
+   "descripcion": null,
+   "precio": 4990,
+   "unidades": null,
+   "piezas": null,
+   "subtipo": null,
+   "opciones": [],
+   "imagen": null,
+   "imagen_ajuste": "contain",
+   "admite_cambios": true,
+   "tiene_kanikama": false,
+   "orden": 4,
+   "rolls": []
+  },
+  {
+   "id": "handroll-salmon-furay",
+   "categoria_id": "handrolls",
+   "nombre": "Handroll salmón furay",
+   "descripcion": null,
+   "precio": 5490,
+   "unidades": null,
+   "piezas": null,
+   "subtipo": null,
+   "opciones": [],
+   "imagen": null,
+   "imagen_ajuste": "contain",
+   "admite_cambios": true,
+   "tiene_kanikama": false,
+   "orden": 5,
+   "rolls": []
+  },
+  {
+   "id": "handroll-kanikama",
+   "categoria_id": "handrolls",
+   "nombre": "Handroll kanikama",
+   "descripcion": null,
+   "precio": 4590,
+   "unidades": null,
+   "piezas": null,
+   "subtipo": null,
+   "opciones": [],
+   "imagen": null,
+   "imagen_ajuste": "contain",
+   "admite_cambios": true,
+   "tiene_kanikama": false,
+   "orden": 6,
+   "rolls": []
+  },
+  {
+   "id": "handroll-champinon",
+   "categoria_id": "handrolls",
+   "nombre": "Handroll champiñón",
+   "descripcion": null,
+   "precio": 4590,
+   "unidades": null,
+   "piezas": null,
+   "subtipo": null,
+   "opciones": [],
+   "imagen": null,
+   "imagen_ajuste": "contain",
+   "admite_cambios": true,
+   "tiene_kanikama": false,
+   "orden": 7,
+   "rolls": []
+  },
+  {
+   "id": "handroll-atun",
+   "categoria_id": "handrolls",
+   "nombre": "Handroll atún",
+   "descripcion": null,
+   "precio": 5990,
+   "unidades": null,
+   "piezas": null,
+   "subtipo": null,
+   "opciones": [],
+   "imagen": null,
+   "imagen_ajuste": "contain",
+   "admite_cambios": true,
+   "tiene_kanikama": false,
+   "orden": 8,
+   "rolls": []
+  },
+  {
+   "id": "gohan-pollo-furay",
+   "categoria_id": "gohan",
+   "nombre": "Gohan pollo furay",
+   "descripcion": null,
+   "precio": 5490,
+   "unidades": null,
+   "piezas": null,
+   "subtipo": null,
+   "opciones": [],
+   "imagen": null,
+   "imagen_ajuste": "contain",
+   "admite_cambios": true,
+   "tiene_kanikama": false,
+   "orden": 0,
+   "rolls": []
+  },
+  {
+   "id": "gohan-camaron-furay",
+   "categoria_id": "gohan",
+   "nombre": "Gohan camarón furay",
+   "descripcion": null,
+   "precio": 5490,
+   "unidades": null,
+   "piezas": null,
+   "subtipo": null,
+   "opciones": [],
+   "imagen": null,
+   "imagen_ajuste": "contain",
+   "admite_cambios": true,
+   "tiene_kanikama": false,
+   "orden": 1,
+   "rolls": []
+  },
+  {
+   "id": "gohan-champinon",
+   "categoria_id": "gohan",
+   "nombre": "Gohan champiñón",
+   "descripcion": null,
+   "precio": 5490,
+   "unidades": null,
+   "piezas": null,
+   "subtipo": null,
+   "opciones": [],
+   "imagen": null,
+   "imagen_ajuste": "contain",
+   "admite_cambios": true,
+   "tiene_kanikama": false,
+   "orden": 2,
+   "rolls": []
+  },
+  {
+   "id": "gohan-salmon",
+   "categoria_id": "gohan",
+   "nombre": "Gohan salmón",
+   "descripcion": null,
+   "precio": 5990,
+   "unidades": null,
+   "piezas": null,
+   "subtipo": null,
+   "opciones": [],
+   "imagen": null,
+   "imagen_ajuste": "contain",
+   "admite_cambios": true,
+   "tiene_kanikama": false,
+   "orden": 3,
+   "rolls": []
+  },
+  {
+   "id": "gohan-mixto",
+   "categoria_id": "gohan",
+   "nombre": "Gohan mixto",
+   "descripcion": null,
+   "precio": 5990,
+   "unidades": null,
+   "piezas": null,
+   "subtipo": null,
+   "opciones": [],
+   "imagen": null,
+   "imagen_ajuste": "contain",
+   "admite_cambios": true,
+   "tiene_kanikama": false,
+   "orden": 4,
+   "rolls": []
+  },
+  {
+   "id": "sushi-burger-pollo",
+   "categoria_id": "burger",
+   "nombre": "Sushi burger pollo",
+   "descripcion": null,
+   "precio": 5990,
+   "unidades": null,
+   "piezas": null,
+   "subtipo": null,
+   "opciones": [],
+   "imagen": null,
+   "imagen_ajuste": "contain",
+   "admite_cambios": true,
+   "tiene_kanikama": false,
+   "orden": 0,
+   "rolls": []
+  },
+  {
+   "id": "sushi-burger-camaron",
+   "categoria_id": "burger",
+   "nombre": "Sushi burger camarón",
+   "descripcion": null,
+   "precio": 5990,
+   "unidades": null,
+   "piezas": null,
+   "subtipo": null,
+   "opciones": [],
+   "imagen": null,
+   "imagen_ajuste": "contain",
+   "admite_cambios": true,
+   "tiene_kanikama": false,
+   "orden": 1,
+   "rolls": []
+  },
+  {
+   "id": "sushi-burger-champinon",
+   "categoria_id": "burger",
+   "nombre": "Sushi burger champiñón",
+   "descripcion": null,
+   "precio": 5990,
+   "unidades": null,
+   "piezas": null,
+   "subtipo": null,
+   "opciones": [],
+   "imagen": null,
+   "imagen_ajuste": "contain",
+   "admite_cambios": true,
+   "tiene_kanikama": false,
+   "orden": 2,
+   "rolls": []
+  },
+  {
+   "id": "sushi-burger-camaron-furay",
+   "categoria_id": "burger",
+   "nombre": "Sushi burger camarón furay",
+   "descripcion": null,
+   "precio": 6490,
+   "unidades": null,
+   "piezas": null,
+   "subtipo": null,
+   "opciones": [],
+   "imagen": null,
+   "imagen_ajuste": "contain",
+   "admite_cambios": true,
+   "tiene_kanikama": false,
+   "orden": 3,
+   "rolls": []
+  },
+  {
+   "id": "sushi-burger-salmon",
+   "categoria_id": "burger",
+   "nombre": "Sushi burger salmón",
+   "descripcion": null,
+   "precio": 6490,
+   "unidades": null,
+   "piezas": null,
+   "subtipo": null,
+   "opciones": [],
+   "imagen": null,
+   "imagen_ajuste": "contain",
+   "admite_cambios": true,
+   "tiene_kanikama": false,
+   "orden": 4,
+   "rolls": []
+  },
+  {
+   "id": "sushi-burger-salmon-ahumado",
+   "categoria_id": "burger",
+   "nombre": "Sushi burger salmón ahumado",
+   "descripcion": null,
+   "precio": 6990,
+   "unidades": null,
+   "piezas": null,
+   "subtipo": null,
+   "opciones": [],
+   "imagen": null,
+   "imagen_ajuste": "contain",
+   "admite_cambios": true,
+   "tiene_kanikama": false,
+   "orden": 5,
+   "rolls": []
+  },
+  {
+   "id": "sushi-burger-atun",
+   "categoria_id": "burger",
+   "nombre": "Sushi burger atún",
+   "descripcion": null,
+   "precio": 6990,
+   "unidades": null,
+   "piezas": null,
+   "subtipo": null,
+   "opciones": [],
+   "imagen": null,
+   "imagen_ajuste": "contain",
+   "admite_cambios": true,
+   "tiene_kanikama": false,
+   "orden": 6,
+   "rolls": []
+  },
+  {
+   "id": "arrollados",
+   "categoria_id": "picar",
+   "nombre": "Arrollados",
+   "descripcion": null,
+   "precio": 3490,
+   "unidades": 5,
+   "piezas": null,
+   "subtipo": null,
+   "opciones": [
+    "Primavera",
+    "Jamón queso"
+   ],
+   "imagen": "img/arrollados.jpg",
+   "imagen_ajuste": "contain",
+   "admite_cambios": false,
+   "tiene_kanikama": false,
+   "orden": 0,
+   "rolls": []
+  },
+  {
+   "id": "korokes",
+   "categoria_id": "picar",
+   "nombre": "Korokes",
+   "descripcion": null,
+   "precio": 4490,
+   "unidades": 6,
+   "piezas": null,
+   "subtipo": null,
+   "opciones": [
+    "Pollo",
+    "Camarón",
+    "Champiñón",
+    "Palmito"
+   ],
+   "imagen": "img/korokes.jpg",
+   "imagen_ajuste": "contain",
+   "admite_cambios": false,
+   "tiene_kanikama": false,
+   "orden": 1,
+   "rolls": []
+  },
+  {
+   "id": "gyozas",
+   "categoria_id": "picar",
+   "nombre": "Gyozas",
+   "descripcion": null,
+   "precio": 3490,
+   "unidades": 5,
+   "piezas": null,
+   "subtipo": null,
+   "opciones": [
+    "Pollo",
+    "Camarón",
+    "Vegetariana",
+    "Cerdo"
+   ],
+   "imagen": "img/gyozas.jpg",
+   "imagen_ajuste": "contain",
+   "admite_cambios": false,
+   "tiene_kanikama": false,
+   "orden": 2,
+   "rolls": []
+  },
+  {
+   "id": "nigiri",
+   "categoria_id": "picar",
+   "nombre": "Nigiri",
+   "descripcion": null,
+   "precio": 3990,
+   "unidades": 3,
+   "piezas": null,
+   "subtipo": null,
+   "opciones": [
+    "Camarón",
+    "Salmón",
+    "Atún"
+   ],
+   "imagen": "img/nigiri.jpg",
+   "imagen_ajuste": "contain",
+   "admite_cambios": false,
+   "tiene_kanikama": false,
+   "orden": 3,
+   "rolls": []
+  },
+  {
+   "id": "furay",
+   "categoria_id": "picar",
+   "nombre": "Furay",
+   "descripcion": null,
+   "precio": 3990,
+   "unidades": 5,
+   "piezas": null,
+   "subtipo": null,
+   "opciones": [
+    "Camarón",
+    "Salmón",
+    "Pollo"
+   ],
+   "imagen": "img/furay.jpg",
+   "imagen_ajuste": "contain",
+   "admite_cambios": false,
+   "tiene_kanikama": false,
+   "orden": 4,
+   "rolls": []
+  },
+  {
+   "id": "sashimi",
+   "categoria_id": "picar",
+   "nombre": "Sashimi",
+   "descripcion": null,
+   "precio": 4990,
+   "unidades": 5,
+   "piezas": null,
+   "subtipo": null,
+   "opciones": [
+    "Camarón",
+    "Salmón",
+    "Atún"
+   ],
+   "imagen": "img/sashimi.jpg",
+   "imagen_ajuste": "contain",
+   "admite_cambios": false,
+   "tiene_kanikama": false,
+   "orden": 5,
+   "rolls": []
+  },
+  {
+   "id": "topping-papas-al-hilo",
+   "categoria_id": "toppings",
+   "nombre": "Papas al hilo",
+   "descripcion": null,
+   "precio": 1990,
+   "unidades": null,
+   "piezas": null,
+   "subtipo": null,
+   "opciones": [],
+   "imagen": null,
+   "imagen_ajuste": "contain",
+   "admite_cambios": false,
+   "tiene_kanikama": false,
+   "orden": 0,
+   "rolls": []
+  },
+  {
+   "id": "topping-mousse-de-palta",
+   "categoria_id": "toppings",
+   "nombre": "Mousse de palta",
+   "descripcion": null,
+   "precio": 2490,
+   "unidades": null,
+   "piezas": null,
+   "subtipo": null,
+   "opciones": [],
+   "imagen": null,
+   "imagen_ajuste": "contain",
+   "admite_cambios": false,
+   "tiene_kanikama": false,
+   "orden": 1,
+   "rolls": []
+  },
+  {
+   "id": "topping-guacamole",
+   "categoria_id": "toppings",
+   "nombre": "Guacamole",
+   "descripcion": null,
+   "precio": 2990,
+   "unidades": null,
+   "piezas": null,
+   "subtipo": null,
+   "opciones": [],
+   "imagen": null,
+   "imagen_ajuste": "contain",
+   "admite_cambios": false,
+   "tiene_kanikama": false,
+   "orden": 2,
+   "rolls": []
+  },
+  {
+   "id": "topping-acevichado",
+   "categoria_id": "toppings",
+   "nombre": "Acevichado",
+   "descripcion": null,
+   "precio": 3490,
+   "unidades": null,
+   "piezas": null,
+   "subtipo": null,
+   "opciones": [],
+   "imagen": null,
+   "imagen_ajuste": "contain",
+   "admite_cambios": false,
+   "tiene_kanikama": false,
+   "orden": 3,
+   "rolls": []
+  },
+  {
+   "id": "mas-completos",
+   "categoria_id": "mas_alla",
+   "nombre": "Completos",
+   "descripcion": null,
+   "precio": null,
+   "unidades": null,
+   "piezas": null,
+   "subtipo": null,
+   "opciones": [],
+   "imagen": "img/x-completos.jpg",
+   "imagen_ajuste": "cover",
+   "admite_cambios": false,
+   "tiene_kanikama": false,
+   "orden": 0,
+   "rolls": []
+  },
+  {
+   "id": "mas-hamburguesas",
+   "categoria_id": "mas_alla",
+   "nombre": "Hamburguesas",
+   "descripcion": null,
+   "precio": null,
+   "unidades": null,
+   "piezas": null,
+   "subtipo": null,
+   "opciones": [],
+   "imagen": "img/x-hamburguesa.jpg",
+   "imagen_ajuste": "cover",
+   "admite_cambios": false,
+   "tiene_kanikama": false,
+   "orden": 1,
+   "rolls": []
+  },
+  {
+   "id": "mas-churrascos",
+   "categoria_id": "mas_alla",
+   "nombre": "Churrascos",
+   "descripcion": null,
+   "precio": null,
+   "unidades": null,
+   "piezas": null,
+   "subtipo": null,
+   "opciones": [],
+   "imagen": "img/x-churrascos.jpg",
+   "imagen_ajuste": "cover",
+   "admite_cambios": false,
+   "tiene_kanikama": false,
+   "orden": 2,
+   "rolls": []
+  },
+  {
+   "id": "mas-chorrillana",
+   "categoria_id": "mas_alla",
+   "nombre": "Chorrillana",
+   "descripcion": null,
+   "precio": null,
+   "unidades": null,
+   "piezas": null,
+   "subtipo": null,
+   "opciones": [],
+   "imagen": "img/x-chorrillana.jpg",
+   "imagen_ajuste": "cover",
+   "admite_cambios": false,
+   "tiene_kanikama": false,
+   "orden": 3,
+   "rolls": []
+  },
+  {
+   "id": "mas-papas-fritas",
+   "categoria_id": "mas_alla",
+   "nombre": "Papas fritas",
+   "descripcion": null,
+   "precio": null,
+   "unidades": null,
+   "piezas": null,
+   "subtipo": null,
+   "opciones": [],
+   "imagen": "img/x-papas.jpg",
+   "imagen_ajuste": "cover",
+   "admite_cambios": false,
+   "tiene_kanikama": false,
+   "orden": 4,
+   "rolls": []
+  },
+  {
+   "id": "mas-empanadas",
+   "categoria_id": "mas_alla",
+   "nombre": "Empanadas",
+   "descripcion": null,
+   "precio": null,
+   "unidades": null,
+   "piezas": null,
+   "subtipo": null,
+   "opciones": [],
+   "imagen": "img/x-empanadas.jpg",
+   "imagen_ajuste": "cover",
+   "admite_cambios": false,
+   "tiene_kanikama": false,
+   "orden": 5,
+   "rolls": []
+  },
+  {
+   "id": "mas-fajitas",
+   "categoria_id": "mas_alla",
+   "nombre": "Fajitas",
+   "descripcion": null,
+   "precio": null,
+   "unidades": null,
+   "piezas": null,
+   "subtipo": null,
+   "opciones": [],
+   "imagen": "img/x-fajitas.jpg",
+   "imagen_ajuste": "cover",
+   "admite_cambios": false,
+   "tiene_kanikama": false,
+   "orden": 6,
+   "rolls": []
+  }
+ ],
+ "cambios": [
+  {
+   "id": "veg-prot",
+   "etiqueta": "Vegetal a proteína",
+   "precio": 1500,
+   "orden": 0
+  },
+  {
+   "id": "kani-prot",
+   "etiqueta": "Kanikama a proteína",
+   "precio": 1500,
+   "orden": 1
+  },
+  {
+   "id": "prot-prot",
+   "etiqueta": "Proteína a otra proteína",
+   "precio": 1500,
+   "orden": 2
+  },
+  {
+   "id": "veg-palta",
+   "etiqueta": "Vegetal a palta o champiñón",
+   "precio": 1500,
+   "orden": 3
+  },
+  {
+   "id": "sin-nori",
+   "etiqueta": "Sin nori",
+   "precio": 1000,
+   "orden": 4
+  },
+  {
+   "id": "cobertura",
+   "etiqueta": "Cambio de cobertura",
+   "precio": 1000,
+   "orden": 5
+  },
+  {
+   "id": "veg-veg",
+   "etiqueta": "Vegetal por otro vegetal",
+   "precio": 0,
+   "orden": 6
+  }
+ ],
+ "proteinas": [
+  "Pollo",
+  "Camarón",
+  "Camarón furay",
+  "Salmón",
+  "Salmón ahumado",
+  "Atún"
+ ],
+ "armador": {
+  "coberturas": [
+   {
+    "nombre": "Panko",
+    "modo": "con_arroz",
+    "especial": false,
+    "precio": null,
+    "orden": 0
+   },
+   {
+    "nombre": "Tempura",
+    "modo": "con_arroz",
+    "especial": false,
+    "precio": null,
+    "orden": 1
+   },
+   {
+    "nombre": "Sésamo",
+    "modo": "con_arroz",
+    "especial": false,
+    "precio": null,
+    "orden": 2
+   },
+   {
+    "nombre": "Nori",
+    "modo": "con_arroz",
+    "especial": false,
+    "precio": null,
+    "orden": 3
+   },
+   {
+    "nombre": "Amapola",
+    "modo": "con_arroz",
+    "especial": false,
+    "precio": null,
+    "orden": 4
+   },
+   {
+    "nombre": "Envuelto en palta",
+    "modo": "con_arroz",
+    "especial": true,
+    "precio": 5590,
+    "orden": 5
+   },
+   {
+    "nombre": "Envuelto en queso",
+    "modo": "con_arroz",
+    "especial": true,
+    "precio": 5590,
+    "orden": 6
+   },
+   {
+    "nombre": "Envuelto en palta y queso",
+    "modo": "con_arroz",
+    "especial": true,
+    "precio": 5990,
+    "orden": 7
+   },
+   {
+    "nombre": "Envuelto en queso y nuez",
+    "modo": "con_arroz",
+    "especial": true,
+    "precio": 5790,
+    "orden": 8
+   },
+   {
+    "nombre": "Envuelto en queso y almendra",
+    "modo": "con_arroz",
+    "especial": true,
+    "precio": 5790,
+    "orden": 9
+   },
+   {
+    "nombre": "Envuelto en salmón",
+    "modo": "con_arroz",
+    "especial": true,
+    "precio": 6490,
+    "orden": 10
+   },
+   {
+    "nombre": "Envuelto en salmón ahumado",
+    "modo": "con_arroz",
+    "especial": true,
+    "precio": 6490,
+    "orden": 11
+   },
+   {
+    "nombre": "Panko",
+    "modo": "sin_arroz",
+    "especial": false,
+    "precio": null,
+    "orden": 12
+   },
+   {
+    "nombre": "Nori",
+    "modo": "sin_arroz",
+    "especial": false,
+    "precio": null,
+    "orden": 13
+   },
+   {
+    "nombre": "Palta",
+    "modo": "sin_arroz",
+    "especial": false,
+    "precio": null,
+    "orden": 14
+   },
+   {
+    "nombre": "Queso",
+    "modo": "sin_arroz",
+    "especial": false,
+    "precio": null,
+    "orden": 15
+   }
+  ],
+  "bases": [
+   {
+    "nombre": "Pollo teriyaki",
+    "precio": 4990,
+    "orden": 0
+   },
+   {
+    "nombre": "Camarón",
+    "precio": 4990,
+    "orden": 1
+   },
+   {
+    "nombre": "Camarón furay",
+    "precio": 5490,
+    "orden": 2
+   },
+   {
+    "nombre": "Salmón",
+    "precio": 5490,
+    "orden": 3
+   },
+   {
+    "nombre": "Salmón ahumado",
+    "precio": 5490,
+    "orden": 4
+   },
+   {
+    "nombre": "Kanikama",
+    "precio": 4490,
+    "orden": 5
+   },
+   {
+    "nombre": "Champiñón",
+    "precio": 4490,
+    "orden": 6
+   }
+  ],
+  "ingredientes": [
+   {
+    "nombre": "Aceituna",
+    "tipo": "vegetal",
+    "orden": 0
+   },
+   {
+    "nombre": "Espárrago",
+    "tipo": "vegetal",
+    "orden": 1
+   },
+   {
+    "nombre": "Cebollín",
+    "tipo": "vegetal",
+    "orden": 2
+   },
+   {
+    "nombre": "Choclo",
+    "tipo": "vegetal",
+    "orden": 3
+   },
+   {
+    "nombre": "Nuez",
+    "tipo": "otro",
+    "orden": 4
+   },
+   {
+    "nombre": "Queso crema",
+    "tipo": "otro",
+    "orden": 5
+   },
+   {
+    "nombre": "Palta",
+    "tipo": "premium",
+    "orden": 6
+   },
+   {
+    "nombre": "Palmito",
+    "tipo": "vegetal",
+    "orden": 7
+   },
+   {
+    "nombre": "Champiñón",
+    "tipo": "premium",
+    "orden": 8
+   },
+   {
+    "nombre": "Morrón",
+    "tipo": "vegetal",
+    "orden": 9
+   },
+   {
+    "nombre": "Ají verde",
+    "tipo": "vegetal",
+    "orden": 10
+   },
+   {
+    "nombre": "Ciboulette",
+    "tipo": "vegetal",
+    "orden": 11
+   },
+   {
+    "nombre": "Cebolla morada",
+    "tipo": "vegetal",
+    "orden": 12
+   }
+  ]
+ },
+ "config": {
+  "sin_arroz_precio": 6490,
+  "propuesta_kanikama": {
+   "proteina": "Pollo",
+   "precio": 0
+  }
+ }
+}
