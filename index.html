@@ -287,7 +287,7 @@ footer.site img { height: 40px; width: auto; }
 .checkout .btn { width: 100%; }
 .checkout .ph { font-size: 12px; color: var(--muted); text-align: center; }
 
-.toast { position: fixed; left: 50%; bottom: 88px; transform: translate(-50%, 20px); opacity: 0; background: var(--rice); color: var(--ink); padding: 10px 18px; border-radius: 999px; font-weight: 700; font-size: 14px; z-index: 70; pointer-events: none; transition: opacity .2s, transform .2s; }
+.toast { max-width: calc(100% - 32px); text-align: center; position: fixed; left: 50%; bottom: 88px; transform: translate(-50%, 20px); opacity: 0; background: var(--rice); color: var(--ink); padding: 10px 18px; border-radius: 999px; font-weight: 700; font-size: 14px; z-index: 70; pointer-events: none; transition: opacity .2s, transform .2s; }
 .toast.show { opacity: 1; transform: translate(-50%, 0); }
 </style>
 </head>
@@ -569,7 +569,7 @@ function addToCart(name, detail, price, opts = {}) {
 
 
 let tTimer;
-function toast(msg) { const t = $("#toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(tTimer); tTimer = setTimeout(() => t.classList.remove("show"), 1800); }
+function toast(msg, ms = 1800) { const t = $("#toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(tTimer); tTimer = setTimeout(() => t.classList.remove("show"), ms); }
 
 /* ---------- Cambio de kanikama en tablas y promos ---------- */
 const KANI = CAMBIOS.find(c => c.id === "kani-prot");
@@ -845,7 +845,11 @@ document.querySelectorAll("[data-ship]").forEach(b => b.onclick = () => {
 function shipNote() { $("#shipNote").textContent = ship === "delivery" ? "El despacho se cobra aparte según tu sector. Te lo confirmamos por WhatsApp." : "Retiro sin costo en Av. Alemania #6762."; }
 document.querySelectorAll("[data-ship]").forEach(x => x.setAttribute("aria-pressed", x.dataset.ship === ship));
 $("#addr").hidden = ship !== "delivery"; shipNote();
-["#addr", "#cname", "#cnote"].forEach(s => $(s).addEventListener("input", updateWa));
+// Datos del cliente: se guardan solo durante esta sesión del navegador.
+["#addr", "#cname", "#cnote"].forEach(s => {
+  try { const v = sessionStorage.getItem("megami-" + s.slice(1)); if (v) $(s).value = v; } catch (e) {}
+  $(s).addEventListener("input", () => { try { sessionStorage.setItem("megami-" + s.slice(1), $(s).value); } catch (e) {} updateWa(); });
+});
 
 function openDrawer() { $("#drawer").hidden = false; $("#drawerBg").hidden = false; renderCart(); $("#closeCart").focus(); }
 function closeDrawer() { $("#drawer").hidden = true; $("#drawerBg").hidden = true; openForm = null; renderCart(); }
@@ -854,7 +858,10 @@ $("#resetCart").onclick = e => {
   const b = e.currentTarget;
   if (!resetArmed) { b.textContent = "¿Seguro? Toca de nuevo"; resetArmed = setTimeout(() => { resetArmed = null; b.textContent = "Vaciar pedido"; }, 3000); return; }
   clearTimeout(resetArmed); resetArmed = null; b.textContent = "Vaciar pedido";
-  cart = []; openForm = null; save(); renderCart(); toast("Pedido vacío, puedes armarlo de nuevo");
+  cart = []; openForm = null; save(); closeDrawer();
+  $("#promos").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+  const datos = ["#cname", "#addr", "#cnote"].some(s => $(s).value.trim());
+  toast(datos ? "Pedido vacío. Arma uno nuevo: tus datos quedaron guardados." : "Pedido vacío. Puedes armar uno nuevo.", 4500);
 };
 $("#openCart").onclick = openDrawer; $("#openCart2").onclick = openDrawer;
 $("#closeCart").onclick = closeDrawer; $("#drawerBg").onclick = closeDrawer;
