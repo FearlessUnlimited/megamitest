@@ -817,6 +817,7 @@ function updateWa() {
   lines.push(ship === "delivery" ? `Entrega: delivery${addr ? " a " + addr : ""}` : "Entrega: retiro en el local");
   if (nm) lines.push(`Nombre: ${nm}`);
   if (note) lines.push(`Nota: ${note}`);
+  lines.push("", "*PEDIDO DE PRUEBA: NO ES REAL. Enviado desde la maqueta de la landing, no preparar.*");
   $("#sendWa").href = `https://wa.me/${WA}?text=${encodeURIComponent(lines.join("\n"))}`;
   $("#sendWa").setAttribute("aria-disabled", cart.length ? "false" : "true");
   $("#sendWa").style.opacity = cart.length ? "" : ".45";
