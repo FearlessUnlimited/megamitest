@@ -892,7 +892,7 @@ const io = new IntersectionObserver(es => es.forEach(e => {
   if (!e.isIntersecting) return;
   links.forEach(a => a.classList.toggle("on", a.getAttribute("href") === "#" + e.target.id));
   const on = links.find(a => a.classList.contains("on"));
-  if (on) nav.scrollTo({ left: on.offsetLeft - 16, behavior: "smooth" });
+  if (on) nav.scrollTo({ left: on.offsetLeft - nav.offsetLeft - 16, behavior: "smooth" });
 }), { rootMargin: "-40% 0px -55% 0px" });
 [...CATS.map(c => document.getElementById(c.id)), $("#armador"), $("#cambios"), $("#mas"), $("#despacho")].forEach(s => s && io.observe(s));
 </script>
