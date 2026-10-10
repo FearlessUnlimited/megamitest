@@ -1,3 +1,9 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Carta completa de Megami Sushi, Valparaíso. Arma tu pedido y envíalo por WhatsApp.">
 <title>Megami Sushi Valparaíso</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -23,7 +29,10 @@
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; scroll-padding-top: 128px; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; animation: none !important; } }
-body { background: var(--ink); color: var(--rice); font-family: var(--body); font-size: 16px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+html { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+body { margin: 0; background: var(--ink); color: var(--rice); font-family: var(--body); font-size: 16px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
 h1, h2, h3 { font-family: var(--display); font-weight: 400; line-height: 1.1; text-wrap: balance; margin: 0; }
 p { margin: 0; }
 a { color: inherit; }
@@ -273,6 +282,8 @@ footer.site img { height: 40px; width: auto; }
 .toast { position: fixed; left: 50%; bottom: 88px; transform: translate(-50%, 20px); opacity: 0; background: var(--rice); color: var(--ink); padding: 10px 18px; border-radius: 999px; font-weight: 700; font-size: 14px; z-index: 70; pointer-events: none; transition: opacity .2s, transform .2s; }
 .toast.show { opacity: 1; transform: translate(-50%, 0); }
 </style>
+</head>
+<body>
 
 <div class="pitch"><div class="wrap"><span>Propuesta de Fearless para Megami Sushi.</span><a href="propuesta.html">Ver qué hicimos y por qué →</a></div></div>
 
@@ -885,3 +896,5 @@ const io = new IntersectionObserver(es => es.forEach(e => {
 }), { rootMargin: "-40% 0px -55% 0px" });
 [...CATS.map(c => document.getElementById(c.id)), $("#armador"), $("#cambios"), $("#mas"), $("#despacho")].forEach(s => s && io.observe(s));
 </script>
+</body>
+</html>
