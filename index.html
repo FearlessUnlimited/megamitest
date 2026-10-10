@@ -296,6 +296,8 @@ footer.site img { height: 40px; width: auto; }
 .target select { width: 100%; }
 .target.missing select { border-color: var(--shu-hi); }
 .target.missing span { color: var(--shu-hi); font-weight: 700; }
+.sin { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.sin .chip { padding: 3px 10px; font-size: 12px; }
 .chg { display: flex; justify-content: space-between; gap: 8px; font-size: 13px; background: var(--ink); border-radius: 8px; padding: 6px 10px; }
 .chg button { border: 0; background: none; color: var(--muted); cursor: pointer; }
 .chgform { display: grid; gap: 8px; background: var(--ink); border-radius: 10px; padding: 10px; }
@@ -538,7 +540,7 @@ async function fetchCarta() {
 
 function adaptCarta(d) {
   const de = id => d.productos.filter(p => p.categoria_id === id);
-  PROMOS = de("promos").map(p => ({ id: p.id, name: p.nombre, desc: p.descripcion || "", price: p.precio, img: p.imagen, cover: p.imagen_ajuste === "cover", noChanges: !p.admite_cambios, kani: p.tiene_kanikama, opts: p.opciones.length ? p.opciones : null, picks: p.elecciones }));
+  PROMOS = de("promos").map(p => ({ id: p.id, name: p.nombre, desc: p.descripcion || "", price: p.precio, img: p.imagen, cover: p.imagen_ajuste === "cover", noChanges: !p.admite_cambios, kani: p.tiene_kanikama, opts: p.opciones.length ? p.opciones : null, picks: p.elecciones, sin: p.quitables }));
   const tabla = p => ({ title: p.nombre, n: p.piezas, price: p.precio, kani: p.tiene_kanikama, name: p.subtipo === "veggie" || p.subtipo === "vegan" ? p.subtipo : "", rolls: p.rolls.map(r => [r.nombre, r.ingredientes]) });
   const tablas = de("tablas");
   TABLAS = {
@@ -548,7 +550,7 @@ function adaptCarta(d) {
   };
   ESPECIALES = de("especiales").map(p => [p.nombre, p.descripcion || "", p.precio]);
   const listas = ["handrolls", "gohan", "burger", "toppings"];
-  CATS = d.categorias.filter(c => !["promos", "mas_alla", "bebestibles"].includes(c.id)).map(c => ({ id: c.id, name: c.nombre, desc: c.descripcion, img: c.imagen, cover: c.coberturas.length ? c.coberturas : null, items: listas.includes(c.id) ? de(c.id).map(p => [p.nombre, p.precio]) : undefined }));
+  CATS = d.categorias.filter(c => !["promos", "mas_alla", "bebestibles"].includes(c.id)).map(c => ({ id: c.id, name: c.nombre, desc: c.descripcion, img: c.imagen, cover: c.coberturas.length ? c.coberturas : null, items: listas.includes(c.id) ? de(c.id).map(p => [p.nombre, p.precio, p.quitables]) : undefined }));
   PICAR = de("picar").map(p => ({ name: p.nombre, u: p.unidades, price: p.precio, img: p.imagen, opts: p.opciones }));
   CAMBIOS = d.cambios.map(c => ({ id: c.id, label: c.etiqueta, price: c.precio }));
   MORE = de("mas_alla").map(p => [p.nombre, p.imagen]);
@@ -591,7 +593,7 @@ function addToCart(name, detail, price, opts = {}) {
   const own = changes.length || opts.topping;
   const ex = !own && cart.find(l => l.key === key && !(l.changes || []).length);
   if (ex) ex.qty++;
-  else cart.push({ key: key + (own ? "|" + Date.now() + Math.random() : ""), name, detail: detail || "", price, qty: 1, changes, noChanges: !!opts.noChanges, rolls: opts.rolls || null, topping: !!opts.topping, target: "" });
+  else cart.push({ key: key + (own ? "|" + Date.now() + Math.random() : ""), name, detail: detail || "", price, qty: 1, changes, noChanges: !!opts.noChanges, rolls: opts.rolls || null, topping: !!opts.topping, target: "", quitables: opts.quitables || [], sin: [] });
   save(); renderCart();
   toast(opts.topping ? name + " agregado. Indica en qué roll va, en tu pedido." : name + " agregado al pedido", opts.topping ? 3500 : 1800);
 }
@@ -638,7 +640,7 @@ PROMOS.forEach(p => {
       <div class="row foot"><span class="price num">${clp(p.price)}</span><button class="add" type="button" aria-label="Agregar ${esc(p.name)}">+</button></div>
     </div>`);
   wireKani(card, p.price);
-  card.querySelector(".add").onclick = () => addToCart(p.name, p.opts ? pickDetail([...card.querySelectorAll("[data-pick]")].map(s => s.value)) : p.desc, p.price, { noChanges: p.noChanges, changes: kaniChanges(card) });
+  card.querySelector(".add").onclick = () => addToCart(p.name, p.opts ? pickDetail([...card.querySelectorAll("[data-pick]")].map(s => s.value)) : p.desc, p.price, { noChanges: p.noChanges, changes: kaniChanges(card), quitables: p.sin });
   $("#promoGrid").append(card);
 });
 
@@ -700,7 +702,7 @@ CATS.forEach(c => {
   sec.querySelectorAll("[data-i]").forEach(b => b.onclick = () => {
     const it = c.items[b.dataset.i];
     if (c.id === "toppings") return addToCart("Topping " + it[0].toLowerCase(), "", it[1], { noChanges: true, topping: true });
-    addToCart(it[0], c.cover ? "Cobertura " + $("#cov-" + c.id).value.toLowerCase() : "", it[1]);
+    addToCart(it[0], c.cover ? "Cobertura " + $("#cov-" + c.id).value.toLowerCase() : "", it[1], { quitables: it[2] });
   });
   menu.append(sec);
 });
@@ -873,7 +875,7 @@ function renderCart() {
   if (!cart.length) { L.innerHTML = `<p class="empty">Aún no agregas nada. Toca + en cualquier plato de la carta.</p>`; updateWa(); return; }
   L.innerHTML = cart.map((l, i) => `
     <div class="line">
-      <div class="t"><div><h4><b class="q">${l.qty}×</b> ${esc(l.name)}</h4>${l.detail ? `<div class="d">${esc(l.detail)}</div>` : ""}${l.topping ? targetSelect(l, i) : ""}</div><span class="num">${clp(unit(l) * l.qty)}</span></div>
+      <div class="t"><div><h4><b class="q">${l.qty}×</b> ${esc(l.name)}</h4>${l.detail ? `<div class="d">${esc(l.detail)}</div>` : ""}${l.topping ? targetSelect(l, i) : ""}${(l.quitables || []).length ? `<div class="sin" role="group" aria-label="Quitar ingredientes">${l.quitables.map(q => `<button type="button" class="chip" aria-pressed="${(l.sin || []).includes(q)}" data-sin="${i}" data-q="${q}">Sin ${q.toLowerCase()}</button>`).join("")}</div>` : ""}</div><span class="num">${clp(unit(l) * l.qty)}</span></div>
       ${(l.changes || []).map((c, j) => `<div class="chg"><span>${esc(c.label)}${c.note ? ": " + esc(c.note) : ""} · ${c.price ? "+" + clp(c.price) : "gratis"}</span><button type="button" data-rmchg="${i}-${j}" aria-label="Quitar cambio">✕</button></div>`).join("")}
       ${openForm === i ? `<div class="chgform">
           <select id="chgType" aria-label="Tipo de cambio">${CAMBIOS.map(c => `<option value="${c.id}">${c.label} (${c.price ? "+" + clp(c.price) : "gratis"})</option>`).join("")}</select>
@@ -885,6 +887,7 @@ function renderCart() {
       </div>
     </div>`).join("") + extrasHtml();
   wireExtras(L);
+  L.querySelectorAll("[data-sin]").forEach(b => b.onclick = () => { const l = cart[b.dataset.sin], q = b.dataset.q; l.sin = (l.sin || []).includes(q) ? l.sin.filter(x => x !== q) : [...(l.sin || []), q]; save(); renderCart(); });
   L.querySelectorAll("[data-target]").forEach(sel => sel.onchange = () => { cart[sel.dataset.target].target = sel.value; save(); renderCart(); });
   L.querySelectorAll("[data-inc]").forEach(b => b.onclick = () => { cart[b.dataset.inc].qty++; save(); renderCart(); });
   L.querySelectorAll("[data-dec]").forEach(b => b.onclick = () => { const l = cart[b.dataset.dec]; l.qty--; if (l.qty <= 0) { cart.splice(b.dataset.dec, 1); openForm = null; } save(); renderCart(); });
@@ -901,7 +904,8 @@ function updateWa() {
   const lines = ["Hola Megami, quiero hacer un pedido:", ""];
   cart.forEach(l => {
     const det = l.topping ? (l.target ? "en " + l.target : "falta indicar en qué roll") : l.detail;
-    lines.push(`*${l.qty}×* ${l.name}${det ? " (" + det + ")" : ""}: ${clp(unit(l) * l.qty)}`);
+    const sin = (l.sin || []).length ? ` _${l.sin.map(x => "sin " + x.toLowerCase()).join(", ")}_` : "";
+    lines.push(`*${l.qty}×* ${l.name}${det ? " (" + det + ")" : ""}${sin}: ${clp(unit(l) * l.qty)}`);
     (l.changes || []).forEach(c => lines.push(`   _Cambio: ${c.label.toLowerCase()}${c.note ? ", " + c.note : ""} (${c.price ? "+" + clp(c.price) : "sin costo"})_`));
   });
   const ops = ACOMP.opcionales.map(o => acomp.opcionales.includes(o) ? o.toLowerCase() : "sin " + o.toLowerCase());

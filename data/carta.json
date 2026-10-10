@@ -102,6 +102,10 @@
    "tiene_kanikama": false,
    "orden": 0,
    "elecciones": 1,
+   "quitables": [
+    "Queso",
+    "Palta"
+   ],
    "rolls": []
   },
   {
@@ -123,6 +127,11 @@
    "tiene_kanikama": false,
    "orden": 1,
    "elecciones": 2,
+   "quitables": [
+    "Palta",
+    "Queso",
+    "Cebollín"
+   ],
    "rolls": []
   },
   {
@@ -141,6 +150,7 @@
    "tiene_kanikama": true,
    "orden": 2,
    "elecciones": 1,
+   "quitables": [],
    "rolls": []
   },
   {
@@ -159,6 +169,11 @@
    "tiene_kanikama": false,
    "orden": 3,
    "elecciones": 1,
+   "quitables": [
+    "Vienesa",
+    "Palta",
+    "Mayo"
+   ],
    "rolls": []
   },
   {
@@ -177,6 +192,7 @@
    "tiene_kanikama": false,
    "orden": 0,
    "elecciones": 1,
+   "quitables": [],
    "rolls": [
     {
      "nombre": "Hot pollo",
@@ -206,6 +222,7 @@
    "tiene_kanikama": true,
    "orden": 1,
    "elecciones": 1,
+   "quitables": [],
    "rolls": [
     {
      "nombre": "Hot pollo",
@@ -240,6 +257,7 @@
    "tiene_kanikama": true,
    "orden": 2,
    "elecciones": 1,
+   "quitables": [],
    "rolls": [
     {
      "nombre": "Hot pollo",
@@ -279,6 +297,7 @@
    "tiene_kanikama": true,
    "orden": 3,
    "elecciones": 1,
+   "quitables": [],
    "rolls": [
     {
      "nombre": "Hot pollo",
@@ -323,6 +342,7 @@
    "tiene_kanikama": true,
    "orden": 4,
    "elecciones": 1,
+   "quitables": [],
    "rolls": [
     {
      "nombre": "Hot pollo",
@@ -372,6 +392,7 @@
    "tiene_kanikama": true,
    "orden": 5,
    "elecciones": 1,
+   "quitables": [],
    "rolls": [
     {
      "nombre": "Hot pollo",
@@ -426,6 +447,7 @@
    "tiene_kanikama": true,
    "orden": 6,
    "elecciones": 1,
+   "quitables": [],
    "rolls": [
     {
      "nombre": "Hot pollo",
@@ -485,6 +507,7 @@
    "tiene_kanikama": false,
    "orden": 7,
    "elecciones": 1,
+   "quitables": [],
    "rolls": [
     {
      "nombre": "Hot",
@@ -514,6 +537,7 @@
    "tiene_kanikama": true,
    "orden": 8,
    "elecciones": 1,
+   "quitables": [],
    "rolls": [
     {
      "nombre": "Hot",
@@ -548,6 +572,7 @@
    "tiene_kanikama": true,
    "orden": 9,
    "elecciones": 1,
+   "quitables": [],
    "rolls": [
     {
      "nombre": "Hot",
@@ -587,6 +612,7 @@
    "tiene_kanikama": true,
    "orden": 10,
    "elecciones": 1,
+   "quitables": [],
    "rolls": [
     {
      "nombre": "Hot",
@@ -631,6 +657,7 @@
    "tiene_kanikama": false,
    "orden": 11,
    "elecciones": 1,
+   "quitables": [],
    "rolls": [
     {
      "nombre": "Hot",
@@ -665,6 +692,7 @@
    "tiene_kanikama": false,
    "orden": 12,
    "elecciones": 1,
+   "quitables": [],
    "rolls": [
     {
      "nombre": "California",
@@ -699,6 +727,7 @@
    "tiene_kanikama": false,
    "orden": 0,
    "elecciones": 1,
+   "quitables": [],
    "rolls": []
   },
   {
@@ -717,6 +746,7 @@
    "tiene_kanikama": false,
    "orden": 1,
    "elecciones": 1,
+   "quitables": [],
    "rolls": []
   },
   {
@@ -735,6 +765,7 @@
    "tiene_kanikama": false,
    "orden": 2,
    "elecciones": 1,
+   "quitables": [],
    "rolls": []
   },
   {
@@ -753,6 +784,7 @@
    "tiene_kanikama": false,
    "orden": 3,
    "elecciones": 1,
+   "quitables": [],
    "rolls": []
   },
   {
@@ -771,6 +803,7 @@
    "tiene_kanikama": false,
    "orden": 4,
    "elecciones": 1,
+   "quitables": [],
    "rolls": []
   },
   {
@@ -789,6 +822,7 @@
    "tiene_kanikama": false,
    "orden": 5,
    "elecciones": 1,
+   "quitables": [],
    "rolls": []
   },
   {
@@ -807,6 +841,7 @@
    "tiene_kanikama": false,
    "orden": 6,
    "elecciones": 1,
+   "quitables": [],
    "rolls": []
   },
   {
@@ -825,6 +860,11 @@
    "tiene_kanikama": false,
    "orden": 0,
    "elecciones": 1,
+   "quitables": [
+    "Queso",
+    "Palta",
+    "Cebollín"
+   ],
    "rolls": []
   },
   {
@@ -843,6 +883,11 @@
    "tiene_kanikama": false,
    "orden": 1,
    "elecciones": 1,
+   "quitables": [
+    "Queso",
+    "Palta",
+    "Cebollín"
+   ],
    "rolls": []
   },
   {
@@ -861,6 +906,11 @@
    "tiene_kanikama": false,
    "orden": 2,
    "elecciones": 1,
+   "quitables": [
+    "Queso",
+    "Palta",
+    "Cebollín"
+   ],
    "rolls": []
   },
   {
@@ -879,6 +929,11 @@
    "tiene_kanikama": false,
    "orden": 3,
    "elecciones": 1,
+   "quitables": [
+    "Queso",
+    "Palta",
+    "Cebollín"
+   ],
    "rolls": []
   },
   {
@@ -897,6 +952,11 @@
    "tiene_kanikama": false,
    "orden": 4,
    "elecciones": 1,
+   "quitables": [
+    "Queso",
+    "Palta",
+    "Cebollín"
+   ],
    "rolls": []
   },
   {
@@ -915,6 +975,11 @@
    "tiene_kanikama": false,
    "orden": 5,
    "elecciones": 1,
+   "quitables": [
+    "Queso",
+    "Palta",
+    "Cebollín"
+   ],
    "rolls": []
   },
   {
@@ -933,6 +998,11 @@
    "tiene_kanikama": false,
    "orden": 6,
    "elecciones": 1,
+   "quitables": [
+    "Queso",
+    "Palta",
+    "Cebollín"
+   ],
    "rolls": []
   },
   {
@@ -951,6 +1021,11 @@
    "tiene_kanikama": false,
    "orden": 7,
    "elecciones": 1,
+   "quitables": [
+    "Queso",
+    "Palta",
+    "Cebollín"
+   ],
    "rolls": []
   },
   {
@@ -969,6 +1044,11 @@
    "tiene_kanikama": false,
    "orden": 8,
    "elecciones": 1,
+   "quitables": [
+    "Queso",
+    "Palta",
+    "Cebollín"
+   ],
    "rolls": []
   },
   {
@@ -987,6 +1067,12 @@
    "tiene_kanikama": false,
    "orden": 0,
    "elecciones": 1,
+   "quitables": [
+    "Palta",
+    "Queso",
+    "Sésamo",
+    "Cebollín"
+   ],
    "rolls": []
   },
   {
@@ -1005,6 +1091,12 @@
    "tiene_kanikama": false,
    "orden": 1,
    "elecciones": 1,
+   "quitables": [
+    "Palta",
+    "Queso",
+    "Sésamo",
+    "Cebollín"
+   ],
    "rolls": []
   },
   {
@@ -1023,6 +1115,12 @@
    "tiene_kanikama": false,
    "orden": 2,
    "elecciones": 1,
+   "quitables": [
+    "Palta",
+    "Queso",
+    "Sésamo",
+    "Cebollín"
+   ],
    "rolls": []
   },
   {
@@ -1041,6 +1139,12 @@
    "tiene_kanikama": false,
    "orden": 3,
    "elecciones": 1,
+   "quitables": [
+    "Palta",
+    "Queso",
+    "Sésamo",
+    "Cebollín"
+   ],
    "rolls": []
   },
   {
@@ -1059,6 +1163,12 @@
    "tiene_kanikama": false,
    "orden": 4,
    "elecciones": 1,
+   "quitables": [
+    "Palta",
+    "Queso",
+    "Sésamo",
+    "Cebollín"
+   ],
    "rolls": []
   },
   {
@@ -1077,6 +1187,11 @@
    "tiene_kanikama": false,
    "orden": 0,
    "elecciones": 1,
+   "quitables": [
+    "Palta",
+    "Queso",
+    "Cebollín"
+   ],
    "rolls": []
   },
   {
@@ -1095,6 +1210,11 @@
    "tiene_kanikama": false,
    "orden": 1,
    "elecciones": 1,
+   "quitables": [
+    "Palta",
+    "Queso",
+    "Cebollín"
+   ],
    "rolls": []
   },
   {
@@ -1113,6 +1233,11 @@
    "tiene_kanikama": false,
    "orden": 2,
    "elecciones": 1,
+   "quitables": [
+    "Palta",
+    "Queso",
+    "Cebollín"
+   ],
    "rolls": []
   },
   {
@@ -1131,6 +1256,11 @@
    "tiene_kanikama": false,
    "orden": 3,
    "elecciones": 1,
+   "quitables": [
+    "Palta",
+    "Queso",
+    "Cebollín"
+   ],
    "rolls": []
   },
   {
@@ -1149,6 +1279,11 @@
    "tiene_kanikama": false,
    "orden": 4,
    "elecciones": 1,
+   "quitables": [
+    "Palta",
+    "Queso",
+    "Cebollín"
+   ],
    "rolls": []
   },
   {
@@ -1167,6 +1302,11 @@
    "tiene_kanikama": false,
    "orden": 5,
    "elecciones": 1,
+   "quitables": [
+    "Palta",
+    "Queso",
+    "Cebollín"
+   ],
    "rolls": []
   },
   {
@@ -1185,6 +1325,11 @@
    "tiene_kanikama": false,
    "orden": 6,
    "elecciones": 1,
+   "quitables": [
+    "Palta",
+    "Queso",
+    "Cebollín"
+   ],
    "rolls": []
   },
   {
@@ -1206,6 +1351,7 @@
    "tiene_kanikama": false,
    "orden": 0,
    "elecciones": 1,
+   "quitables": [],
    "rolls": []
   },
   {
@@ -1229,6 +1375,7 @@
    "tiene_kanikama": false,
    "orden": 1,
    "elecciones": 1,
+   "quitables": [],
    "rolls": []
   },
   {
@@ -1252,6 +1399,7 @@
    "tiene_kanikama": false,
    "orden": 2,
    "elecciones": 1,
+   "quitables": [],
    "rolls": []
   },
   {
@@ -1274,6 +1422,7 @@
    "tiene_kanikama": false,
    "orden": 3,
    "elecciones": 1,
+   "quitables": [],
    "rolls": []
   },
   {
@@ -1296,6 +1445,7 @@
    "tiene_kanikama": false,
    "orden": 4,
    "elecciones": 1,
+   "quitables": [],
    "rolls": []
   },
   {
@@ -1318,6 +1468,7 @@
    "tiene_kanikama": false,
    "orden": 5,
    "elecciones": 1,
+   "quitables": [],
    "rolls": []
   },
   {
@@ -1336,6 +1487,7 @@
    "tiene_kanikama": false,
    "orden": 0,
    "elecciones": 1,
+   "quitables": [],
    "rolls": []
   },
   {
@@ -1354,6 +1506,7 @@
    "tiene_kanikama": false,
    "orden": 1,
    "elecciones": 1,
+   "quitables": [],
    "rolls": []
   },
   {
@@ -1372,6 +1525,7 @@
    "tiene_kanikama": false,
    "orden": 2,
    "elecciones": 1,
+   "quitables": [],
    "rolls": []
   },
   {
@@ -1390,6 +1544,7 @@
    "tiene_kanikama": false,
    "orden": 3,
    "elecciones": 1,
+   "quitables": [],
    "rolls": []
   },
   {
@@ -1408,6 +1563,7 @@
    "tiene_kanikama": false,
    "orden": 0,
    "elecciones": 1,
+   "quitables": [],
    "rolls": []
   },
   {
@@ -1426,6 +1582,7 @@
    "tiene_kanikama": false,
    "orden": 1,
    "elecciones": 1,
+   "quitables": [],
    "rolls": []
   },
   {
@@ -1444,6 +1601,7 @@
    "tiene_kanikama": false,
    "orden": 2,
    "elecciones": 1,
+   "quitables": [],
    "rolls": []
   },
   {
@@ -1462,6 +1620,7 @@
    "tiene_kanikama": false,
    "orden": 3,
    "elecciones": 1,
+   "quitables": [],
    "rolls": []
   },
   {
@@ -1480,6 +1639,7 @@
    "tiene_kanikama": false,
    "orden": 4,
    "elecciones": 1,
+   "quitables": [],
    "rolls": []
   },
   {
@@ -1498,6 +1658,7 @@
    "tiene_kanikama": false,
    "orden": 5,
    "elecciones": 1,
+   "quitables": [],
    "rolls": []
   },
   {
@@ -1516,6 +1677,7 @@
    "tiene_kanikama": false,
    "orden": 6,
    "elecciones": 1,
+   "quitables": [],
    "rolls": []
   },
   {
@@ -1534,6 +1696,7 @@
    "tiene_kanikama": false,
    "orden": 0,
    "elecciones": 1,
+   "quitables": [],
    "rolls": []
   },
   {
@@ -1552,6 +1715,7 @@
    "tiene_kanikama": false,
    "orden": 1,
    "elecciones": 1,
+   "quitables": [],
    "rolls": []
   },
   {
@@ -1570,6 +1734,7 @@
    "tiene_kanikama": false,
    "orden": 2,
    "elecciones": 1,
+   "quitables": [],
    "rolls": []
   },
   {
@@ -1588,6 +1753,7 @@
    "tiene_kanikama": false,
    "orden": 3,
    "elecciones": 1,
+   "quitables": [],
    "rolls": []
   }
  ],
