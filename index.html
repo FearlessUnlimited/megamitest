@@ -512,16 +512,64 @@ footer.site img { height: 40px; width: auto; }
 
 <div class="toast" id="toast" role="status"></div>
 
+<script src="config.js"></script>
 <script>
-const WA = "56950646715";
+const CFG = window.MEGAMI_CONFIG;
+const WA = CFG.WHATSAPP;
 const clp = n => "$" + Math.round(n).toLocaleString("es-CL");
 
 /* ---------- Carta ---------- */
-// "local": lee data/carta.json (mockup, generado desde las migraciones con scripts/carta-json.js).
-// "supabase": lee la función carta_publica() del proyecto; completar URL y clave pública (anon).
-const CARTA_FUENTE = "local";
-const SUPABASE_URL = "";
-const SUPABASE_ANON_KEY = "";
+// La fuente y las claves están en config.js.
+const CARTA_FUENTE = CFG.CARTA_FUENTE;
+const SUPABASE_URL = CFG.SUPABASE_URL;
+const SUPABASE_ANON_KEY = CFG.SUPABASE_ANON_KEY;
+
+/* ---------- Registro de pedidos ---------- */
+// Al tocar "Enviar pedido por WhatsApp" se guarda el pedido en Supabase (función registrar_pedido).
+// Si no hay internet o Supabase no responde, queda en una cola en este navegador y se reintenta
+// al volver la conexión o en la próxima visita. El id lo genera el navegador: un reintento no duplica.
+const REGISTRO_ACTIVO = Boolean(SUPABASE_URL && SUPABASE_ANON_KEY);
+const COLA = "megami-pedidos-pendientes";
+const leerCola = () => { try { return JSON.parse(localStorage.getItem(COLA) || "[]"); } catch (e) { return []; } };
+const guardarCola = c => { try { localStorage.setItem(COLA, JSON.stringify(c)); } catch (e) {} };
+async function enviarRegistro(p) {
+  const r = await fetch(SUPABASE_URL + "/rest/v1/rpc/registrar_pedido", {
+    method: "POST",
+    keepalive: true, // sigue aunque el navegador cambie a WhatsApp
+    headers: { apikey: SUPABASE_ANON_KEY, Authorization: "Bearer " + SUPABASE_ANON_KEY, "Content-Type": "application/json" },
+    body: JSON.stringify({ p }),
+  });
+  if (!r.ok) { const e = new Error("registro respondió " + r.status + ": " + (await r.text())); e.status = r.status; throw e; }
+}
+let vaciando = false;
+async function vaciarCola() {
+  if (!REGISTRO_ACTIVO || vaciando) return;
+  vaciando = true;
+  try {
+    for (const p of leerCola()) {
+      try {
+        await enviarRegistro(p);
+        guardarCola(leerCola().filter(x => x.id !== p.id));
+      } catch (e) {
+        // Un 4xx (salvo 408 y 429) es un pedido que Supabase rechaza por inválido: reintentarlo no sirve.
+        if (e.status >= 400 && e.status < 500 && e.status !== 408 && e.status !== 429) {
+          console.error("Pedido rechazado por el registro, se descarta de la cola:", p, e.message);
+          guardarCola(leerCola().filter(x => x.id !== p.id));
+          continue;
+        }
+        console.warn("Pedido en cola, se reintentará:", p.id, e.message);
+        break;
+      }
+    }
+  } finally { vaciando = false; }
+}
+function registrarPedido(p) {
+  if (!REGISTRO_ACTIVO) return;
+  guardarCola([...leerCola().filter(x => x.id !== p.id), p]);
+  vaciarCola();
+}
+addEventListener("online", vaciarCola);
+vaciarCola();
 let PROMOS, TABLAS, ESPECIALES, CATS, PICAR, CAMBIOS, MORE, COB_CLASICAS, COB_ESPECIALES, BASES, INGREDIENTES, COB_SIN_ARROZ, SIN_ARROZ_PRICE, PROTEINAS, PROP, BEBIDAS, ACOMP, DESTACADO;
 
 async function fetchCarta() {
@@ -903,6 +951,8 @@ function renderCart() {
   L.querySelectorAll("[data-rmchg]").forEach(b => b.onclick = () => { const [i, j] = b.dataset.rmchg.split("-").map(Number); cart[i].changes.splice(j, 1); save(); renderCart(); });
   updateWa();
 }
+let mensajeActual = "";
+let pedidoEnviado = { mensaje: null, id: null }; // mismo mensaje = mismo pedido (doble toque no duplica)
 function updateWa() {
   const lines = ["Hola Megami, quiero hacer un pedido:", ""];
   cart.forEach(l => {
@@ -918,8 +968,9 @@ function updateWa() {
   lines.push(ship === "delivery" ? `*Entrega:* delivery${addr ? " a " + addr : ""}` : "*Entrega:* retiro en el local");
   if (nm) lines.push(`*Nombre:* ${nm}`);
   if (note) lines.push(`*Nota:* _${note}_`);
-  lines.push("", "*PEDIDO DE PRUEBA: NO ES REAL. Enviado desde la maqueta de la landing, no preparar.*");
-  $("#sendWa").href = `https://wa.me/${WA}?text=${encodeURIComponent(lines.join("\n"))}`;
+  if (CFG.PEDIDOS_DE_PRUEBA) lines.push("", "*PEDIDO DE PRUEBA: NO ES REAL. Enviado desde la maqueta de la landing, no preparar.*");
+  mensajeActual = lines.join("\n");
+  $("#sendWa").href = `https://wa.me/${WA}?text=${encodeURIComponent(mensajeActual)}`;
   $("#sendWa").setAttribute("aria-disabled", cart.length ? "false" : "true");
   $("#sendWa").style.opacity = cart.length ? "" : ".45";
   $("#sendWa").style.pointerEvents = cart.length ? "" : "none";
@@ -938,6 +989,27 @@ $("#addr").hidden = ship !== "delivery"; shipNote();
   $(s).addEventListener("input", () => { try { sessionStorage.setItem("megami-" + s.slice(1), $(s).value); } catch (e) {} updateWa(); });
 });
 
+$("#sendWa").addEventListener("click", () => {
+  if (!cart.length) return;
+  if (pedidoEnviado.mensaje !== mensajeActual) pedidoEnviado = { mensaje: mensajeActual, id: crypto.randomUUID() };
+  registrarPedido({
+    id: pedidoEnviado.id,
+    enviado_en_cliente: new Date().toISOString(),
+    cliente_nombre: $("#cname").value.trim(),
+    entrega: ship,
+    direccion: ship === "delivery" ? $("#addr").value.trim() : "",
+    nota: $("#cnote").value.trim(),
+    items: cart.map(l => ({
+      cantidad: l.qty, nombre: l.name, detalle: l.detail || null,
+      precio_unitario: unit(l), subtotal: unit(l) * l.qty,
+      cambios: l.changes || [], sin: l.sin || [], va_en: l.topping ? (l.target || null) : null,
+    })),
+    acompanamientos: acomp,
+    total: total(),
+    mensaje: mensajeActual,
+    es_prueba: CFG.PEDIDOS_DE_PRUEBA,
+  });
+});
 function openDrawer() { $("#drawer").hidden = false; $("#drawerBg").hidden = false; renderCart(); $("#closeCart").focus(); }
 function closeDrawer() { $("#drawer").hidden = true; $("#drawerBg").hidden = true; openForm = null; renderCart(); }
 let resetArmed;

@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Pedidos Megami</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
+<style>
+/* Layout: panel interno de una columna. Resumen arriba, filtros, y la lista de pedidos del más nuevo al más antiguo. */
+:root {
+  color-scheme: dark;
+  --ink: #0f0c0c;
+  --ink-2: #181313;
+  --ink-3: #241c1b;
+  --line: #3b2d2b;
+  --rice: #f3ece2;
+  --muted: #ab9d93;
+  --shu: #c0201c;
+  --shu-hi: #ff6b5e;
+  --ok: #6fcf8e;
+  --warn: #f2c14e;
+  --display: "Dela Gothic One", "Zen Kaku Gothic New", system-ui, sans-serif;
+  --body: "Zen Kaku Gothic New", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --gutter: clamp(16px, 4vw, 32px);
+}
+* { box-sizing: border-box; }
+html { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+body { margin: 0; background: var(--ink); color: var(--rice); font-family: var(--body); font-size: 15px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+h1, h2 { font-family: var(--display); font-weight: 400; margin: 0; line-height: 1.15; }
+p { margin: 0; }
+button, input, select { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--shu-hi); outline-offset: 2px; }
+[hidden] { display: none !important; }
+.wrap { max-width: 980px; margin-inline: auto; padding-inline: var(--gutter); }
+.num { font-variant-numeric: tabular-nums; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; border: 0; border-radius: 999px; padding: 9px 16px; font-weight: 700; cursor: pointer; background: var(--shu); color: var(--rice); text-decoration: none; }
+.btn.ghost { background: transparent; box-shadow: inset 0 0 0 1.5px var(--line); }
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+input, select { background: var(--ink-3); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; }
+
+.top { border-bottom: 1px solid var(--line); position: sticky; top: env(safe-area-inset-top, 0px); background: color-mix(in srgb, var(--ink) 92%, transparent); backdrop-filter: blur(8px); z-index: 10; }
+.top .wrap { display: flex; align-items: center; gap: 12px; padding-block: 10px; flex-wrap: wrap; }
+.top img { height: 32px; width: auto; mix-blend-mode: lighten; }
+.top h1 { font-size: 18px; }
+.top .sp { flex: 1; }
+.top small { color: var(--muted); }
+
+main { padding-block: 24px 64px; display: grid; gap: 20px; }
+.notice { border: 1.5px dashed var(--line); border-radius: 12px; padding: 16px 18px; display: grid; gap: 8px; }
+.notice.warn { border-color: var(--warn); }
+.notice b { font-size: 16px; }
+.notice p { color: var(--muted); }
+.notice .row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 4px; }
+
+.login { max-width: 380px; display: grid; gap: 10px; background: var(--ink-2); border: 1px solid var(--line); border-radius: 14px; padding: 20px; }
+.login h2 { font-size: 22px; }
+.login .err { color: var(--shu-hi); font-size: 14px; min-height: 20px; }
+
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; }
+.stats div { background: var(--ink-2); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; display: grid; gap: 2px; }
+.stats b { font-family: var(--display); font-weight: 400; font-size: 26px; }
+.stats span { color: var(--muted); font-size: 13px; }
+
+.filters { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.filters input { flex: 1; min-width: 180px; }
+.filters .upd { color: var(--muted); font-size: 13px; }
+
+.list { display: grid; gap: 12px; }
+.ped { background: var(--ink-2); border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; display: grid; gap: 10px; }
+.ped .h { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; }
+.ped .n { font-family: var(--display); font-size: 20px; }
+.ped .t { color: var(--muted); font-size: 14px; }
+.ped .tot { margin-left: auto; font-family: var(--display); font-size: 18px; }
+.tag { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; font-weight: 700; border-radius: 4px; padding: 2px 7px; }
+.tag.prueba { background: var(--warn); color: var(--ink); }
+.tag.ejemplo { background: var(--muted); color: var(--ink); }
+.tag.retraso { background: var(--ink-3); color: var(--warn); }
+.ped .who { display: flex; flex-wrap: wrap; gap: 4px 18px; font-size: 14px; }
+.ped .who b { font-weight: 700; }
+.ped .who span { color: var(--muted); }
+.ped ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 4px; font-size: 14px; border-top: 1px dashed var(--line); padding-top: 10px; }
+.ped li .q { color: var(--shu-hi); font-weight: 700; font-variant-numeric: tabular-nums; }
+.ped li small { color: var(--muted); }
+.ped li em { color: var(--muted); }
+.ped .acomp { font-size: 13px; color: var(--muted); }
+.ped details summary { cursor: pointer; color: var(--shu-hi); font-weight: 700; font-size: 14px; }
+.ped pre { white-space: pre-wrap; background: var(--ink); border: 1px solid var(--line); border-radius: 8px; padding: 12px; font-family: var(--body); font-size: 13px; margin: 8px 0 0; }
+.ped .acts { display: flex; gap: 8px; flex-wrap: wrap; }
+.ped .acts .btn { padding: 6px 12px; font-size: 13px; }
+.empty { color: var(--muted); padding: 24px 0; text-align: center; }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <img src="img/logo.png" alt="Megami Sushi">
+    <h1>Registro de pedidos</h1>
+    <span class="sp"></span>
+    <small id="who"></small>
+    <button class="btn ghost" type="button" id="logout" hidden>Cerrar sesión</button>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="notice warn" id="noConfig" hidden>
+    <b>El registro todavía no está conectado</b>
+    <p>Cuando se conecte Supabase, cada pedido que un cliente envíe desde la landing quedará guardado aquí con su hora, sus datos y el mensaje exacto de WhatsApp. Mientras tanto puedes ver cómo se verá con pedidos de ejemplo.</p>
+    <div class="row"><button class="btn" type="button" id="verEjemplo">Ver con pedidos de ejemplo</button><a class="btn ghost" href="./">Ir a la landing</a></div>
+  </div>
+
+  <form class="login" id="login" hidden>
+    <h2>Acceso del local</h2>
+    <p style="color:var(--muted);font-size:14px">Solo el personal autorizado puede ver los pedidos.</p>
+    <input type="email" id="email" placeholder="Correo" autocomplete="username" required>
+    <input type="password" id="pass" placeholder="Contraseña" autocomplete="current-password" required>
+    <button class="btn" type="submit" id="loginBtn">Entrar</button>
+    <p class="err" id="loginErr" role="alert"></p>
+  </form>
+
+  <div class="notice" id="noAuth" hidden>
+    <b>Tu usuario no está autorizado</b>
+    <p>Iniciaste sesión, pero tu cuenta no está inscrita como personal del local. Pide que la agreguen a la lista de personal.</p>
+  </div>
+
+  <section id="panel" hidden>
+    <div class="notice" id="demoNote" hidden style="margin-bottom:16px">
+      <b>Pedidos de ejemplo</b>
+      <p>Estos pedidos son inventados, solo para mostrar el panel. Los reales aparecerán cuando el registro esté conectado.</p>
+    </div>
+    <div class="stats" id="stats"></div>
+    <div class="filters" style="margin-block:16px">
+      <select id="rango" aria-label="Período">
+        <option value="hoy">Hoy</option>
+        <option value="7">Últimos 7 días</option>
+        <option value="30">Últimos 30 días</option>
+        <option value="todo">Todo</option>
+      </select>
+      <select id="tipo" aria-label="Tipo de pedido">
+        <option value="todos">Reales y de prueba</option>
+        <option value="reales">Solo reales</option>
+        <option value="prueba">Solo de prueba</option>
+      </select>
+      <input type="search" id="buscar" placeholder="Buscar por nombre, dirección o producto">
+      <button class="btn ghost" type="button" id="actualizar">Actualizar</button>
+      <span class="upd" id="upd"></span>
+    </div>
+    <div class="list" id="list"></div>
+  </section>
+</main>
+
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script>
+const CFG = window.MEGAMI_CONFIG;
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const clp = n => "$" + Math.round(n).toLocaleString("es-CL");
+const TZ = "America/Santiago";
+const fecha = iso => new Intl.DateTimeFormat("es-CL", { timeZone: TZ, weekday: "short", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }).format(new Date(iso));
+const diaChile = d => new Intl.DateTimeFormat("en-CA", { timeZone: TZ, year: "numeric", month: "2-digit", day: "2-digit" }).format(d);
+
+let pedidos = [];
+let demo = false;
+let db = null;
+
+/* ---------- Pedidos de ejemplo (modo demostración) ---------- */
+function ejemplos() {
+  const hace = min => new Date(Date.now() - min * 60000).toISOString();
+  const msg = "Hola Megami, quiero hacer un pedido: …";
+  return [
+    { numero: 3, creado_en: hace(12), enviado_en_cliente: hace(12), cliente_nombre: "Camila (ejemplo)", entrega: "delivery", direccion: "Av. Alemania 5100, depto 23", nota: "Tocar el timbre 2 veces", total: 30660, es_prueba: false, ejemplo: true,
+      items: [{ cantidad: 1, nombre: "Tabla mixta 40 piezas", detalle: null, subtotal: 15990, cambios: [{ label: "Kanikama a proteína", note: "kanikama por salmón", price: 1500 }], sin: [] },
+              { cantidad: 2, nombre: "Handroll pollo", detalle: "Cobertura panko", subtotal: 9180, cambios: [], sin: ["Cebollín"] },
+              { cantidad: 1, nombre: "Roll armado", detalle: "panko · salmón · queso crema y palta", subtotal: 5490, cambios: [], sin: [] }],
+      acompanamientos: { salsa: "Soya", palitos: 3, opcionales: ["Jengibre"] }, mensaje: msg },
+    { numero: 2, creado_en: hace(95), enviado_en_cliente: hace(140), cliente_nombre: "Patricio (ejemplo)", entrega: "retiro", direccion: null, nota: null, total: 16980, es_prueba: false, ejemplo: true,
+      items: [{ cantidad: 1, nombre: "3 handrolls", detalle: null, subtotal: 11990, cambios: [], sin: [] },
+              { cantidad: 1, nombre: "Topping acevichado", detalle: null, va_en: "3 handrolls", subtotal: 3490, cambios: [], sin: [] },
+              { cantidad: 1, nombre: "Bebida en lata", detalle: null, subtotal: 1500, cambios: [], sin: [] }],
+      acompanamientos: { salsa: "Unagi", palitos: 2, opcionales: [] }, mensaje: msg },
+    { numero: 1, creado_en: hace(60 * 26), enviado_en_cliente: hace(60 * 26), cliente_nombre: null, entrega: "retiro", direccion: null, nota: null, total: 11490, es_prueba: true, ejemplo: true,
+      items: [{ cantidad: 1, nombre: "Promo 2x1 sushi burger", detalle: "1 de pollo y 1 de camarón", subtotal: 11490, cambios: [], sin: [] }],
+      acompanamientos: { salsa: "Ambas", palitos: 2, opcionales: ["Wasabi"] }, mensaje: msg },
+  ];
+}
+
+/* ---------- Filtros y dibujo ---------- */
+function filtrados() {
+  const r = $("#rango").value, t = $("#tipo").value, q = $("#buscar").value.trim().toLowerCase();
+  const hoy = diaChile(new Date());
+  return pedidos.filter(p => {
+    if (r === "hoy" && diaChile(new Date(p.creado_en)) !== hoy) return false;
+    if ((r === "7" || r === "30") && Date.now() - new Date(p.creado_en) > +r * 864e5) return false;
+    if (t === "reales" && p.es_prueba) return false;
+    if (t === "prueba" && !p.es_prueba) return false;
+    if (q) {
+      const txt = [p.cliente_nombre, p.direccion, p.nota, ...p.items.map(i => i.nombre + " " + (i.detalle || ""))].join(" ").toLowerCase();
+      if (!txt.includes(q)) return false;
+    }
+    return true;
+  });
+}
+function dibujar() {
+  const ps = filtrados();
+  const reales = ps.filter(p => !p.es_prueba);
+  const suma = reales.reduce((a, p) => a + p.total, 0);
+  $("#stats").innerHTML = `
+    <div><b class="num">${ps.length}</b><span>pedidos en el período</span></div>
+    <div><b class="num">${clp(suma)}</b><span>total de pedidos reales</span></div>
+    <div><b class="num">${reales.length ? clp(suma / reales.length) : "—"}</b><span>ticket promedio real</span></div>
+    <div><b class="num">${ps.filter(p => p.entrega === "delivery").length}</b><span>con delivery</span></div>`;
+  if (!ps.length) { $("#list").innerHTML = `<p class="empty">No hay pedidos con estos filtros.</p>`; return; }
+  $("#list").innerHTML = ps.map((p, k) => {
+    const retraso = p.enviado_en_cliente && (new Date(p.creado_en) - new Date(p.enviado_en_cliente)) > 3 * 60000;
+    const a = p.acompanamientos || {};
+    const acomp = a.salsa ? `Salsa ${esc(a.salsa).toLowerCase()} · ${a.palitos ? a.palitos + " pares de palitos" : "sin palitos"}${(a.opcionales || []).length ? " · " + a.opcionales.map(esc).join(", ").toLowerCase() : ""}` : "";
+    return `<article class="ped">
+      <div class="h">
+        <span class="n num">#${p.numero}</span>
+        <span class="t">${fecha(p.creado_en)}</span>
+        ${p.ejemplo ? `<span class="tag ejemplo">Ejemplo</span>` : ""}
+        ${p.es_prueba ? `<span class="tag prueba">Prueba</span>` : ""}
+        ${retraso ? `<span class="tag retraso" title="El cliente lo envió el ${fecha(p.enviado_en_cliente)}; llegó después por falta de conexión">Llegó con retraso</span>` : ""}
+        <span class="tot num">${clp(p.total)}</span>
+      </div>
+      <div class="who">
+        <span><b>${esc(p.cliente_nombre) || "Sin nombre"}</b></span>
+        <span>${p.entrega === "delivery" ? "Delivery a " + (esc(p.direccion) || "dirección no indicada") : "Retiro en el local"}</span>
+        ${p.nota ? `<span><em>Nota: ${esc(p.nota)}</em></span>` : ""}
+      </div>
+      <ul>${p.items.map(i => `<li><span class="q">${i.cantidad}×</span> ${esc(i.nombre)}${i.detalle ? ` <small>(${esc(i.detalle)})</small>` : ""}${i.va_en ? ` <small>· en ${esc(i.va_en)}</small>` : ""}${(i.sin || []).length ? ` <em>sin ${i.sin.map(esc).join(", sin ").toLowerCase()}</em>` : ""}${(i.cambios || []).map(c => `<br><small>&nbsp;&nbsp;Cambio: ${esc(c.label).toLowerCase()}${c.note ? ", " + esc(c.note) : ""}</small>`).join("")} <small class="num">· ${clp(i.subtotal)}</small></li>`).join("")}</ul>
+      ${acomp ? `<p class="acomp">${acomp}</p>` : ""}
+      <details><summary>Ver mensaje de WhatsApp</summary><pre>${esc(p.mensaje)}</pre></details>
+      <div class="acts"><button class="btn ghost" type="button" data-copy="${k}">Copiar mensaje</button></div>
+    </article>`;
+  }).join("");
+  $("#list").querySelectorAll("[data-copy]").forEach(b => b.onclick = async () => {
+    try { await navigator.clipboard.writeText(ps[b.dataset.copy].mensaje); b.textContent = "Copiado"; }
+    catch (e) { b.textContent = "No se pudo copiar"; }
+    setTimeout(() => b.textContent = "Copiar mensaje", 1500);
+  });
+}
+["#rango", "#tipo"].forEach(s => $(s).onchange = dibujar);
+$("#buscar").oninput = dibujar;
+
+/* ---------- Datos reales ---------- */
+async function cargar() {
+  if (demo) { pedidos = ejemplos(); dibujar(); return; }
+  $("#actualizar").disabled = true;
+  const { data, error } = await db.from("pedidos")
+    .select("numero, creado_en, enviado_en_cliente, cliente_nombre, entrega, direccion, nota, items, acompanamientos, total, mensaje, es_prueba")
+    .order("creado_en", { ascending: false }).limit(500);
+  $("#actualizar").disabled = false;
+  if (error) { $("#list").innerHTML = `<p class="empty">No se pudieron cargar los pedidos: ${esc(error.message)}</p>`; return; }
+  pedidos = data;
+  $("#upd").textContent = "Actualizado " + new Intl.DateTimeFormat("es-CL", { timeZone: TZ, hour: "2-digit", minute: "2-digit", second: "2-digit" }).format(new Date());
+  dibujar();
+}
+$("#actualizar").onclick = cargar;
+
+function mostrarPanel() {
+  $("#login").hidden = true; $("#noAuth").hidden = true; $("#panel").hidden = false;
+  cargar();
+  if (!demo) setInterval(cargar, 30000);
+}
+
+async function entrar(session) {
+  $("#who").textContent = session.user.email;
+  $("#logout").hidden = false;
+  const { data: ok, error } = await db.rpc("es_personal");
+  if (error || !ok) { $("#login").hidden = true; $("#noAuth").hidden = false; return; }
+  mostrarPanel();
+}
+
+if (!CFG.SUPABASE_URL || !CFG.SUPABASE_ANON_KEY) {
+  $("#noConfig").hidden = false;
+  $("#verEjemplo").onclick = () => { demo = true; $("#noConfig").hidden = true; $("#demoNote").hidden = false; $("#rango").value = "todo"; mostrarPanel(); };
+} else {
+  db = supabase.createClient(CFG.SUPABASE_URL, CFG.SUPABASE_ANON_KEY);
+  db.auth.getSession().then(({ data }) => data.session ? entrar(data.session) : ($("#login").hidden = false));
+  $("#login").onsubmit = async e => {
+    e.preventDefault();
+    $("#loginBtn").disabled = true; $("#loginErr").textContent = "";
+    const { data, error } = await db.auth.signInWithPassword({ email: $("#email").value.trim(), password: $("#pass").value });
+    $("#loginBtn").disabled = false;
+    if (error) { $("#loginErr").textContent = "No pudimos entrar: revisa el correo y la contraseña."; return; }
+    entrar(data.session);
+  };
+  $("#logout").onclick = async () => { await db.auth.signOut(); location.reload(); };
+}
+</script>
+</body>
+</html>
