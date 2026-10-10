@@ -273,6 +273,25 @@ footer.site img { height: 40px; width: auto; }
 .line h4 .q { color: var(--shu-hi); font-variant-numeric: tabular-nums; }
 .chg span { font-style: italic; }
 .checkout .tot small { text-decoration: underline; text-underline-offset: 3px; }
+.extras { display: grid; gap: 16px; padding-top: 18px; }
+.extras h5 { margin: 0 0 8px; font-size: 13px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); display: flex; justify-content: space-between; gap: 8px; }
+.extras h5 em { font-style: normal; text-transform: none; letter-spacing: 0; color: var(--ok); font-weight: 700; }
+.extras .chips { gap: 6px; }
+.extras .chip { padding: 5px 12px; font-size: 13px; }
+.checks { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 14px; }
+.checks label { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+.checks input { accent-color: var(--shu); width: 18px; height: 18px; }
+.tempt { border: 1.5px solid var(--shu); border-radius: 12px; padding: 12px 14px; display: grid; gap: 8px; background: color-mix(in srgb, var(--shu) 8%, var(--ink)); }
+.tempt .top { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.tempt b { font-size: 15px; }
+.tempt small { color: var(--muted); }
+.tempt .others { font-size: 13px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 4px 10px; }
+.tempt .others button { border: 0; background: none; color: var(--rice); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; font-size: 13px; padding: 0; }
+.drinks summary { cursor: pointer; font-weight: 700; color: var(--shu-hi); font-size: 14px; }
+.drinks .row { display: flex; justify-content: space-between; align-items: center; padding-block: 6px; border-bottom: 1px solid var(--line); font-size: 14px; gap: 10px; }
+.drinks .row span:first-child { flex: 1; }
+.drinks .add { width: 30px; height: 30px; font-size: 18px; }
+.drinks p { font-size: 12px; color: var(--muted); font-style: italic; margin-top: 6px; }
 .chg { display: flex; justify-content: space-between; gap: 8px; font-size: 13px; background: var(--ink); border-radius: 8px; padding: 6px 10px; }
 .chg button { border: 0; background: none; color: var(--muted); cursor: pointer; }
 .chgform { display: grid; gap: 8px; background: var(--ink); border-radius: 10px; padding: 10px; }
@@ -287,7 +306,7 @@ footer.site img { height: 40px; width: auto; }
 .checkout .btn { width: 100%; }
 .checkout .ph { font-size: 12px; color: var(--muted); text-align: center; }
 
-.toast { max-width: calc(100% - 32px); text-align: center; position: fixed; left: 50%; bottom: 88px; transform: translate(-50%, 20px); opacity: 0; background: var(--rice); color: var(--ink); padding: 10px 18px; border-radius: 999px; font-weight: 700; font-size: 14px; z-index: 70; pointer-events: none; transition: opacity .2s, transform .2s; }
+.toast { max-width: min(440px, calc(100% - 32px)); border-radius: 14px; line-height: 1.4; text-align: center; position: fixed; left: 50%; bottom: 88px; transform: translate(-50%, 20px); opacity: 0; background: var(--rice); color: var(--ink); padding: 10px 18px; border-radius: 999px; font-weight: 700; font-size: 14px; z-index: 70; pointer-events: none; transition: opacity .2s, transform .2s; }
 .toast.show { opacity: 1; transform: translate(-50%, 0); }
 </style>
 </head>
@@ -494,7 +513,7 @@ const clp = n => "$" + Math.round(n).toLocaleString("es-CL");
 const CARTA_FUENTE = "local";
 const SUPABASE_URL = "";
 const SUPABASE_ANON_KEY = "";
-let PROMOS, TABLAS, ESPECIALES, CATS, PICAR, CAMBIOS, MORE, COB_CLASICAS, COB_ESPECIALES, BASES, INGREDIENTES, COB_SIN_ARROZ, SIN_ARROZ_PRICE, PROTEINAS, PROP;
+let PROMOS, TABLAS, ESPECIALES, CATS, PICAR, CAMBIOS, MORE, COB_CLASICAS, COB_ESPECIALES, BASES, INGREDIENTES, COB_SIN_ARROZ, SIN_ARROZ_PRICE, PROTEINAS, PROP, BEBIDAS, ACOMP, DESTACADO;
 
 async function fetchCarta() {
   if (CARTA_FUENTE === "local") {
@@ -525,7 +544,7 @@ function adaptCarta(d) {
   };
   ESPECIALES = de("especiales").map(p => [p.nombre, p.descripcion || "", p.precio]);
   const listas = ["handrolls", "gohan", "burger", "toppings"];
-  CATS = d.categorias.filter(c => c.id !== "promos" && c.id !== "mas_alla").map(c => ({ id: c.id, name: c.nombre, desc: c.descripcion, img: c.imagen, cover: c.coberturas.length ? c.coberturas : null, items: listas.includes(c.id) ? de(c.id).map(p => [p.nombre, p.precio]) : undefined }));
+  CATS = d.categorias.filter(c => !["promos", "mas_alla", "bebestibles"].includes(c.id)).map(c => ({ id: c.id, name: c.nombre, desc: c.descripcion, img: c.imagen, cover: c.coberturas.length ? c.coberturas : null, items: listas.includes(c.id) ? de(c.id).map(p => [p.nombre, p.precio]) : undefined }));
   PICAR = de("picar").map(p => ({ name: p.nombre, u: p.unidades, price: p.precio, img: p.imagen, opts: p.opciones }));
   CAMBIOS = d.cambios.map(c => ({ id: c.id, label: c.etiqueta, price: c.precio }));
   MORE = de("mas_alla").map(p => [p.nombre, p.imagen]);
@@ -538,7 +557,10 @@ function adaptCarta(d) {
   PROTEINAS = d.proteinas;
   SIN_ARROZ_PRICE = d.config.sin_arroz_precio;
   PROP = d.config.propuesta_kanikama;
-  const faltan = [["sin_arroz_precio", SIN_ARROZ_PRICE], ["propuesta_kanikama", PROP], ["cambio kani-prot", CAMBIOS.find(c => c.id === "kani-prot")], ["categoría toppings", CATS.find(c => c.id === "toppings")]].filter(x => x[1] == null).map(x => x[0]);
+  BEBIDAS = de("bebestibles").map(p => ({ name: p.nombre, price: p.precio }));
+  ACOMP = d.config.acompanamientos;
+  DESTACADO = d.config.topping_destacado;
+  const faltan = [["sin_arroz_precio", SIN_ARROZ_PRICE], ["propuesta_kanikama", PROP], ["cambio kani-prot", CAMBIOS.find(c => c.id === "kani-prot")], ["categoría toppings", CATS.find(c => c.id === "toppings")], ["acompanamientos", ACOMP], ["topping_destacado", DESTACADO]].filter(x => x[1] == null).map(x => x[0]);
   if (faltan.length) throw new Error("La carta en Supabase está incompleta: falta " + faltan.join(", "));
 }
 
@@ -553,8 +575,9 @@ $("#promoGrid").innerHTML = ""; $("#menu").innerHTML = "";
 /* ---------- Pedido ---------- */
 let cart = [];
 let ship = "retiro";
-try { const s = JSON.parse(localStorage.getItem("megami-cart") || "null"); if (s && Array.isArray(s.cart)) { cart = s.cart; ship = s.ship || "retiro"; } } catch (e) {}
-const save = () => { try { localStorage.setItem("megami-cart", JSON.stringify({ cart, ship })); } catch (e) {} };
+let acomp = { salsa: ACOMP.salsas[0], palitos: ACOMP.palitos_por_defecto, opcionales: [] };
+try { const s = JSON.parse(localStorage.getItem("megami-cart") || "null"); if (s && Array.isArray(s.cart)) { cart = s.cart; ship = s.ship || "retiro"; if (s.acomp) acomp = s.acomp; } } catch (e) {}
+const save = () => { try { localStorage.setItem("megami-cart", JSON.stringify({ cart, ship, acomp })); } catch (e) {} };
 const unit = l => l.price + (l.changes || []).reduce((a, c) => a + c.price, 0);
 const total = () => cart.reduce((a, l) => a + unit(l) * l.qty, 0);
 
@@ -788,6 +811,35 @@ renderSteps();
 
 /* ---------- Drawer del pedido ---------- */
 let openForm = null;
+let drinksOpen = false;
+function extrasHtml() {
+  const top = CATS.find(c => c.id === "toppings").items;
+  const dest = top.find(t => t[0] === DESTACADO);
+  const inCart = n => cart.some(l => l.name === "Topping " + n.toLowerCase());
+  return `<div class="extras">
+    <div><h5>Salsa <em>incluida</em></h5><div class="chips">${ACOMP.salsas.map(x => chip(x, acomp.salsa === x, `data-salsa="${x}"`)).join("")}</div></div>
+    <div><h5>Palitos <em>incluidos</em></h5><span class="qty"><button type="button" data-pal="-1" aria-label="Menos palitos">−</button><span>${acomp.palitos}</span><button type="button" data-pal="1" aria-label="Más palitos">+</button></span> <small style="color:var(--muted);font-size:13px">pares</small></div>
+    <div><h5>¿Quieres? <em>incluidos</em></h5><div class="checks">${ACOMP.opcionales.map(o => `<label><input type="checkbox" data-opc="${o}" ${acomp.opcionales.includes(o) ? "checked" : ""}> ${o}</label>`).join("")}</div></div>
+    ${dest ? `<div class="tempt">
+      <div class="top"><span><b>¿Le pones ${dest[0].toLowerCase()}?</b><br><small>El topping más pedido · <b>+${clp(dest[1])}</b></small></span>
+      ${inCart(dest[0]) ? `<small>Agregado ✓</small>` : `<button class="btn btn-red" type="button" style="padding:7px 14px;font-size:14px" data-top-add="${dest[0]}">Agregar</button>`}</div>
+      <div class="others">Otros toppings: ${top.filter(t => t !== dest).map(t => `<button type="button" data-top-add="${t[0]}">${t[0].toLowerCase()} +${clp(t[1])}</button>`).join("")}</div>
+    </div>` : ""}
+    <details class="drinks" ${drinksOpen ? "open" : ""}><summary>Agregar bebestibles</summary>
+      ${BEBIDAS.map((b, i) => `<div class="row"><span>${b.name}</span><span class="num">${clp(b.price)}</span><button class="add" type="button" data-drink="${i}" aria-label="Agregar ${b.name}">+</button></div>`).join("")}
+      <p>Precios de ejemplo, por confirmar con el local.</p>
+    </details>
+  </div>`;
+}
+function wireExtras(L) {
+  const top = CATS.find(c => c.id === "toppings").items;
+  L.querySelectorAll("[data-salsa]").forEach(b => b.onclick = () => { acomp.salsa = b.dataset.salsa; save(); renderCart(); });
+  L.querySelectorAll("[data-pal]").forEach(b => b.onclick = () => { acomp.palitos = Math.max(0, Math.min(20, acomp.palitos + +b.dataset.pal)); save(); renderCart(); });
+  L.querySelectorAll("[data-opc]").forEach(c => c.onchange = () => { acomp.opcionales = c.checked ? [...acomp.opcionales, c.dataset.opc] : acomp.opcionales.filter(x => x !== c.dataset.opc); save(); updateWa(); });
+  L.querySelectorAll("[data-top-add]").forEach(b => b.onclick = () => { const t = top.find(x => x[0] === b.dataset.topAdd); addToCart("Topping " + t[0].toLowerCase(), "", t[1], { noChanges: true }); });
+  L.querySelectorAll("[data-drink]").forEach(b => b.onclick = () => { const d = BEBIDAS[b.dataset.drink]; drinksOpen = true; addToCart(d.name, "", d.price, { noChanges: true }); });
+  const det = L.querySelector(".drinks"); if (det) det.ontoggle = () => { drinksOpen = det.open; };
+}
 function renderCart() {
   const n = cart.reduce((a, l) => a + l.qty, 0);
   $("#cartCount").textContent = n; $("#cartCount2").textContent = n;
@@ -808,7 +860,8 @@ function renderCart() {
         <span class="qty"><button type="button" data-dec="${i}" aria-label="Quitar uno">−</button><span>${l.qty}</span><button type="button" data-inc="${i}" aria-label="Agregar uno">+</button></span>
         ${l.noChanges ? "" : `<button class="linkish" type="button" data-chg="${i}">${openForm === i ? "Cancelar" : "+ Cambio"}</button>`}
       </div>
-    </div>`).join("");
+    </div>`).join("") + extrasHtml();
+  wireExtras(L);
   L.querySelectorAll("[data-inc]").forEach(b => b.onclick = () => { cart[b.dataset.inc].qty++; save(); renderCart(); });
   L.querySelectorAll("[data-dec]").forEach(b => b.onclick = () => { const l = cart[b.dataset.dec]; l.qty--; if (l.qty <= 0) { cart.splice(b.dataset.dec, 1); openForm = null; } save(); renderCart(); });
   L.querySelectorAll("[data-chg]").forEach(b => b.onclick = () => { openForm = openForm === +b.dataset.chg ? null : +b.dataset.chg; renderCart(); });
@@ -826,6 +879,8 @@ function updateWa() {
     lines.push(`*${l.qty}×* ${l.name}${l.detail ? " (" + l.detail + ")" : ""}: ${clp(unit(l) * l.qty)}`);
     (l.changes || []).forEach(c => lines.push(`   _Cambio: ${c.label.toLowerCase()}${c.note ? ", " + c.note : ""} (${c.price ? "+" + clp(c.price) : "sin costo"})_`));
   });
+  const ops = ACOMP.opcionales.map(o => acomp.opcionales.includes(o) ? o.toLowerCase() : "sin " + o.toLowerCase());
+  lines.push("", `*Para acompañar (incluido):* salsa ${acomp.salsa === "Ambas" ? "soya y unagi" : acomp.salsa.toLowerCase()}, ${acomp.palitos ? acomp.palitos + " pares de palitos" : "sin palitos"}, ${ops.join(", ")}`);
   lines.push("", `*Total: ${clp(total())}* _(despacho aparte según zona)_`);
   const addr = $("#addr").value.trim(), nm = $("#cname").value.trim(), note = $("#cnote").value.trim();
   lines.push(ship === "delivery" ? `*Entrega:* delivery${addr ? " a " + addr : ""}` : "*Entrega:* retiro en el local");
@@ -860,8 +915,9 @@ $("#resetCart").onclick = e => {
   clearTimeout(resetArmed); resetArmed = null; b.textContent = "Vaciar pedido";
   cart = []; openForm = null; save(); closeDrawer();
   $("#promos").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
-  const datos = ["#cname", "#addr", "#cnote"].some(s => $(s).value.trim());
-  toast(datos ? "Pedido vacío. Arma uno nuevo: tus datos quedaron guardados." : "Pedido vacío. Puedes armar uno nuevo.", 4500);
+  const nm = $("#cname").value.trim(), addr = ship === "delivery" ? $("#addr").value.trim() : "";
+  const datos = nm || addr || $("#cnote").value.trim();
+  toast(`Tu pedido fue reiniciado${nm ? ", " + nm : ""}${addr ? `, y seguirá llegando a ${addr}` : ""}. Vuelve a elegir tus productos.${datos ? " Puedes editar tus datos y dirección en la siguiente pantalla." : ""}`, 7000);
 };
 $("#openCart").onclick = openDrawer; $("#openCart2").onclick = openDrawer;
 $("#closeCart").onclick = closeDrawer; $("#drawerBg").onclick = closeDrawer;

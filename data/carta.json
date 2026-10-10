@@ -75,6 +75,14 @@
    "imagen": null,
    "coberturas": [],
    "orden": 8
+  },
+  {
+   "id": "bebestibles",
+   "nombre": "Bebestibles",
+   "descripcion": "Precios de ejemplo, por confirmar con el local.",
+   "imagen": null,
+   "coberturas": [],
+   "orden": 9
   }
  ],
  "productos": [
@@ -1509,6 +1517,78 @@
    "orden": 6,
    "elecciones": 1,
    "rolls": []
+  },
+  {
+   "id": "bebida-lata",
+   "categoria_id": "bebestibles",
+   "nombre": "Bebida en lata",
+   "descripcion": null,
+   "precio": 1500,
+   "unidades": null,
+   "piezas": null,
+   "subtipo": null,
+   "opciones": [],
+   "imagen": null,
+   "imagen_ajuste": "contain",
+   "admite_cambios": false,
+   "tiene_kanikama": false,
+   "orden": 0,
+   "elecciones": 1,
+   "rolls": []
+  },
+  {
+   "id": "bebida-1-5l",
+   "categoria_id": "bebestibles",
+   "nombre": "Bebida 1,5 L",
+   "descripcion": null,
+   "precio": 2990,
+   "unidades": null,
+   "piezas": null,
+   "subtipo": null,
+   "opciones": [],
+   "imagen": null,
+   "imagen_ajuste": "contain",
+   "admite_cambios": false,
+   "tiene_kanikama": false,
+   "orden": 1,
+   "elecciones": 1,
+   "rolls": []
+  },
+  {
+   "id": "agua-mineral",
+   "categoria_id": "bebestibles",
+   "nombre": "Agua mineral",
+   "descripcion": null,
+   "precio": 1200,
+   "unidades": null,
+   "piezas": null,
+   "subtipo": null,
+   "opciones": [],
+   "imagen": null,
+   "imagen_ajuste": "contain",
+   "admite_cambios": false,
+   "tiene_kanikama": false,
+   "orden": 2,
+   "elecciones": 1,
+   "rolls": []
+  },
+  {
+   "id": "jugo-natural",
+   "categoria_id": "bebestibles",
+   "nombre": "Jugo natural",
+   "descripcion": null,
+   "precio": 2500,
+   "unidades": null,
+   "piezas": null,
+   "subtipo": null,
+   "opciones": [],
+   "imagen": null,
+   "imagen_ajuste": "contain",
+   "admite_cambios": false,
+   "tiene_kanikama": false,
+   "orden": 3,
+   "elecciones": 1,
+   "rolls": []
   }
  ],
  "cambios": [
@@ -1788,6 +1868,19 @@
   "propuesta_kanikama": {
    "proteina": "Pollo",
    "precio": 0
-  }
+  },
+  "acompanamientos": {
+   "salsas": [
+    "Soya",
+    "Unagi",
+    "Ambas"
+   ],
+   "palitos_por_defecto": 2,
+   "opcionales": [
+    "Jengibre",
+    "Wasabi"
+   ]
+  },
+  "topping_destacado": "Acevichado"
  }
 }

@@ -10,7 +10,8 @@ insert into public.categorias (id, nombre, descripcion, imagen, coberturas, orde
   ('burger', 'Sushi burger', 'Pan de arroz con palta, queso y cebollín.', 'img/burger.jpg', '{}'::text[], 5),
   ('picar', 'Para picar', 'Mientras llega la tabla.', null, '{}'::text[], 6),
   ('toppings', 'Toppings', 'Para cubrir cualquier roll.', null, '{}'::text[], 7),
-  ('mas_alla', 'Más allá del sushi', 'Completos, churrascos, chorrillana y más. Pregunta el precio del día por WhatsApp.', null, '{}'::text[], 8);
+  ('mas_alla', 'Más allá del sushi', 'Completos, churrascos, chorrillana y más. Pregunta el precio del día por WhatsApp.', null, '{}'::text[], 8),
+  ('bebestibles', 'Bebestibles', 'Precios de ejemplo, por confirmar con el local.', null, '{}'::text[], 9);
 
 insert into public.productos (id, categoria_id, nombre, descripcion, precio, unidades, piezas, subtipo, opciones, imagen, imagen_ajuste, admite_cambios, tiene_kanikama, orden, elecciones) values
   ('promo-hand3', 'promos', '3 handrolls', 'Pollo, queso y palta', 11990, null, null, null, '{}'::text[], 'img/x-sushi.jpg', 'contain', true, false, 0, 1),
@@ -74,7 +75,11 @@ insert into public.productos (id, categoria_id, nombre, descripcion, precio, uni
   ('mas-chorrillana', 'mas_alla', 'Chorrillana', null, null, null, null, null, '{}'::text[], 'img/x-chorrillana.jpg', 'cover', false, false, 3, 1),
   ('mas-papas-fritas', 'mas_alla', 'Papas fritas', null, null, null, null, null, '{}'::text[], 'img/x-papas.jpg', 'cover', false, false, 4, 1),
   ('mas-empanadas', 'mas_alla', 'Empanadas', null, null, null, null, null, '{}'::text[], 'img/x-empanadas.jpg', 'cover', false, false, 5, 1),
-  ('mas-fajitas', 'mas_alla', 'Fajitas', null, null, null, null, null, '{}'::text[], 'img/x-fajitas.jpg', 'cover', false, false, 6, 1);
+  ('mas-fajitas', 'mas_alla', 'Fajitas', null, null, null, null, null, '{}'::text[], 'img/x-fajitas.jpg', 'cover', false, false, 6, 1),
+  ('bebida-lata', 'bebestibles', 'Bebida en lata', null, 1500, null, null, null, '{}'::text[], null, 'contain', false, false, 0, 1),
+  ('bebida-1-5l', 'bebestibles', 'Bebida 1,5 L', null, 2990, null, null, null, '{}'::text[], null, 'contain', false, false, 1, 1),
+  ('agua-mineral', 'bebestibles', 'Agua mineral', null, 1200, null, null, null, '{}'::text[], null, 'contain', false, false, 2, 1),
+  ('jugo-natural', 'bebestibles', 'Jugo natural', null, 2500, null, null, null, '{}'::text[], null, 'contain', false, false, 3, 1);
 
 insert into public.tabla_rolls (producto_id, nombre, ingredientes, cantidad, orden) values
   ('tabla-mixta-20', 'Hot pollo', 'pollo, queso, cebollín', 10, 0),
@@ -194,4 +199,6 @@ insert into public.armador_ingredientes (nombre, tipo, orden) values
 
 insert into public.config (clave, valor) values
   ('sin_arroz_precio', '6490'::jsonb),
-  ('propuesta_kanikama', '{"proteina":"Pollo","precio":0}'::jsonb);
+  ('propuesta_kanikama', '{"proteina":"Pollo","precio":0}'::jsonb),
+  ('acompanamientos', '{"salsas": ["Soya", "Unagi", "Ambas"], "palitos_por_defecto": 2, "opcionales": ["Jengibre", "Wasabi"]}'::jsonb),
+  ('topping_destacado', '"Acevichado"'::jsonb);
