@@ -266,6 +266,13 @@ footer.site img { height: 40px; width: auto; }
 .qty span { min-width: 18px; text-align: center; font-variant-numeric: tabular-nums; }
 .line .ctrl { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
 .linkish { border: 0; background: none; color: var(--shu-hi); font-size: 13px; cursor: pointer; padding: 0; font-weight: 700; }
+.picks { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 6px; }
+.picks label { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--muted); }
+.picks select { flex: 1; min-width: 0; }
+.drawer .hd { display: flex; align-items: center; gap: 14px; }
+.line h4 .q { color: var(--shu-hi); font-variant-numeric: tabular-nums; }
+.chg span { font-style: italic; }
+.checkout .tot small { text-decoration: underline; text-underline-offset: 3px; }
 .chg { display: flex; justify-content: space-between; gap: 8px; font-size: 13px; background: var(--ink); border-radius: 8px; padding: 6px 10px; }
 .chg button { border: 0; background: none; color: var(--muted); cursor: pointer; }
 .chgform { display: grid; gap: 8px; background: var(--ink); border-radius: 10px; padding: 10px; }
@@ -458,10 +465,10 @@ footer.site img { height: 40px; width: auto; }
 
 <div class="drawer-bg" id="drawerBg" hidden></div>
 <aside class="drawer" id="drawer" hidden aria-label="Tu pedido">
-  <header><h2>Tu pedido</h2><button class="x" type="button" id="closeCart" aria-label="Cerrar">✕</button></header>
+  <header><h2>Tu pedido</h2><span class="hd"><button class="linkish" type="button" id="resetCart" hidden>Vaciar pedido</button><button class="x" type="button" id="closeCart" aria-label="Cerrar">✕</button></span></header>
   <div class="lines" id="lines"></div>
   <div class="checkout">
-    <div class="tot"><span>Total <small>despacho aparte</small></span><span class="num" id="cartTotal">$0</span></div>
+    <div class="tot"><span>Total <small>despacho aparte según zona</small></span><span class="num" id="cartTotal">$0</span></div>
     <div class="mode" role="group" aria-label="Entrega">
       <button type="button" data-ship="retiro" aria-pressed="true">Retiro en local</button>
       <button type="button" data-ship="delivery" aria-pressed="false">Delivery</button>
@@ -508,7 +515,7 @@ async function fetchCarta() {
 
 function adaptCarta(d) {
   const de = id => d.productos.filter(p => p.categoria_id === id);
-  PROMOS = de("promos").map(p => ({ id: p.id, name: p.nombre, desc: p.descripcion || "", price: p.precio, img: p.imagen, cover: p.imagen_ajuste === "cover", noChanges: !p.admite_cambios, kani: p.tiene_kanikama, opts: p.opciones.length ? p.opciones : null }));
+  PROMOS = de("promos").map(p => ({ id: p.id, name: p.nombre, desc: p.descripcion || "", price: p.precio, img: p.imagen, cover: p.imagen_ajuste === "cover", noChanges: !p.admite_cambios, kani: p.tiene_kanikama, opts: p.opciones.length ? p.opciones : null, picks: p.elecciones }));
   const tabla = p => ({ title: p.nombre, n: p.piezas, price: p.precio, kani: p.tiene_kanikama, name: p.subtipo === "veggie" || p.subtipo === "vegan" ? p.subtipo : "", rolls: p.rolls.map(r => [r.nombre, r.ingredientes]) });
   const tablas = de("tablas");
   TABLAS = {
@@ -587,8 +594,14 @@ function kaniChanges(card) {
 }
 
 /* ---------- Promos ---------- */
+// Resume lo elegido en una promo doble: ["Pollo","Camarón"] → "1 de pollo y 1 de camarón"; ["Pollo","Pollo"] → "2 de pollo".
+function pickDetail(vals) {
+  if (vals.length === 1) return vals[0];
+  const n = {}; vals.forEach(v => n[v] = (n[v] || 0) + 1);
+  return Object.entries(n).map(([v, c]) => `${c} de ${v.toLowerCase()}`).join(" y ");
+}
 PROMOS.forEach(p => {
-  const sel = p.opts ? `<select id="${p.id}-opt" aria-label="Opción">${p.opts.map(o => `<option>${o}</option>`).join("")}</select>` : "";
+  const sel = p.opts ? `<div class="picks">${Array.from({ length: p.picks }, (_, k) => `<label>${p.picks > 1 ? `<span>${k + 1}.</span>` : ""}<select data-pick aria-label="Opción ${k + 1}">${p.opts.map(o => `<option>${o}</option>`).join("")}</select></label>`).join("")}</div>` : "";
   const card = el("article", { class: "promo" }, `
     <div class="pic"><img class="photo${p.cover ? " cover" : ""}" src="${p.img}" alt="${esc(p.name)}" loading="lazy"></div>
     <div class="body">
@@ -596,7 +609,7 @@ PROMOS.forEach(p => {
       <div class="row foot"><span class="price num">${clp(p.price)}</span><button class="add" type="button" aria-label="Agregar ${esc(p.name)}">+</button></div>
     </div>`);
   wireKani(card, p.price);
-  card.querySelector(".add").onclick = () => addToCart(p.name, p.opts ? $("#" + p.id + "-opt").value : p.desc, p.price, { noChanges: p.noChanges, changes: kaniChanges(card) });
+  card.querySelector(".add").onclick = () => addToCart(p.name, p.opts ? pickDetail([...card.querySelectorAll("[data-pick]")].map(s => s.value)) : p.desc, p.price, { noChanges: p.noChanges, changes: kaniChanges(card) });
   $("#promoGrid").append(card);
 });
 
@@ -781,10 +794,11 @@ function renderCart() {
   $("#cartTotal").textContent = clp(total()); $("#cartTotal2").textContent = clp(total());
   $("#cartbar").classList.toggle("show", n > 0 && $("#drawer").hidden);
   const L = $("#lines");
+  $("#resetCart").hidden = !cart.length;
   if (!cart.length) { L.innerHTML = `<p class="empty">Aún no agregas nada. Toca + en cualquier plato de la carta.</p>`; updateWa(); return; }
   L.innerHTML = cart.map((l, i) => `
     <div class="line">
-      <div class="t"><div><h4>${esc(l.name)}</h4>${l.detail ? `<div class="d">${esc(l.detail)}</div>` : ""}</div><span class="num">${clp(unit(l) * l.qty)}</span></div>
+      <div class="t"><div><h4><b class="q">${l.qty}×</b> ${esc(l.name)}</h4>${l.detail ? `<div class="d">${esc(l.detail)}</div>` : ""}</div><span class="num">${clp(unit(l) * l.qty)}</span></div>
       ${(l.changes || []).map((c, j) => `<div class="chg"><span>${esc(c.label)}${c.note ? ": " + esc(c.note) : ""} · ${c.price ? "+" + clp(c.price) : "gratis"}</span><button type="button" data-rmchg="${i}-${j}" aria-label="Quitar cambio">✕</button></div>`).join("")}
       ${openForm === i ? `<div class="chgform">
           <select id="chgType" aria-label="Tipo de cambio">${CAMBIOS.map(c => `<option value="${c.id}">${c.label} (${c.price ? "+" + clp(c.price) : "gratis"})</option>`).join("")}</select>
@@ -809,14 +823,14 @@ function renderCart() {
 function updateWa() {
   const lines = ["Hola Megami, quiero hacer un pedido:", ""];
   cart.forEach(l => {
-    lines.push(`${l.qty} × ${l.name}${l.detail ? " (" + l.detail + ")" : ""}: ${clp(unit(l) * l.qty)}`);
-    (l.changes || []).forEach(c => lines.push(`   Cambio: ${c.label.toLowerCase()}${c.note ? ", " + c.note : ""} (${c.price ? "+" + clp(c.price) : "sin costo"})`));
+    lines.push(`*${l.qty}×* ${l.name}${l.detail ? " (" + l.detail + ")" : ""}: ${clp(unit(l) * l.qty)}`);
+    (l.changes || []).forEach(c => lines.push(`   _Cambio: ${c.label.toLowerCase()}${c.note ? ", " + c.note : ""} (${c.price ? "+" + clp(c.price) : "sin costo"})_`));
   });
-  lines.push("", `Total: ${clp(total())} (despacho aparte)`);
+  lines.push("", `*Total: ${clp(total())}* _(despacho aparte según zona)_`);
   const addr = $("#addr").value.trim(), nm = $("#cname").value.trim(), note = $("#cnote").value.trim();
-  lines.push(ship === "delivery" ? `Entrega: delivery${addr ? " a " + addr : ""}` : "Entrega: retiro en el local");
-  if (nm) lines.push(`Nombre: ${nm}`);
-  if (note) lines.push(`Nota: ${note}`);
+  lines.push(ship === "delivery" ? `*Entrega:* delivery${addr ? " a " + addr : ""}` : "*Entrega:* retiro en el local");
+  if (nm) lines.push(`*Nombre:* ${nm}`);
+  if (note) lines.push(`*Nota:* _${note}_`);
   lines.push("", "*PEDIDO DE PRUEBA: NO ES REAL. Enviado desde la maqueta de la landing, no preparar.*");
   $("#sendWa").href = `https://wa.me/${WA}?text=${encodeURIComponent(lines.join("\n"))}`;
   $("#sendWa").setAttribute("aria-disabled", cart.length ? "false" : "true");
@@ -835,6 +849,13 @@ $("#addr").hidden = ship !== "delivery"; shipNote();
 
 function openDrawer() { $("#drawer").hidden = false; $("#drawerBg").hidden = false; renderCart(); $("#closeCart").focus(); }
 function closeDrawer() { $("#drawer").hidden = true; $("#drawerBg").hidden = true; openForm = null; renderCart(); }
+let resetArmed;
+$("#resetCart").onclick = e => {
+  const b = e.currentTarget;
+  if (!resetArmed) { b.textContent = "¿Seguro? Toca de nuevo"; resetArmed = setTimeout(() => { resetArmed = null; b.textContent = "Vaciar pedido"; }, 3000); return; }
+  clearTimeout(resetArmed); resetArmed = null; b.textContent = "Vaciar pedido";
+  cart = []; openForm = null; save(); renderCart(); toast("Pedido vacío, puedes armarlo de nuevo");
+};
 $("#openCart").onclick = openDrawer; $("#openCart2").onclick = openDrawer;
 $("#closeCart").onclick = closeDrawer; $("#drawerBg").onclick = closeDrawer;
 document.addEventListener("keydown", e => { if (e.key === "Escape" && !$("#drawer").hidden) closeDrawer(); });

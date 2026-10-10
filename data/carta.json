@@ -93,27 +93,28 @@
    "admite_cambios": true,
    "tiene_kanikama": false,
    "orden": 0,
+   "elecciones": 1,
    "rolls": []
   },
   {
    "id": "promo-burger2",
    "categoria_id": "promos",
-   "nombre": "2 sushi burger",
-   "descripcion": "Pollo o camarón, a elección",
+   "nombre": "Promo 2x1 sushi burger",
+   "descripcion": "Trae 2 sushi burger. Elige la proteína de cada una.",
    "precio": 11490,
    "unidades": null,
    "piezas": null,
    "subtipo": null,
    "opciones": [
     "Pollo",
-    "Camarón",
-    "Una de cada una"
+    "Camarón"
    ],
    "imagen": "img/burger.jpg",
    "imagen_ajuste": "contain",
    "admite_cambios": true,
    "tiene_kanikama": false,
    "orden": 1,
+   "elecciones": 2,
    "rolls": []
   },
   {
@@ -131,13 +132,14 @@
    "admite_cambios": true,
    "tiene_kanikama": true,
    "orden": 2,
+   "elecciones": 1,
    "rolls": []
   },
   {
    "id": "promo-completo2",
    "categoria_id": "promos",
-   "nombre": "2 completos",
-   "descripcion": "Con palta y mayo",
+   "nombre": "Promo 2x1 completos",
+   "descripcion": "Trae 2 completos con palta y mayo.",
    "precio": 4000,
    "unidades": null,
    "piezas": null,
@@ -148,6 +150,7 @@
    "admite_cambios": false,
    "tiene_kanikama": false,
    "orden": 3,
+   "elecciones": 1,
    "rolls": []
   },
   {
@@ -165,6 +168,7 @@
    "admite_cambios": true,
    "tiene_kanikama": false,
    "orden": 0,
+   "elecciones": 1,
    "rolls": [
     {
      "nombre": "Hot pollo",
@@ -193,6 +197,7 @@
    "admite_cambios": true,
    "tiene_kanikama": true,
    "orden": 1,
+   "elecciones": 1,
    "rolls": [
     {
      "nombre": "Hot pollo",
@@ -226,6 +231,7 @@
    "admite_cambios": true,
    "tiene_kanikama": true,
    "orden": 2,
+   "elecciones": 1,
    "rolls": [
     {
      "nombre": "Hot pollo",
@@ -264,6 +270,7 @@
    "admite_cambios": true,
    "tiene_kanikama": true,
    "orden": 3,
+   "elecciones": 1,
    "rolls": [
     {
      "nombre": "Hot pollo",
@@ -307,6 +314,7 @@
    "admite_cambios": true,
    "tiene_kanikama": true,
    "orden": 4,
+   "elecciones": 1,
    "rolls": [
     {
      "nombre": "Hot pollo",
@@ -355,6 +363,7 @@
    "admite_cambios": true,
    "tiene_kanikama": true,
    "orden": 5,
+   "elecciones": 1,
    "rolls": [
     {
      "nombre": "Hot pollo",
@@ -408,6 +417,7 @@
    "admite_cambios": true,
    "tiene_kanikama": true,
    "orden": 6,
+   "elecciones": 1,
    "rolls": [
     {
      "nombre": "Hot pollo",
@@ -466,6 +476,7 @@
    "admite_cambios": true,
    "tiene_kanikama": false,
    "orden": 7,
+   "elecciones": 1,
    "rolls": [
     {
      "nombre": "Hot",
@@ -494,6 +505,7 @@
    "admite_cambios": true,
    "tiene_kanikama": true,
    "orden": 8,
+   "elecciones": 1,
    "rolls": [
     {
      "nombre": "Hot",
@@ -527,6 +539,7 @@
    "admite_cambios": true,
    "tiene_kanikama": true,
    "orden": 9,
+   "elecciones": 1,
    "rolls": [
     {
      "nombre": "Hot",
@@ -565,6 +578,7 @@
    "admite_cambios": true,
    "tiene_kanikama": true,
    "orden": 10,
+   "elecciones": 1,
    "rolls": [
     {
      "nombre": "Hot",
@@ -608,6 +622,7 @@
    "admite_cambios": true,
    "tiene_kanikama": false,
    "orden": 11,
+   "elecciones": 1,
    "rolls": [
     {
      "nombre": "Hot",
@@ -641,6 +656,7 @@
    "admite_cambios": true,
    "tiene_kanikama": false,
    "orden": 12,
+   "elecciones": 1,
    "rolls": [
     {
      "nombre": "California",
@@ -674,6 +690,7 @@
    "admite_cambios": true,
    "tiene_kanikama": false,
    "orden": 0,
+   "elecciones": 1,
    "rolls": []
   },
   {
@@ -691,6 +708,7 @@
    "admite_cambios": true,
    "tiene_kanikama": false,
    "orden": 1,
+   "elecciones": 1,
    "rolls": []
   },
   {
@@ -708,6 +726,7 @@
    "admite_cambios": true,
    "tiene_kanikama": false,
    "orden": 2,
+   "elecciones": 1,
    "rolls": []
   },
   {
@@ -725,6 +744,7 @@
    "admite_cambios": true,
    "tiene_kanikama": false,
    "orden": 3,
+   "elecciones": 1,
    "rolls": []
   },
   {
@@ -742,6 +762,7 @@
    "admite_cambios": true,
    "tiene_kanikama": false,
    "orden": 4,
+   "elecciones": 1,
    "rolls": []
   },
   {
@@ -759,6 +780,7 @@
    "admite_cambios": true,
    "tiene_kanikama": false,
    "orden": 5,
+   "elecciones": 1,
    "rolls": []
   },
   {
@@ -776,6 +798,7 @@
    "admite_cambios": true,
    "tiene_kanikama": false,
    "orden": 6,
+   "elecciones": 1,
    "rolls": []
   },
   {
@@ -793,6 +816,7 @@
    "admite_cambios": true,
    "tiene_kanikama": false,
    "orden": 0,
+   "elecciones": 1,
    "rolls": []
   },
   {
@@ -810,6 +834,7 @@
    "admite_cambios": true,
    "tiene_kanikama": false,
    "orden": 1,
+   "elecciones": 1,
    "rolls": []
   },
   {
@@ -827,6 +852,7 @@
    "admite_cambios": true,
    "tiene_kanikama": false,
    "orden": 2,
+   "elecciones": 1,
    "rolls": []
   },
   {
@@ -844,6 +870,7 @@
    "admite_cambios": true,
    "tiene_kanikama": false,
    "orden": 3,
+   "elecciones": 1,
    "rolls": []
   },
   {
@@ -861,6 +888,7 @@
    "admite_cambios": true,
    "tiene_kanikama": false,
    "orden": 4,
+   "elecciones": 1,
    "rolls": []
   },
   {
@@ -878,6 +906,7 @@
    "admite_cambios": true,
    "tiene_kanikama": false,
    "orden": 5,
+   "elecciones": 1,
    "rolls": []
   },
   {
@@ -895,6 +924,7 @@
    "admite_cambios": true,
    "tiene_kanikama": false,
    "orden": 6,
+   "elecciones": 1,
    "rolls": []
   },
   {
@@ -912,6 +942,7 @@
    "admite_cambios": true,
    "tiene_kanikama": false,
    "orden": 7,
+   "elecciones": 1,
    "rolls": []
   },
   {
@@ -929,6 +960,7 @@
    "admite_cambios": true,
    "tiene_kanikama": false,
    "orden": 8,
+   "elecciones": 1,
    "rolls": []
   },
   {
@@ -946,6 +978,7 @@
    "admite_cambios": true,
    "tiene_kanikama": false,
    "orden": 0,
+   "elecciones": 1,
    "rolls": []
   },
   {
@@ -963,6 +996,7 @@
    "admite_cambios": true,
    "tiene_kanikama": false,
    "orden": 1,
+   "elecciones": 1,
    "rolls": []
   },
   {
@@ -980,6 +1014,7 @@
    "admite_cambios": true,
    "tiene_kanikama": false,
    "orden": 2,
+   "elecciones": 1,
    "rolls": []
   },
   {
@@ -997,6 +1032,7 @@
    "admite_cambios": true,
    "tiene_kanikama": false,
    "orden": 3,
+   "elecciones": 1,
    "rolls": []
   },
   {
@@ -1014,6 +1050,7 @@
    "admite_cambios": true,
    "tiene_kanikama": false,
    "orden": 4,
+   "elecciones": 1,
    "rolls": []
   },
   {
@@ -1031,6 +1068,7 @@
    "admite_cambios": true,
    "tiene_kanikama": false,
    "orden": 0,
+   "elecciones": 1,
    "rolls": []
   },
   {
@@ -1048,6 +1086,7 @@
    "admite_cambios": true,
    "tiene_kanikama": false,
    "orden": 1,
+   "elecciones": 1,
    "rolls": []
   },
   {
@@ -1065,6 +1104,7 @@
    "admite_cambios": true,
    "tiene_kanikama": false,
    "orden": 2,
+   "elecciones": 1,
    "rolls": []
   },
   {
@@ -1082,6 +1122,7 @@
    "admite_cambios": true,
    "tiene_kanikama": false,
    "orden": 3,
+   "elecciones": 1,
    "rolls": []
   },
   {
@@ -1099,6 +1140,7 @@
    "admite_cambios": true,
    "tiene_kanikama": false,
    "orden": 4,
+   "elecciones": 1,
    "rolls": []
   },
   {
@@ -1116,6 +1158,7 @@
    "admite_cambios": true,
    "tiene_kanikama": false,
    "orden": 5,
+   "elecciones": 1,
    "rolls": []
   },
   {
@@ -1133,6 +1176,7 @@
    "admite_cambios": true,
    "tiene_kanikama": false,
    "orden": 6,
+   "elecciones": 1,
    "rolls": []
   },
   {
@@ -1153,6 +1197,7 @@
    "admite_cambios": false,
    "tiene_kanikama": false,
    "orden": 0,
+   "elecciones": 1,
    "rolls": []
   },
   {
@@ -1175,6 +1220,7 @@
    "admite_cambios": false,
    "tiene_kanikama": false,
    "orden": 1,
+   "elecciones": 1,
    "rolls": []
   },
   {
@@ -1197,6 +1243,7 @@
    "admite_cambios": false,
    "tiene_kanikama": false,
    "orden": 2,
+   "elecciones": 1,
    "rolls": []
   },
   {
@@ -1218,6 +1265,7 @@
    "admite_cambios": false,
    "tiene_kanikama": false,
    "orden": 3,
+   "elecciones": 1,
    "rolls": []
   },
   {
@@ -1239,6 +1287,7 @@
    "admite_cambios": false,
    "tiene_kanikama": false,
    "orden": 4,
+   "elecciones": 1,
    "rolls": []
   },
   {
@@ -1260,6 +1309,7 @@
    "admite_cambios": false,
    "tiene_kanikama": false,
    "orden": 5,
+   "elecciones": 1,
    "rolls": []
   },
   {
@@ -1277,6 +1327,7 @@
    "admite_cambios": false,
    "tiene_kanikama": false,
    "orden": 0,
+   "elecciones": 1,
    "rolls": []
   },
   {
@@ -1294,6 +1345,7 @@
    "admite_cambios": false,
    "tiene_kanikama": false,
    "orden": 1,
+   "elecciones": 1,
    "rolls": []
   },
   {
@@ -1311,6 +1363,7 @@
    "admite_cambios": false,
    "tiene_kanikama": false,
    "orden": 2,
+   "elecciones": 1,
    "rolls": []
   },
   {
@@ -1328,6 +1381,7 @@
    "admite_cambios": false,
    "tiene_kanikama": false,
    "orden": 3,
+   "elecciones": 1,
    "rolls": []
   },
   {
@@ -1345,6 +1399,7 @@
    "admite_cambios": false,
    "tiene_kanikama": false,
    "orden": 0,
+   "elecciones": 1,
    "rolls": []
   },
   {
@@ -1362,6 +1417,7 @@
    "admite_cambios": false,
    "tiene_kanikama": false,
    "orden": 1,
+   "elecciones": 1,
    "rolls": []
   },
   {
@@ -1379,6 +1435,7 @@
    "admite_cambios": false,
    "tiene_kanikama": false,
    "orden": 2,
+   "elecciones": 1,
    "rolls": []
   },
   {
@@ -1396,6 +1453,7 @@
    "admite_cambios": false,
    "tiene_kanikama": false,
    "orden": 3,
+   "elecciones": 1,
    "rolls": []
   },
   {
@@ -1413,6 +1471,7 @@
    "admite_cambios": false,
    "tiene_kanikama": false,
    "orden": 4,
+   "elecciones": 1,
    "rolls": []
   },
   {
@@ -1430,6 +1489,7 @@
    "admite_cambios": false,
    "tiene_kanikama": false,
    "orden": 5,
+   "elecciones": 1,
    "rolls": []
   },
   {
@@ -1447,6 +1507,7 @@
    "admite_cambios": false,
    "tiene_kanikama": false,
    "orden": 6,
+   "elecciones": 1,
    "rolls": []
   }
  ],

@@ -21,6 +21,7 @@ create table public.productos (
   piezas         int check (piezas > 0),     -- tablas: total de piezas
   subtipo        text,                       -- tablas: mixta, hot, veggie, vegan
   opciones       text[] not null default '{}', -- sabores o variantes a elegir
+  elecciones     int not null default 1 check (elecciones > 0), -- cuántas opciones elige el cliente por unidad (promo 2x1: 2)
   imagen         text,
   imagen_ajuste  text not null default 'contain' check (imagen_ajuste in ('contain', 'cover')),
   admite_cambios boolean not null default true,
