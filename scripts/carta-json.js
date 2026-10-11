@@ -42,7 +42,7 @@ const cat = Object.fromEntries(t.categorias.map(c => [c.id, c]));
 const carta = {
   categorias: [...t.categorias].sort(byOrder),
   productos: t.productos
-    .map(p => ({ ...p, rolls: t.tabla_rolls.filter(r => r.producto_id === p.id).sort(byOrder).map(r => ({ nombre: r.nombre, ingredientes: r.ingredientes, cantidad: r.cantidad })) }))
+    .map(p => ({ ...p, rolls: t.tabla_rolls.filter(r => r.producto_id === p.id).sort(byOrder).map(r => ({ nombre: r.nombre, ingredientes: r.ingredientes, cantidad: r.cantidad })), platos: t.mas_alla_platos.filter(m => m.producto_id === p.id).sort(byOrder).map(m => ({ nombre: m.nombre, descripcion: m.descripcion, precio: m.precio, quitables: m.quitables })) }))
     .sort((a, b) => cat[a.categoria_id].orden - cat[b.categoria_id].orden || a.orden - b.orden),
   cambios: [...t.cambios].sort(byOrder),
   proteinas: [...t.proteinas].sort(byOrder).map(p => p.nombre),

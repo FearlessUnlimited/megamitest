@@ -17,7 +17,7 @@ create table public.productos (
   nombre         text not null,
   descripcion    text,
   precio         int check (precio >= 0),
-  unidades       int check (unidades > 0),   -- para picar: unidades por porción
+  unidades       int check (unidades > 0),   -- picar: unidades por porción; promos: rolls o platos que trae
   piezas         int check (piezas > 0),     -- tablas: total de piezas
   subtipo        text,                       -- tablas: mixta, hot, veggie, vegan
   opciones       text[] not null default '{}', -- sabores o variantes a elegir
@@ -42,6 +42,18 @@ create table public.tabla_rolls (
   orden        int not null default 0
 );
 create index tabla_rolls_producto_orden on public.tabla_rolls (producto_id, orden);
+
+-- Mini menú de "Más allá del sushi": platos de cada grupo (completos, churrascos, etc.).
+create table public.mas_alla_platos (
+  id          bigint generated always as identity primary key,
+  producto_id text not null references public.productos (id) on update cascade on delete cascade,
+  nombre      text not null,
+  descripcion text,
+  precio      int not null check (precio >= 0),
+  quitables   text[] not null default '{}', -- ingredientes que el cliente puede pedir sin ("sin tomate")
+  orden       int not null default 0
+);
+create index mas_alla_platos_producto_orden on public.mas_alla_platos (producto_id, orden);
 
 -- Cambios de ingredientes y su valor.
 create table public.cambios (
@@ -95,7 +107,7 @@ create table public.config (
 do $$
 declare t text;
 begin
-  foreach t in array array['categorias', 'productos', 'tabla_rolls', 'cambios', 'proteinas',
+  foreach t in array array['categorias', 'productos', 'tabla_rolls', 'mas_alla_platos', 'cambios', 'proteinas',
                            'armador_coberturas', 'armador_bases', 'armador_ingredientes', 'config']
   loop
     execute format('alter table public.%I enable row level security', t);
@@ -120,7 +132,10 @@ as $$
       select jsonb_agg(
                (to_jsonb(p) - 'activo') || jsonb_build_object('rolls', coalesce((
                  select jsonb_agg(jsonb_build_object('nombre', r.nombre, 'ingredientes', r.ingredientes, 'cantidad', r.cantidad) order by r.orden)
-                 from public.tabla_rolls r where r.producto_id = p.id), '[]'::jsonb))
+                 from public.tabla_rolls r where r.producto_id = p.id), '[]'::jsonb),
+                 'platos', coalesce((
+                 select jsonb_agg(jsonb_build_object('nombre', m.nombre, 'descripcion', m.descripcion, 'precio', m.precio, 'quitables', m.quitables) order by m.orden)
+                 from public.mas_alla_platos m where m.producto_id = p.id), '[]'::jsonb))
                order by c.orden, p.orden)
       from public.productos p join public.categorias c on c.id = p.categoria_id
       where p.activo and c.activo), '[]'::jsonb),

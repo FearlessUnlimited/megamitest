@@ -9,15 +9,15 @@ insert into public.categorias (id, nombre, descripcion, imagen, coberturas, orde
   ('gohan', 'Gohan', 'Bowl con base de arroz, palta, queso, sésamo y cebollín.', 'img/gohan.jpg', '{}'::text[], 4),
   ('burger', 'Sushi burger', 'Pan de arroz con palta, queso y cebollín.', 'img/burger.jpg', '{}'::text[], 5),
   ('picar', 'Para picar', 'Mientras llega la tabla.', null, '{}'::text[], 6),
-  ('toppings', 'Toppings', 'Para cubrir cualquier roll.', null, '{}'::text[], 7),
-  ('mas_alla', 'Más allá del sushi', 'Completos, churrascos, chorrillana y más. Pregunta el precio del día por WhatsApp.', null, '{}'::text[], 8),
+  ('toppings', 'Toppings', 'Solo para rolls de sushi, uno por roll. Se eligen al agregar cada roll. El guacamole también va en los completos.', null, '{}'::text[], 7),
+  ('mas_alla', 'Más allá del sushi', 'Completos, hamburguesas, churrascos, chorrillana y más. Precios de ejemplo, por confirmar con el local.', null, '{}'::text[], 8),
   ('bebestibles', 'Bebestibles', 'Precios de ejemplo, por confirmar con el local.', null, '{}'::text[], 9);
 
 insert into public.productos (id, categoria_id, nombre, descripcion, precio, unidades, piezas, subtipo, opciones, imagen, imagen_ajuste, admite_cambios, tiene_kanikama, orden, elecciones, quitables) values
-  ('promo-hand3', 'promos', '3 handrolls', 'Pollo, queso y palta', 11990, null, null, null, '{}'::text[], 'img/x-sushi.jpg', 'contain', true, false, 0, 1, array['Queso', 'Palta']::text[]),
-  ('promo-burger2', 'promos', 'Promo 2x1 sushi burger', 'Trae 2 sushi burger. Elige la proteína de cada una.', 11490, null, null, null, array['Pollo', 'Camarón']::text[], 'img/burger.jpg', 'contain', true, false, 1, 2, array['Palta', 'Queso', 'Cebollín']::text[]),
+  ('promo-hand3', 'promos', '3 handrolls', 'Pollo, queso y palta', 11990, 3, null, null, '{}'::text[], 'img/x-sushi.jpg', 'contain', true, false, 0, 1, array['Queso', 'Palta']::text[]),
+  ('promo-burger2', 'promos', 'Promo 2x1 sushi burger', 'Trae 2 sushi burger. Elige la proteína de cada una.', 11490, 2, null, null, array['Pollo', 'Camarón']::text[], 'img/burger.jpg', 'contain', true, false, 1, 2, array['Palta', 'Queso', 'Cebollín']::text[]),
   ('promo-tabla70', 'promos', 'Tabla 70 piezas mixtas', 'Siete variedades, 10 piezas de cada una', 21990, null, null, null, '{}'::text[], 'img/tabla-roll.jpg', 'contain', true, true, 2, 1, '{}'::text[]),
-  ('promo-completo2', 'promos', 'Promo 2x1 completos', 'Trae 2 completos con palta y mayo.', 4000, null, null, null, '{}'::text[], 'img/completo.jpg', 'cover', false, false, 3, 1, array['Vienesa', 'Palta', 'Mayo']::text[]),
+  ('promo-completo2', 'promos', 'Promo 2x1 completos', 'Trae 2 completos con tomate, palta y mayo.', 4000, 2, null, null, '{}'::text[], 'img/completo.jpg', 'cover', false, false, 3, 1, array['Vienesa', 'Tomate', 'Palta', 'Mayo']::text[]),
   ('tabla-mixta-20', 'tablas', 'Tabla mixta 20 piezas', null, 9990, null, 20, 'mixta', '{}'::text[], null, 'contain', true, false, 0, 1, '{}'::text[]),
   ('tabla-mixta-30', 'tablas', 'Tabla mixta 30 piezas', null, 12990, null, 30, 'mixta', '{}'::text[], null, 'contain', true, true, 1, 1, '{}'::text[]),
   ('tabla-mixta-40', 'tablas', 'Tabla mixta 40 piezas', null, 14490, null, 40, 'mixta', '{}'::text[], null, 'contain', true, true, 2, 1, '{}'::text[]),
@@ -59,10 +59,9 @@ insert into public.productos (id, categoria_id, nombre, descripcion, precio, uni
   ('sushi-burger-salmon', 'burger', 'Sushi burger salmón', null, 6490, null, null, null, '{}'::text[], null, 'contain', true, false, 4, 1, array['Palta', 'Queso', 'Cebollín']::text[]),
   ('sushi-burger-salmon-ahumado', 'burger', 'Sushi burger salmón ahumado', null, 6990, null, null, null, '{}'::text[], null, 'contain', true, false, 5, 1, array['Palta', 'Queso', 'Cebollín']::text[]),
   ('sushi-burger-atun', 'burger', 'Sushi burger atún', null, 6990, null, null, null, '{}'::text[], null, 'contain', true, false, 6, 1, array['Palta', 'Queso', 'Cebollín']::text[]),
-  ('topping-papas-al-hilo', 'toppings', 'Papas al hilo', null, 1990, null, null, null, '{}'::text[], null, 'contain', false, false, 0, 1, '{}'::text[]),
-  ('topping-mousse-de-palta', 'toppings', 'Mousse de palta', null, 2490, null, null, null, '{}'::text[], null, 'contain', false, false, 1, 1, '{}'::text[]),
-  ('topping-guacamole', 'toppings', 'Guacamole', null, 2990, null, null, null, '{}'::text[], null, 'contain', false, false, 2, 1, '{}'::text[]),
-  ('topping-acevichado', 'toppings', 'Acevichado', null, 3490, null, null, null, '{}'::text[], null, 'contain', false, false, 3, 1, '{}'::text[]),
+  ('topping-mousse-de-palta', 'toppings', 'Mousse de palta', null, 2490, null, null, null, '{}'::text[], null, 'contain', false, false, 0, 1, '{}'::text[]),
+  ('topping-guacamole', 'toppings', 'Guacamole', null, 2990, null, null, null, '{}'::text[], null, 'contain', false, false, 1, 1, '{}'::text[]),
+  ('topping-acevichado', 'toppings', 'Acevichado', null, 3490, null, null, null, '{}'::text[], null, 'contain', false, false, 2, 1, '{}'::text[]),
   ('arrollados', 'picar', 'Arrollados', null, 3490, 5, null, null, array['Primavera', 'Jamón queso']::text[], 'img/arrollados.jpg', 'contain', false, false, 0, 1, '{}'::text[]),
   ('korokes', 'picar', 'Korokes', null, 4490, 6, null, null, array['Pollo', 'Camarón', 'Champiñón', 'Palmito']::text[], 'img/korokes.jpg', 'contain', false, false, 1, 1, '{}'::text[]),
   ('gyozas', 'picar', 'Gyozas', null, 3490, 5, null, null, array['Pollo', 'Camarón', 'Vegetariana', 'Cerdo']::text[], 'img/gyozas.jpg', 'contain', false, false, 2, 1, '{}'::text[]),
@@ -82,6 +81,13 @@ insert into public.productos (id, categoria_id, nombre, descripcion, precio, uni
   ('jugo-natural', 'bebestibles', 'Jugo natural', null, 2500, null, null, null, '{}'::text[], null, 'contain', false, false, 3, 1, '{}'::text[]);
 
 insert into public.tabla_rolls (producto_id, nombre, ingredientes, cantidad, orden) values
+  ('promo-tabla70', 'Hot pollo', 'pollo, queso, cebollín', 10, 0),
+  ('promo-tabla70', 'Hot camarón', 'camarón, palta, cebollín', 10, 1),
+  ('promo-tabla70', 'Tempura', 'pollo, queso, nuez', 10, 2),
+  ('promo-tabla70', 'California kani', 'kanikama, queso, cebollín', 10, 3),
+  ('promo-tabla70', 'Cheese', 'morrón, palta, cebollín', 10, 4),
+  ('promo-tabla70', 'Avocado', 'camarón, queso, cebollín', 10, 5),
+  ('promo-tabla70', 'Hosomaki', 'palta, queso', 10, 6),
   ('tabla-mixta-20', 'Hot pollo', 'pollo, queso, cebollín', 10, 0),
   ('tabla-mixta-20', 'Cheese camarón', 'camarón, palta, cebollín', 10, 1),
   ('tabla-mixta-30', 'Hot pollo', 'pollo, queso, cebollín', 10, 0),
@@ -137,6 +143,39 @@ insert into public.tabla_rolls (producto_id, nombre, ingredientes, cantidad, ord
   ('tabla-vegan-30', 'California', 'palmito, palta, aceituna', 10, 0),
   ('tabla-vegan-30', 'Nori', 'choclo, palta, cebollín', 10, 1),
   ('tabla-vegan-30', 'Avocado', 'espárrago, morrón, cebollín', 10, 2);
+
+-- Mini menú de "Más allá del sushi": platos de cada grupo. Precios de ejemplo, por confirmar con el local.
+insert into public.mas_alla_platos (producto_id, nombre, descripcion, precio, quitables, orden) values
+  ('mas-completos', 'Completo italiano', 'Vienesa, tomate, palta y mayo', 2990, array['Vienesa', 'Tomate', 'Palta', 'Mayo']::text[], 0),
+  ('mas-completos', 'Completo dinámico', 'Vienesa, tomate, palta, mayo y chucrut', 3290, array['Vienesa', 'Tomate', 'Palta', 'Mayo']::text[], 1),
+  ('mas-completos', 'Completo con queso', 'Vienesa, queso derretido, tomate, palta y mayo', 3290, array['Vienesa', 'Tomate', 'Palta', 'Mayo']::text[], 2),
+  ('mas-completos', 'As', 'Churrasco, queso derretido y palta', 4490, array['Palta']::text[], 3),
+  ('mas-hamburguesas', 'Hamburguesa clásica', 'Carne, lechuga, tomate y mayo', 3990, array['Tomate', 'Mayo']::text[], 0),
+  ('mas-hamburguesas', 'Hamburguesa con queso', 'Carne, queso cheddar, tomate y mayo', 4290, array['Tomate', 'Mayo']::text[], 1),
+  ('mas-hamburguesas', 'Hamburguesa italiana', 'Carne, tomate, palta y mayo', 4590, array['Tomate', 'Palta', 'Mayo']::text[], 2),
+  ('mas-hamburguesas', 'Hamburguesa doble', 'Doble carne, doble queso', 5490, array['Tomate', 'Mayo']::text[], 3),
+  ('mas-hamburguesas', 'Hamburguesa a lo pobre', 'Carne, huevo, cebolla frita y papas fritas', 5290, '{}'::text[], 4),
+  ('mas-churrascos', 'Churrasco italiano', 'Carne, tomate, palta y mayo', 4990, array['Tomate', 'Palta', 'Mayo']::text[], 0),
+  ('mas-churrascos', 'Churrasco palta', 'Carne, palta y mayo', 4790, array['Palta', 'Mayo']::text[], 1),
+  ('mas-churrascos', 'Churrasco queso', 'Carne y queso derretido', 4790, array['Mayo']::text[], 2),
+  ('mas-churrascos', 'Chacarero', 'Carne, tomate, poroto verde y ají', 4990, array['Tomate']::text[], 3),
+  ('mas-churrascos', 'Barros luco', 'Carne y queso derretido', 4990, '{}'::text[], 4),
+  ('mas-chorrillana', 'Chorrillana para 2', 'Papas fritas, carne, cebolla y huevos', 11990, '{}'::text[], 0),
+  ('mas-chorrillana', 'Chorrillana para 3', 'Papas fritas, carne, cebolla y huevos', 15990, '{}'::text[], 1),
+  ('mas-chorrillana', 'Chorrillana de pollo para 2', 'Papas fritas, pollo, cebolla y huevos', 10990, '{}'::text[], 2),
+  ('mas-papas-fritas', 'Papas fritas chicas', 'Porción individual', 2490, '{}'::text[], 0),
+  ('mas-papas-fritas', 'Papas fritas medianas', 'Para compartir', 3990, '{}'::text[], 1),
+  ('mas-papas-fritas', 'Papas fritas grandes', 'Para 3 o 4 personas', 5490, '{}'::text[], 2),
+  ('mas-papas-fritas', 'Papas con queso', 'Papas fritas con salsa de queso', 4490, '{}'::text[], 3),
+  ('mas-empanadas', 'Empanada de pino', 'Horno', 1990, '{}'::text[], 0),
+  ('mas-empanadas', 'Empanada de queso', 'Frita', 1790, '{}'::text[], 1),
+  ('mas-empanadas', 'Empanada napolitana', 'Queso, tomate y jamón', 2290, '{}'::text[], 2),
+  ('mas-empanadas', 'Empanada de camarón queso', 'Frita', 2790, '{}'::text[], 3),
+  ('mas-empanadas', 'Empanada de pollo queso', 'Frita', 2290, '{}'::text[], 4),
+  ('mas-fajitas', 'Fajitas de pollo', 'Pollo, pimentón y cebolla, con tortillas', 5990, '{}'::text[], 0),
+  ('mas-fajitas', 'Fajitas de vacuno', 'Carne, pimentón y cebolla, con tortillas', 6490, '{}'::text[], 1),
+  ('mas-fajitas', 'Fajitas mixtas', 'Pollo y carne, con tortillas', 6990, '{}'::text[], 2),
+  ('mas-fajitas', 'Fajitas vegetarianas', 'Verduras salteadas, con tortillas', 5490, '{}'::text[], 3);
 
 insert into public.cambios (id, etiqueta, precio, orden) values
   ('veg-prot', 'Vegetal a proteína', 1500, 0),
@@ -200,5 +239,8 @@ insert into public.armador_ingredientes (nombre, tipo, orden) values
 insert into public.config (clave, valor) values
   ('sin_arroz_precio', '6490'::jsonb),
   ('propuesta_kanikama', '{"proteina":"Pollo","precio":0}'::jsonb),
-  ('acompanamientos', '{"salsas": ["Soya", "Unagi", "Ambas"], "palitos_por_defecto": 2, "opcionales": ["Jengibre", "Wasabi"]}'::jsonb),
-  ('topping_destacado', '"Acevichado"'::jsonb);
+  ('acompanamientos', '{"salsas": ["Soya", "Unagi", "Ambas"], "palitos_por_defecto": 2, "opcionales": ["Jengibre", "Wasabi"], "extras": [{"nombre": "Papas al hilo", "precio": 1990}]}'::jsonb),
+  ('topping_destacado', '"Acevichado"'::jsonb),
+  ('comida_rapida', '{"salsas": ["Ketchup", "Mostaza"], "productos": ["promo-completo2", "mas-completos", "mas-hamburguesas", "mas-churrascos", "mas-chorrillana", "mas-papas-fritas", "mas-fajitas"]}'::jsonb),
+  ('unidades_nombres', '{"promo-hand3": "Handroll", "promo-burger2": "Sushi burger", "promo-completo2": "Completo"}'::jsonb),
+  ('toppings', '{"categorias": ["tablas", "especiales", "handrolls", "gohan", "burger"], "completos": {"topping": "Guacamole", "productos": ["promo-completo2", "mas-completos"]}}'::jsonb);

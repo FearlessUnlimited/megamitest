@@ -63,7 +63,7 @@
   {
    "id": "toppings",
    "nombre": "Toppings",
-   "descripcion": "Para cubrir cualquier roll.",
+   "descripcion": "Solo para rolls de sushi, uno por roll. Se eligen al agregar cada roll. El guacamole también va en los completos.",
    "imagen": null,
    "coberturas": [],
    "orden": 7
@@ -71,7 +71,7 @@
   {
    "id": "mas_alla",
    "nombre": "Más allá del sushi",
-   "descripcion": "Completos, churrascos, chorrillana y más. Pregunta el precio del día por WhatsApp.",
+   "descripcion": "Completos, hamburguesas, churrascos, chorrillana y más. Precios de ejemplo, por confirmar con el local.",
    "imagen": null,
    "coberturas": [],
    "orden": 8
@@ -92,7 +92,7 @@
    "nombre": "3 handrolls",
    "descripcion": "Pollo, queso y palta",
    "precio": 11990,
-   "unidades": null,
+   "unidades": 3,
    "piezas": null,
    "subtipo": null,
    "opciones": [],
@@ -106,7 +106,8 @@
     "Queso",
     "Palta"
    ],
-   "rolls": []
+   "rolls": [],
+   "platos": []
   },
   {
    "id": "promo-burger2",
@@ -114,7 +115,7 @@
    "nombre": "Promo 2x1 sushi burger",
    "descripcion": "Trae 2 sushi burger. Elige la proteína de cada una.",
    "precio": 11490,
-   "unidades": null,
+   "unidades": 2,
    "piezas": null,
    "subtipo": null,
    "opciones": [
@@ -132,7 +133,8 @@
     "Queso",
     "Cebollín"
    ],
-   "rolls": []
+   "rolls": [],
+   "platos": []
   },
   {
    "id": "promo-tabla70",
@@ -151,15 +153,52 @@
    "orden": 2,
    "elecciones": 1,
    "quitables": [],
-   "rolls": []
+   "rolls": [
+    {
+     "nombre": "Hot pollo",
+     "ingredientes": "pollo, queso, cebollín",
+     "cantidad": 10
+    },
+    {
+     "nombre": "Hot camarón",
+     "ingredientes": "camarón, palta, cebollín",
+     "cantidad": 10
+    },
+    {
+     "nombre": "Tempura",
+     "ingredientes": "pollo, queso, nuez",
+     "cantidad": 10
+    },
+    {
+     "nombre": "California kani",
+     "ingredientes": "kanikama, queso, cebollín",
+     "cantidad": 10
+    },
+    {
+     "nombre": "Cheese",
+     "ingredientes": "morrón, palta, cebollín",
+     "cantidad": 10
+    },
+    {
+     "nombre": "Avocado",
+     "ingredientes": "camarón, queso, cebollín",
+     "cantidad": 10
+    },
+    {
+     "nombre": "Hosomaki",
+     "ingredientes": "palta, queso",
+     "cantidad": 10
+    }
+   ],
+   "platos": []
   },
   {
    "id": "promo-completo2",
    "categoria_id": "promos",
    "nombre": "Promo 2x1 completos",
-   "descripcion": "Trae 2 completos con palta y mayo.",
+   "descripcion": "Trae 2 completos con tomate, palta y mayo.",
    "precio": 4000,
-   "unidades": null,
+   "unidades": 2,
    "piezas": null,
    "subtipo": null,
    "opciones": [],
@@ -171,10 +210,12 @@
    "elecciones": 1,
    "quitables": [
     "Vienesa",
+    "Tomate",
     "Palta",
     "Mayo"
    ],
-   "rolls": []
+   "rolls": [],
+   "platos": []
   },
   {
    "id": "tabla-mixta-20",
@@ -204,7 +245,8 @@
      "ingredientes": "camarón, palta, cebollín",
      "cantidad": 10
     }
-   ]
+   ],
+   "platos": []
   },
   {
    "id": "tabla-mixta-30",
@@ -239,7 +281,8 @@
      "ingredientes": "kanikama, queso, cebollín",
      "cantidad": 10
     }
-   ]
+   ],
+   "platos": []
   },
   {
    "id": "tabla-mixta-40",
@@ -279,7 +322,8 @@
      "ingredientes": "palta, queso",
      "cantidad": 10
     }
-   ]
+   ],
+   "platos": []
   },
   {
    "id": "tabla-mixta-50",
@@ -324,7 +368,8 @@
      "ingredientes": "palta, queso",
      "cantidad": 10
     }
-   ]
+   ],
+   "platos": []
   },
   {
    "id": "tabla-mixta-60",
@@ -374,7 +419,8 @@
      "ingredientes": "palta, queso",
      "cantidad": 10
     }
-   ]
+   ],
+   "platos": []
   },
   {
    "id": "tabla-mixta-70",
@@ -429,7 +475,8 @@
      "ingredientes": "palta, queso",
      "cantidad": 10
     }
-   ]
+   ],
+   "platos": []
   },
   {
    "id": "tabla-mixta-80",
@@ -489,7 +536,8 @@
      "ingredientes": "palmito, queso, palta",
      "cantidad": 10
     }
-   ]
+   ],
+   "platos": []
   },
   {
    "id": "tabla-hot-20",
@@ -519,7 +567,8 @@
      "ingredientes": "camarón, queso, cebollín",
      "cantidad": 10
     }
-   ]
+   ],
+   "platos": []
   },
   {
    "id": "tabla-hot-30",
@@ -554,7 +603,8 @@
      "ingredientes": "kanikama, queso, cebollín",
      "cantidad": 10
     }
-   ]
+   ],
+   "platos": []
   },
   {
    "id": "tabla-hot-40",
@@ -594,7 +644,8 @@
      "ingredientes": "champiñón, queso, cebollín",
      "cantidad": 10
     }
-   ]
+   ],
+   "platos": []
   },
   {
    "id": "tabla-hot-50",
@@ -639,7 +690,8 @@
      "ingredientes": "salmón, queso, palta",
      "cantidad": 10
     }
-   ]
+   ],
+   "platos": []
   },
   {
    "id": "tabla-veggie-30",
@@ -674,7 +726,8 @@
      "ingredientes": "palmito, queso, aceituna",
      "cantidad": 10
     }
-   ]
+   ],
+   "platos": []
   },
   {
    "id": "tabla-vegan-30",
@@ -709,7 +762,8 @@
      "ingredientes": "espárrago, morrón, cebollín",
      "cantidad": 10
     }
-   ]
+   ],
+   "platos": []
   },
   {
    "id": "especial-hot-pollo",
@@ -728,7 +782,8 @@
    "orden": 0,
    "elecciones": 1,
    "quitables": [],
-   "rolls": []
+   "rolls": [],
+   "platos": []
   },
   {
    "id": "especial-hot-acevichado",
@@ -747,7 +802,8 @@
    "orden": 1,
    "elecciones": 1,
    "quitables": [],
-   "rolls": []
+   "rolls": [],
+   "platos": []
   },
   {
    "id": "especial-hot-pollo-fries",
@@ -766,7 +822,8 @@
    "orden": 2,
    "elecciones": 1,
    "quitables": [],
-   "rolls": []
+   "rolls": [],
+   "platos": []
   },
   {
    "id": "especial-mango-roll",
@@ -785,7 +842,8 @@
    "orden": 3,
    "elecciones": 1,
    "quitables": [],
-   "rolls": []
+   "rolls": [],
+   "platos": []
   },
   {
    "id": "especial-guacamole-roll",
@@ -804,7 +862,8 @@
    "orden": 4,
    "elecciones": 1,
    "quitables": [],
-   "rolls": []
+   "rolls": [],
+   "platos": []
   },
   {
    "id": "especial-avocado-acevichado",
@@ -823,7 +882,8 @@
    "orden": 5,
    "elecciones": 1,
    "quitables": [],
-   "rolls": []
+   "rolls": [],
+   "platos": []
   },
   {
    "id": "especial-hot-fusion-roll",
@@ -842,7 +902,8 @@
    "orden": 6,
    "elecciones": 1,
    "quitables": [],
-   "rolls": []
+   "rolls": [],
+   "platos": []
   },
   {
    "id": "handroll-pollo",
@@ -865,7 +926,8 @@
     "Palta",
     "Cebollín"
    ],
-   "rolls": []
+   "rolls": [],
+   "platos": []
   },
   {
    "id": "handroll-camaron",
@@ -888,7 +950,8 @@
     "Palta",
     "Cebollín"
    ],
-   "rolls": []
+   "rolls": [],
+   "platos": []
   },
   {
    "id": "handroll-camaron-furay",
@@ -911,7 +974,8 @@
     "Palta",
     "Cebollín"
    ],
-   "rolls": []
+   "rolls": [],
+   "platos": []
   },
   {
    "id": "handroll-salmon",
@@ -934,7 +998,8 @@
     "Palta",
     "Cebollín"
    ],
-   "rolls": []
+   "rolls": [],
+   "platos": []
   },
   {
    "id": "handroll-salmon-ahumado",
@@ -957,7 +1022,8 @@
     "Palta",
     "Cebollín"
    ],
-   "rolls": []
+   "rolls": [],
+   "platos": []
   },
   {
    "id": "handroll-salmon-furay",
@@ -980,7 +1046,8 @@
     "Palta",
     "Cebollín"
    ],
-   "rolls": []
+   "rolls": [],
+   "platos": []
   },
   {
    "id": "handroll-kanikama",
@@ -1003,7 +1070,8 @@
     "Palta",
     "Cebollín"
    ],
-   "rolls": []
+   "rolls": [],
+   "platos": []
   },
   {
    "id": "handroll-champinon",
@@ -1026,7 +1094,8 @@
     "Palta",
     "Cebollín"
    ],
-   "rolls": []
+   "rolls": [],
+   "platos": []
   },
   {
    "id": "handroll-atun",
@@ -1049,7 +1118,8 @@
     "Palta",
     "Cebollín"
    ],
-   "rolls": []
+   "rolls": [],
+   "platos": []
   },
   {
    "id": "gohan-pollo-furay",
@@ -1073,7 +1143,8 @@
     "Sésamo",
     "Cebollín"
    ],
-   "rolls": []
+   "rolls": [],
+   "platos": []
   },
   {
    "id": "gohan-camaron-furay",
@@ -1097,7 +1168,8 @@
     "Sésamo",
     "Cebollín"
    ],
-   "rolls": []
+   "rolls": [],
+   "platos": []
   },
   {
    "id": "gohan-champinon",
@@ -1121,7 +1193,8 @@
     "Sésamo",
     "Cebollín"
    ],
-   "rolls": []
+   "rolls": [],
+   "platos": []
   },
   {
    "id": "gohan-salmon",
@@ -1145,7 +1218,8 @@
     "Sésamo",
     "Cebollín"
    ],
-   "rolls": []
+   "rolls": [],
+   "platos": []
   },
   {
    "id": "gohan-mixto",
@@ -1169,7 +1243,8 @@
     "Sésamo",
     "Cebollín"
    ],
-   "rolls": []
+   "rolls": [],
+   "platos": []
   },
   {
    "id": "sushi-burger-pollo",
@@ -1192,7 +1267,8 @@
     "Queso",
     "Cebollín"
    ],
-   "rolls": []
+   "rolls": [],
+   "platos": []
   },
   {
    "id": "sushi-burger-camaron",
@@ -1215,7 +1291,8 @@
     "Queso",
     "Cebollín"
    ],
-   "rolls": []
+   "rolls": [],
+   "platos": []
   },
   {
    "id": "sushi-burger-champinon",
@@ -1238,7 +1315,8 @@
     "Queso",
     "Cebollín"
    ],
-   "rolls": []
+   "rolls": [],
+   "platos": []
   },
   {
    "id": "sushi-burger-camaron-furay",
@@ -1261,7 +1339,8 @@
     "Queso",
     "Cebollín"
    ],
-   "rolls": []
+   "rolls": [],
+   "platos": []
   },
   {
    "id": "sushi-burger-salmon",
@@ -1284,7 +1363,8 @@
     "Queso",
     "Cebollín"
    ],
-   "rolls": []
+   "rolls": [],
+   "platos": []
   },
   {
    "id": "sushi-burger-salmon-ahumado",
@@ -1307,7 +1387,8 @@
     "Queso",
     "Cebollín"
    ],
-   "rolls": []
+   "rolls": [],
+   "platos": []
   },
   {
    "id": "sushi-burger-atun",
@@ -1330,7 +1411,8 @@
     "Queso",
     "Cebollín"
    ],
-   "rolls": []
+   "rolls": [],
+   "platos": []
   },
   {
    "id": "arrollados",
@@ -1352,7 +1434,8 @@
    "orden": 0,
    "elecciones": 1,
    "quitables": [],
-   "rolls": []
+   "rolls": [],
+   "platos": []
   },
   {
    "id": "korokes",
@@ -1376,7 +1459,8 @@
    "orden": 1,
    "elecciones": 1,
    "quitables": [],
-   "rolls": []
+   "rolls": [],
+   "platos": []
   },
   {
    "id": "gyozas",
@@ -1400,7 +1484,8 @@
    "orden": 2,
    "elecciones": 1,
    "quitables": [],
-   "rolls": []
+   "rolls": [],
+   "platos": []
   },
   {
    "id": "nigiri",
@@ -1423,7 +1508,8 @@
    "orden": 3,
    "elecciones": 1,
    "quitables": [],
-   "rolls": []
+   "rolls": [],
+   "platos": []
   },
   {
    "id": "furay",
@@ -1446,7 +1532,8 @@
    "orden": 4,
    "elecciones": 1,
    "quitables": [],
-   "rolls": []
+   "rolls": [],
+   "platos": []
   },
   {
    "id": "sashimi",
@@ -1469,26 +1556,8 @@
    "orden": 5,
    "elecciones": 1,
    "quitables": [],
-   "rolls": []
-  },
-  {
-   "id": "topping-papas-al-hilo",
-   "categoria_id": "toppings",
-   "nombre": "Papas al hilo",
-   "descripcion": null,
-   "precio": 1990,
-   "unidades": null,
-   "piezas": null,
-   "subtipo": null,
-   "opciones": [],
-   "imagen": null,
-   "imagen_ajuste": "contain",
-   "admite_cambios": false,
-   "tiene_kanikama": false,
-   "orden": 0,
-   "elecciones": 1,
-   "quitables": [],
-   "rolls": []
+   "rolls": [],
+   "platos": []
   },
   {
    "id": "topping-mousse-de-palta",
@@ -1504,10 +1573,11 @@
    "imagen_ajuste": "contain",
    "admite_cambios": false,
    "tiene_kanikama": false,
-   "orden": 1,
+   "orden": 0,
    "elecciones": 1,
    "quitables": [],
-   "rolls": []
+   "rolls": [],
+   "platos": []
   },
   {
    "id": "topping-guacamole",
@@ -1523,10 +1593,11 @@
    "imagen_ajuste": "contain",
    "admite_cambios": false,
    "tiene_kanikama": false,
-   "orden": 2,
+   "orden": 1,
    "elecciones": 1,
    "quitables": [],
-   "rolls": []
+   "rolls": [],
+   "platos": []
   },
   {
    "id": "topping-acevichado",
@@ -1542,10 +1613,11 @@
    "imagen_ajuste": "contain",
    "admite_cambios": false,
    "tiene_kanikama": false,
-   "orden": 3,
+   "orden": 2,
    "elecciones": 1,
    "quitables": [],
-   "rolls": []
+   "rolls": [],
+   "platos": []
   },
   {
    "id": "mas-completos",
@@ -1564,7 +1636,50 @@
    "orden": 0,
    "elecciones": 1,
    "quitables": [],
-   "rolls": []
+   "rolls": [],
+   "platos": [
+    {
+     "nombre": "Completo italiano",
+     "descripcion": "Vienesa, tomate, palta y mayo",
+     "precio": 2990,
+     "quitables": [
+      "Vienesa",
+      "Tomate",
+      "Palta",
+      "Mayo"
+     ]
+    },
+    {
+     "nombre": "Completo dinámico",
+     "descripcion": "Vienesa, tomate, palta, mayo y chucrut",
+     "precio": 3290,
+     "quitables": [
+      "Vienesa",
+      "Tomate",
+      "Palta",
+      "Mayo"
+     ]
+    },
+    {
+     "nombre": "Completo con queso",
+     "descripcion": "Vienesa, queso derretido, tomate, palta y mayo",
+     "precio": 3290,
+     "quitables": [
+      "Vienesa",
+      "Tomate",
+      "Palta",
+      "Mayo"
+     ]
+    },
+    {
+     "nombre": "As",
+     "descripcion": "Churrasco, queso derretido y palta",
+     "precio": 4490,
+     "quitables": [
+      "Palta"
+     ]
+    }
+   ]
   },
   {
    "id": "mas-hamburguesas",
@@ -1583,7 +1698,52 @@
    "orden": 1,
    "elecciones": 1,
    "quitables": [],
-   "rolls": []
+   "rolls": [],
+   "platos": [
+    {
+     "nombre": "Hamburguesa clásica",
+     "descripcion": "Carne, lechuga, tomate y mayo",
+     "precio": 3990,
+     "quitables": [
+      "Tomate",
+      "Mayo"
+     ]
+    },
+    {
+     "nombre": "Hamburguesa con queso",
+     "descripcion": "Carne, queso cheddar, tomate y mayo",
+     "precio": 4290,
+     "quitables": [
+      "Tomate",
+      "Mayo"
+     ]
+    },
+    {
+     "nombre": "Hamburguesa italiana",
+     "descripcion": "Carne, tomate, palta y mayo",
+     "precio": 4590,
+     "quitables": [
+      "Tomate",
+      "Palta",
+      "Mayo"
+     ]
+    },
+    {
+     "nombre": "Hamburguesa doble",
+     "descripcion": "Doble carne, doble queso",
+     "precio": 5490,
+     "quitables": [
+      "Tomate",
+      "Mayo"
+     ]
+    },
+    {
+     "nombre": "Hamburguesa a lo pobre",
+     "descripcion": "Carne, huevo, cebolla frita y papas fritas",
+     "precio": 5290,
+     "quitables": []
+    }
+   ]
   },
   {
    "id": "mas-churrascos",
@@ -1602,7 +1762,50 @@
    "orden": 2,
    "elecciones": 1,
    "quitables": [],
-   "rolls": []
+   "rolls": [],
+   "platos": [
+    {
+     "nombre": "Churrasco italiano",
+     "descripcion": "Carne, tomate, palta y mayo",
+     "precio": 4990,
+     "quitables": [
+      "Tomate",
+      "Palta",
+      "Mayo"
+     ]
+    },
+    {
+     "nombre": "Churrasco palta",
+     "descripcion": "Carne, palta y mayo",
+     "precio": 4790,
+     "quitables": [
+      "Palta",
+      "Mayo"
+     ]
+    },
+    {
+     "nombre": "Churrasco queso",
+     "descripcion": "Carne y queso derretido",
+     "precio": 4790,
+     "quitables": [
+      "Mayo"
+     ]
+    },
+    {
+     "nombre": "Chacarero",
+     "descripcion": "Carne, tomate, poroto verde y ají",
+     "precio": 4990,
+     "quitables": [
+      "Tomate"
+     ]
+    },
+    {
+     "nombre": "Barros luco",
+     "descripcion": "Carne y queso derretido",
+     "precio": 4990,
+     "quitables": []
+    }
+   ]
   },
   {
    "id": "mas-chorrillana",
@@ -1621,7 +1824,27 @@
    "orden": 3,
    "elecciones": 1,
    "quitables": [],
-   "rolls": []
+   "rolls": [],
+   "platos": [
+    {
+     "nombre": "Chorrillana para 2",
+     "descripcion": "Papas fritas, carne, cebolla y huevos",
+     "precio": 11990,
+     "quitables": []
+    },
+    {
+     "nombre": "Chorrillana para 3",
+     "descripcion": "Papas fritas, carne, cebolla y huevos",
+     "precio": 15990,
+     "quitables": []
+    },
+    {
+     "nombre": "Chorrillana de pollo para 2",
+     "descripcion": "Papas fritas, pollo, cebolla y huevos",
+     "precio": 10990,
+     "quitables": []
+    }
+   ]
   },
   {
    "id": "mas-papas-fritas",
@@ -1640,7 +1863,33 @@
    "orden": 4,
    "elecciones": 1,
    "quitables": [],
-   "rolls": []
+   "rolls": [],
+   "platos": [
+    {
+     "nombre": "Papas fritas chicas",
+     "descripcion": "Porción individual",
+     "precio": 2490,
+     "quitables": []
+    },
+    {
+     "nombre": "Papas fritas medianas",
+     "descripcion": "Para compartir",
+     "precio": 3990,
+     "quitables": []
+    },
+    {
+     "nombre": "Papas fritas grandes",
+     "descripcion": "Para 3 o 4 personas",
+     "precio": 5490,
+     "quitables": []
+    },
+    {
+     "nombre": "Papas con queso",
+     "descripcion": "Papas fritas con salsa de queso",
+     "precio": 4490,
+     "quitables": []
+    }
+   ]
   },
   {
    "id": "mas-empanadas",
@@ -1659,7 +1908,39 @@
    "orden": 5,
    "elecciones": 1,
    "quitables": [],
-   "rolls": []
+   "rolls": [],
+   "platos": [
+    {
+     "nombre": "Empanada de pino",
+     "descripcion": "Horno",
+     "precio": 1990,
+     "quitables": []
+    },
+    {
+     "nombre": "Empanada de queso",
+     "descripcion": "Frita",
+     "precio": 1790,
+     "quitables": []
+    },
+    {
+     "nombre": "Empanada napolitana",
+     "descripcion": "Queso, tomate y jamón",
+     "precio": 2290,
+     "quitables": []
+    },
+    {
+     "nombre": "Empanada de camarón queso",
+     "descripcion": "Frita",
+     "precio": 2790,
+     "quitables": []
+    },
+    {
+     "nombre": "Empanada de pollo queso",
+     "descripcion": "Frita",
+     "precio": 2290,
+     "quitables": []
+    }
+   ]
   },
   {
    "id": "mas-fajitas",
@@ -1678,7 +1959,33 @@
    "orden": 6,
    "elecciones": 1,
    "quitables": [],
-   "rolls": []
+   "rolls": [],
+   "platos": [
+    {
+     "nombre": "Fajitas de pollo",
+     "descripcion": "Pollo, pimentón y cebolla, con tortillas",
+     "precio": 5990,
+     "quitables": []
+    },
+    {
+     "nombre": "Fajitas de vacuno",
+     "descripcion": "Carne, pimentón y cebolla, con tortillas",
+     "precio": 6490,
+     "quitables": []
+    },
+    {
+     "nombre": "Fajitas mixtas",
+     "descripcion": "Pollo y carne, con tortillas",
+     "precio": 6990,
+     "quitables": []
+    },
+    {
+     "nombre": "Fajitas vegetarianas",
+     "descripcion": "Verduras salteadas, con tortillas",
+     "precio": 5490,
+     "quitables": []
+    }
+   ]
   },
   {
    "id": "bebida-lata",
@@ -1697,7 +2004,8 @@
    "orden": 0,
    "elecciones": 1,
    "quitables": [],
-   "rolls": []
+   "rolls": [],
+   "platos": []
   },
   {
    "id": "bebida-1-5l",
@@ -1716,7 +2024,8 @@
    "orden": 1,
    "elecciones": 1,
    "quitables": [],
-   "rolls": []
+   "rolls": [],
+   "platos": []
   },
   {
    "id": "agua-mineral",
@@ -1735,7 +2044,8 @@
    "orden": 2,
    "elecciones": 1,
    "quitables": [],
-   "rolls": []
+   "rolls": [],
+   "platos": []
   },
   {
    "id": "jugo-natural",
@@ -1754,7 +2064,8 @@
    "orden": 3,
    "elecciones": 1,
    "quitables": [],
-   "rolls": []
+   "rolls": [],
+   "platos": []
   }
  ],
  "cambios": [
@@ -2045,8 +2356,50 @@
    "opcionales": [
     "Jengibre",
     "Wasabi"
+   ],
+   "extras": [
+    {
+     "nombre": "Papas al hilo",
+     "precio": 1990
+    }
    ]
   },
-  "topping_destacado": "Acevichado"
+  "topping_destacado": "Acevichado",
+  "comida_rapida": {
+   "salsas": [
+    "Ketchup",
+    "Mostaza"
+   ],
+   "productos": [
+    "promo-completo2",
+    "mas-completos",
+    "mas-hamburguesas",
+    "mas-churrascos",
+    "mas-chorrillana",
+    "mas-papas-fritas",
+    "mas-fajitas"
+   ]
+  },
+  "unidades_nombres": {
+   "promo-hand3": "Handroll",
+   "promo-burger2": "Sushi burger",
+   "promo-completo2": "Completo"
+  },
+  "toppings": {
+   "categorias": [
+    "tablas",
+    "especiales",
+    "handrolls",
+    "gohan",
+    "burger"
+   ],
+   "completos": {
+    "topping": "Guacamole",
+    "productos": [
+     "promo-completo2",
+     "mas-completos"
+    ]
+   }
+  }
  }
 }
