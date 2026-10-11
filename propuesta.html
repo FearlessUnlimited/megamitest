@@ -100,6 +100,7 @@ section { padding-block: clamp(48px, 7vw, 88px); border-bottom: 1px solid var(--
 .cutout .b { background: radial-gradient(circle at 40% 40%, #d8302a, var(--shu) 60%, #8d1411); border-radius: 50%; aspect-ratio: 1; display: grid; place-items: center; padding: 12%; }
 .cutout figcaption { font-size: 12px; letter-spacing: .1em; text-transform: uppercase; font-weight: 700; color: var(--muted); }
 
+.flow-next { margin-top: 28px; max-width: 70ch; color: var(--muted); font-size: 15px; }
 .flow { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; }
 .flow > div { border-radius: 14px; padding: 22px; display: grid; gap: 14px; align-content: start; }
 .flow .before { background: var(--ink-2); border: 1px solid var(--line); }
@@ -342,6 +343,20 @@ Nombre: Camila</div>
           </div>
         </div>
 
+        <div class="block flip">
+          <div>
+            <p class="tagline">6 · Imagen, para picar</p>
+            <h3>Korokes y furay, con foto nueva</h3>
+            <p class="muted">Las fotos anteriores venían recortadas de las láminas. Para estos dos platos hicimos una sesión nueva: el plato completo, con fondo oscuro para que se integre con el de la landing.</p>
+          </div>
+          <div class="cutout" style="align-items:start">
+            <figure><figcaption>Antes · korokes</figcaption><div class="a"><img src="img/antes-korokes.jpg" alt="Korokes con foto anterior, recortada" loading="lazy"></div></figure>
+            <figure><figcaption>Ahora · korokes</figcaption><div class="a"><img src="img/korokes.jpg" alt="Korokes con foto nueva, plato completo" loading="lazy"></div></figure>
+            <figure><figcaption>Antes · furay</figcaption><div class="a"><img src="img/antes-furay.jpg" alt="Furay con foto anterior, recortada" loading="lazy"></div></figure>
+            <figure><figcaption>Ahora · furay</figcaption><div class="a"><img src="img/furay-nueva.jpg" alt="Furay con foto nueva, plato completo" loading="lazy"></div></figure>
+          </div>
+        </div>
+
         <div class="block">
           <div>
             <p class="tagline">7 · Registro de pedidos</p>
@@ -362,6 +377,85 @@ Nombre: Camila</div>
             <small><b style="color:var(--shu-hi)">2×</b> Handroll pollo, sin cebollín</small>
             <small><b style="color:var(--shu-hi)">1×</b> Roll armado</small>
             <div class="sel">Salsa soya · 3 pares de palitos · jengibre</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section id="mejoras-visuales">
+    <div class="wrap">
+      <div class="sec-title">
+        <p class="eyebrow">Mejoras visuales</p>
+        <h2>Cómo se ve antes y ahora, en ejemplos</h2>
+        <p>Maquetas de ejemplo para comparar. No son capturas del sitio en producción.</p>
+      </div>
+      <div class="work">
+
+        <div class="block">
+          <div>
+            <p class="tagline">A · Cantidades</p>
+            <h3>Ver cuántos llevas sin recordarlo</h3>
+            <p class="muted">Antes el + sumaba sin mostrar cuánto llevabas. Ahora el número aparece junto al botón, y el − se vuelve basurero al quedar uno.</p>
+          </div>
+          <div class="ba">
+            <figure><figcaption>Antes</figcaption>
+              <div class="mock">
+                <div><b>Handroll pollo</b></div>
+                <div class="row"><span class="pill">$4.590</span><span>＋</span></div>
+              </div>
+            </figure>
+            <figure><figcaption>Ahora</figcaption>
+              <div class="mock">
+                <div><b>Handroll pollo</b></div>
+                <div class="row"><span class="pill">$4.590</span><span>− <b>2</b> ＋</span></div>
+              </div>
+            </figure>
+          </div>
+        </div>
+
+        <div class="block">
+          <div>
+            <p class="tagline">B · Cambios</p>
+            <h3>Perfecto o Modificar, y el ✓ por unidad</h3>
+            <p class="muted">Las opciones aparecen solo al tocar Modificar. En productos con varias unidades, cada una se aprueba con su ✓ y el botón de abajo agrega todo.</p>
+          </div>
+          <div class="ba">
+            <figure><figcaption>Antes</figcaption>
+              <div class="mock">
+                <div><b>Completo 1</b></div>
+                <ul><li><span>Sin vienesa ?</span></li><li><span>Sin tomate ?</span></li><li><span>Sin palta ?</span></li><li><span>Sin mayo ?</span></li></ul>
+              </div>
+            </figure>
+            <figure><figcaption>Ahora</figcaption>
+              <div class="mock">
+                <div><b>Completo 1</b> <small>Lleva vienesa, tomate, palta y mayo</small></div>
+                <div class="row"><span>Modificar</span><span class="tick">✓</span></div>
+              </div>
+            </figure>
+          </div>
+        </div>
+
+        <div class="block">
+          <div>
+            <p class="tagline">C · Para picar</p>
+            <h3>Precios y botones alineados entre tarjetas</h3>
+            <p class="muted">Antes el selector de sabor cambiaba de ancho según el texto, y el precio y el + quedaban desalineados. Ahora todos miden lo mismo.</p>
+          </div>
+          <div class="ba">
+            <figure><figcaption>Antes</figcaption>
+              <div class="mock">
+                <div class="row" style="justify-content:flex-start;gap:8px"><span class="sel" style="width:140px">Primavera ▾</span><span class="pill">$3.490</span><span>＋</span></div>
+                <div class="row" style="justify-content:flex-start;gap:8px"><span class="sel" style="width:96px">Pollo ▾</span><span class="pill">$4.490</span><span>＋</span></div>
+              </div>
+            </figure>
+            <figure><figcaption>Ahora</figcaption>
+              <div class="mock">
+                <div class="row"><span class="sel" style="flex:1 1 0;width:0">Primavera ▾</span><span class="pill">$3.490</span><span>＋</span></div>
+                <div class="row"><span class="sel" style="flex:1 1 0;width:0">Pollo ▾</span><span class="pill">$4.490</span><span>＋</span></div>
+              </div>
+            </figure>
           </div>
         </div>
 
@@ -401,6 +495,7 @@ Nombre: Camila</div>
           <p class="sum">Un mensaje del cliente y una respuesta del local.</p>
         </div>
       </div>
+      <p class="flow-next">A futuro, este mismo camino puede atenderse solo. Un chatbot de WhatsApp atendería al cliente, tomaría el pedido y lo enviaría a cocina como comanda. Después registraría cada pedido, confirmaría el horario de despacho y avisaría al grupo de delivery. Es una etapa posterior: primero validamos que el cliente pide bien desde la landing.</p>
     </div>
   </section>
 

@@ -66,7 +66,7 @@ insert into public.productos (id, categoria_id, nombre, descripcion, precio, uni
   ('korokes', 'picar', 'Korokes', null, 4490, 6, null, null, array['Pollo', 'Camarón', 'Champiñón', 'Palmito']::text[], 'img/korokes.jpg', 'contain', false, false, 1, 1, '{}'::text[]),
   ('gyozas', 'picar', 'Gyozas', null, 3490, 5, null, null, array['Pollo', 'Camarón', 'Vegetariana', 'Cerdo']::text[], 'img/gyozas.jpg', 'contain', false, false, 2, 1, '{}'::text[]),
   ('nigiri', 'picar', 'Nigiri', null, 3990, 3, null, null, array['Camarón', 'Salmón', 'Atún']::text[], 'img/nigiri.jpg', 'contain', false, false, 3, 1, '{}'::text[]),
-  ('furay', 'picar', 'Furay', null, 3990, 5, null, null, array['Camarón', 'Salmón', 'Pollo']::text[], 'img/furay.jpg', 'contain', false, false, 4, 1, '{}'::text[]),
+  ('furay', 'picar', 'Furay', null, 3990, 5, null, null, array['Camarón', 'Salmón', 'Pollo']::text[], 'img/furay-nueva.jpg', 'contain', false, false, 4, 1, '{}'::text[]),
   ('sashimi', 'picar', 'Sashimi', null, 4990, 5, null, null, array['Camarón', 'Salmón', 'Atún']::text[], 'img/sashimi.jpg', 'contain', false, false, 5, 1, '{}'::text[]),
   ('mas-completos', 'mas_alla', 'Completos', null, null, null, null, null, '{}'::text[], 'img/x-completos.jpg', 'cover', false, false, 0, 1, '{}'::text[]),
   ('mas-hamburguesas', 'mas_alla', 'Hamburguesas', null, null, null, null, null, '{}'::text[], 'img/x-hamburguesa.jpg', 'cover', false, false, 1, 1, '{}'::text[]),
