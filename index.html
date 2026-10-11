@@ -71,7 +71,7 @@ button { font: inherit; color: inherit; }
 .top .fu-nav img { height: 22px; width: 22px; }
 @media (max-width: 520px) { .top .fu-nav { padding: 6px; } .top .fu-nav span { display: none; } }
 .top .spacer { flex: 1; }
-.top .btn { padding: 8px 16px; font-size: 14px; }
+.top .btn { padding: 8px 16px; font-size: 14px; white-space: nowrap; }
 .badge { background: var(--rice); color: var(--ink); border-radius: 999px; min-width: 20px; height: 20px; font-size: 12px; display: inline-grid; place-items: center; padding-inline: 6px; }
 @media (max-width: 520px) { .status-text-long { display: none; } }
 
@@ -330,7 +330,7 @@ details.cu > summary::-webkit-details-marker { display: none; }
 details.cu > summary b { font-size: 15px; }
 details.cu > summary small { color: var(--muted); font-size: 12px; text-align: right; }
 details.cu > summary small.on { color: var(--shu-hi); font-weight: 700; }
-.cu .lbl { display: block; font-size: 12px; color: var(--muted); letter-spacing: .06em; text-transform: uppercase; margin-bottom: 6px; }
+.cu .lbl { margin-top: 4px; display: block; font-size: 12px; color: var(--muted); letter-spacing: .06em; text-transform: uppercase; margin-bottom: 6px; }
 .cu .lbl small { text-transform: none; letter-spacing: 0; }
 .cu .chips { gap: 6px; }
 .cu .chip { padding: 5px 12px; font-size: 13px; }
@@ -339,7 +339,11 @@ details.cu > summary small.on { color: var(--shu-hi); font-weight: 700; }
 .cu details.cc { display: grid; gap: 8px; }
 .cfg-f { display: flex; align-items: center; gap: 10px; position: sticky; bottom: 0; padding: 10px 0 2px; background: var(--ink-2); }
 .cfgmode { overflow: visible !important; background: var(--ink-2) !important; }
-.cfgmode .cfg-f { bottom: 78px; padding-bottom: 8px; }
+body:has(.cfgmode) .cartbar { display: none; }
+.cfgmode .cfg-f { padding-bottom: 8px; }
+details.cu > summary { flex-wrap: wrap; }
+details.cu > summary .nm { display: grid; min-width: 0; }
+details.cu > summary .nm small { text-align: left; }
 .promo-grid, .tabla-grid { align-items: start; }
 .cfg-f .btn { flex: 1; }
 .cfg-f .qty button { width: 36px; height: 36px; font-size: 18px; }
@@ -373,6 +377,14 @@ dialog.mini footer p { font-size: 12px; color: var(--muted); text-align: center;
 .checkout .tot small { font-family: var(--body); font-size: 12px; color: var(--muted); }
 .checkout .mode { margin: 0; width: fit-content; }
 .checkout input[type="text"] { width: 100%; }
+.checkout { gap: 8px; padding: 12px 20px; }
+.checkout .tot { font-size: 20px; }
+.checkout .btn { padding: 11px 20px; }
+.checkout .mode button { padding: 6px 14px; }
+.checkout details.note summary { cursor: pointer; font-size: 13px; font-weight: 700; color: var(--shu-hi); }
+.checkout details.note textarea { margin-top: 8px; min-height: 52px; }
+.checkout .ph { line-height: 1.35; }
+body:has(#drawer:not([hidden])) .toast { bottom: auto; top: 76px; }
 .checkout .btn { width: 100%; }
 .checkout .ph { font-size: 12px; color: var(--muted); text-align: center; }
 
@@ -566,10 +578,9 @@ dialog.mini footer p { font-size: 12px; color: var(--muted); text-align: center;
     </div>
     <input type="text" id="addr" placeholder="Dirección de entrega" autocomplete="street-address" hidden>
     <input type="text" id="cname" placeholder="Tu nombre" autocomplete="name">
-    <textarea id="cnote" placeholder="Nota para el local (opcional)"></textarea>
+    <details class="note" id="noteBox"><summary>Agregar una nota para el local</summary><textarea id="cnote" placeholder="Nota para el local (opcional)" rows="2"></textarea></details>
     <a class="btn btn-red" id="sendWa" href="https://wa.me/56950646715" target="_blank" rel="noopener">Enviar pedido por WhatsApp</a>
-    <p class="ph" id="shipNote">Retiro sin costo en Av. Alemania #6762.</p>
-    <p class="ph">Se abre WhatsApp con tu pedido escrito, al +56 9 5064 6715.</p>
+    <p class="ph"><span id="shipNote">Retiro sin costo en Av. Alemania #6762.</span> Se abre WhatsApp con tu pedido escrito.</p>
   </div>
 </aside>
 
@@ -807,7 +818,7 @@ function openCfg(spec, host, edit) {
           <div class="r"><input type="text" data-cn="${i}" placeholder="Ej: cebollín por salmón"><button class="btn btn-ghost" type="button" style="padding:7px 14px" data-addc="${i}">Agregar</button></div></div></details>` : ""}`;
     if (!multi) return `<div class="cu">${inner}</div>`;
     const open = st.open[i] !== undefined ? st.open[i] : st.units.length <= 3;
-    return `<details class="cu" data-ou="${i}" ${open ? "open" : ""}><summary><b>${esc(u.n)}</b><small class="${mods.length ? "on" : ""}">${mods.length ? esc(mods.join(" · ")) : "normal"}</small></summary>${inner}</details>`;
+    return `<details class="cu" data-ou="${i}" ${open ? "open" : ""}><summary><span class="nm"><b>${esc(u.n.split(" (")[0])}</b>${u.n.includes(" (") ? `<small>${esc(u.n.slice(u.n.indexOf(" (") + 2, -1))}</small>` : ""}</span><small class="${mods.length ? "on" : ""}">${mods.length ? esc(mods.join(" · ")) : "normal"}</small></summary>${inner}</details>`;
   };
   function render() {
     const a = document.activeElement, fk = a && root.contains(a) ? a.closest("[data-sin],[data-top]") : null;
@@ -1155,6 +1166,7 @@ $("#addr").hidden = ship !== "delivery"; shipNote();
 // Datos del cliente: se guardan solo durante esta sesión del navegador.
 ["#addr", "#cname", "#cnote"].forEach(s => {
   try { const v = sessionStorage.getItem("megami-" + s.slice(1)); if (v) $(s).value = v; } catch (e) {}
+  if (s === "#cnote" && $(s).value) $("#noteBox").open = true;
   $(s).addEventListener("input", () => { try { sessionStorage.setItem("megami-" + s.slice(1), $(s).value); } catch (e) {} updateWa(); });
 });
 
