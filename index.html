@@ -324,19 +324,22 @@ footer.site img { height: 40px; width: auto; }
 .cfg-h b { font-family: var(--display); font-weight: 400; font-size: 19px; line-height: 1.15; display: block; }
 .cfg-h small { color: var(--muted); font-size: 13px; display: block; line-height: 1.35; margin-top: 2px; }
 .cfg-b { display: grid; gap: 10px; align-content: start; min-height: 0; }
-.cu { background: var(--ink); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; display: grid; gap: 10px; }
-details.cu > summary { cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
-details.cu > summary::-webkit-details-marker { display: none; }
-details.cu > summary b { font-size: 15px; }
-details.cu > summary small { color: var(--muted); font-size: 12px; text-align: right; }
-details.cu > summary small.on { color: var(--shu-hi); font-weight: 700; }
-.cu .lbl { margin-top: 4px; display: block; font-size: 12px; color: var(--muted); letter-spacing: .06em; text-transform: uppercase; margin-bottom: 6px; }
-.cu .lbl small { text-transform: none; letter-spacing: 0; }
+.cu { background: var(--ink); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; display: grid; gap: 8px; }
+.cu-n { font-size: 16px; }
+.cu-d { color: var(--muted); font-size: 14px; }
+.cu-r { font-size: 13px; color: var(--muted); }
+.cu-r.on { color: var(--rice); }
+.cu-r.on b { color: var(--shu-hi); font-weight: 700; }
+.cu-acts { display: flex; flex-wrap: wrap; gap: 6px 14px; padding-top: 2px; }
+.act { border: 0; background: none; padding: 4px 0; color: var(--shu-hi); font-weight: 700; font-size: 14px; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: color-mix(in srgb, var(--shu-hi) 40%, transparent); }
+.act[aria-expanded="true"] { color: var(--rice); text-decoration-color: var(--rice); }
+.cu-sec { border-top: 1px dashed var(--line); padding-top: 10px; display: grid; gap: 10px; }
+.cu-sec .lbl { margin: 0; }
+.cu-sec .chip { padding: 6px 12px; font-size: 13px; }
+.cu-sec .done { justify-self: start; padding: 6px 16px; font-size: 14px; }
+.cu .lbl { display: block; font-size: 12px; color: var(--muted); letter-spacing: .06em; text-transform: uppercase; }
 .cu .chips { gap: 6px; }
-.cu .chip { padding: 5px 12px; font-size: 13px; }
 .cu .kani { margin: 0; background: transparent; padding: 0; }
-.cu details.cc > summary { cursor: pointer; font-size: 13px; color: var(--shu-hi); font-weight: 700; }
-.cu details.cc { display: grid; gap: 8px; }
 .cfg-f { display: flex; align-items: center; gap: 10px; position: sticky; bottom: 0; padding: 10px 0 2px; background: var(--ink-2); }
 .cfgmode { overflow: visible !important; background: var(--ink-2) !important; }
 body:has(.cfgmode) .cartbar { display: none; }
@@ -673,7 +676,7 @@ async function fetchCarta() {
 
 function adaptCarta(d) {
   const de = id => d.productos.filter(p => p.categoria_id === id);
-  PROMOS = de("promos").map(p => ({ id: p.id, name: p.nombre, desc: p.descripcion || "", price: p.precio, img: p.imagen, cover: p.imagen_ajuste === "cover", noChanges: !p.admite_cambios, kani: p.tiene_kanikama, opts: p.opciones.length ? p.opciones : null, picks: p.elecciones, sin: p.quitables, n: p.unidades, rolls: p.rolls.map(r => `${r.nombre} (${r.ingredientes})`) }));
+  PROMOS = de("promos").map(p => ({ id: p.id, name: p.nombre, desc: p.descripcion || "", price: p.precio, img: p.imagen, cover: p.imagen_ajuste === "cover", noChanges: !p.admite_cambios, kani: p.tiene_kanikama, opts: p.opciones.length ? p.opciones : null, picks: p.elecciones, sin: p.quitables, n: p.unidades, rolls: p.rolls.map(r => [r.nombre, r.ingredientes]) }));
   const tabla = p => ({ title: p.nombre, n: p.piezas, price: p.precio, kani: p.tiene_kanikama, name: p.subtipo === "veggie" || p.subtipo === "vegan" ? p.subtipo : "", rolls: p.rolls.map(r => [r.nombre, r.ingredientes]) });
   const tablas = de("tablas");
   TABLAS = {
@@ -731,7 +734,13 @@ const kaniCost = v => !v ? 0 : (enPropuesta(v) ? PROP.precio : KANI.price);
 
 /* ---------- Unidades: cada una cobra sus propios cambios ---------- */
 const TOPLIST = CATS.find(c => c.id === "toppings").items; // [nombre, precio]
-const mkUnit = (n = "", k = false) => ({ n, k, sin: [], top: null, kani: "", chg: [] });
+const mkUnit = (n = "", k = false, d = "") => ({ n, k, d, sin: [], top: null, kani: "", chg: [] });
+const lista = a => a.length > 1 ? a.slice(0, -1).join(", ") + " y " + a[a.length - 1] : a.join("");
+const cap = t => t.charAt(0).toUpperCase() + t.slice(1);
+const nounOf = id => (UNID[id] || "producto").toLowerCase();
+const lleva = quit => quit.length ? "Lleva " + lista(quit.map(x => x.toLowerCase())) : "";
+// Rolls de una tabla o promo como unidades; si dos se llaman igual, se distinguen por su primer ingrediente.
+const rollUnits = rolls => rolls.map(r => ({ n: rolls.filter(x => x[0] === r[0]).length > 1 ? `${r[0]} ${r[1].split(",")[0]}` : r[0], d: cap(r[1]), k: /kanikama/i.test(r[1]) }));
 const uExtra = u => (u.top ? u.top.price : 0) + kaniCost(u.kani) + u.chg.reduce((a, c) => a + c.price, 0);
 const unit = l => l.price + l.units.reduce((a, u) => a + uExtra(u), 0);
 const total = () => cart.reduce((a, l) => a + unit(l) * l.qty, 0);
@@ -744,22 +753,22 @@ const modsList = u => [
 // Los toppings van solo en sushi; en los completos solo el que indique la carta (guacamole).
 const topChoices = tops => tops === "sushi" ? TOPLIST : tops === "completo" ? TOPLIST.filter(t => t[0] === TOPCFG.completos.topping) : [];
 // spec: lo que se pide. units: [{n, k}] (nombre de cada unidad y si trae kanikama), quit: ingredientes que se pueden quitar.
-const mkSpec = o => ({ pid: o.pid || o.name, name: o.name, detail: o.detail || "", price: o.price, units: o.units || [{ n: "", k: false }], quit: o.quit || [], tops: o.tops || null, cambios: !!o.cambios, rapida: !!o.rapida });
-const specOf = l => ({ pid: l.pid, name: l.name, detail: l.detail, price: l.price, units: l.units.map(u => ({ n: u.n, k: u.k })), quit: l.quit, tops: l.tops, cambios: l.cambios, rapida: l.rapida });
+const mkSpec = o => ({ pid: o.pid || o.name, name: o.name, detail: o.detail || "", price: o.price, noun: o.noun || "producto", units: o.units || [{ n: "", k: false, d: o.desc || "" }], quit: o.quit || [], tops: o.tops || null, cambios: !!o.cambios, rapida: !!o.rapida });
+const specOf = l => ({ pid: l.pid, name: l.name, detail: l.detail, price: l.price, noun: l.noun, units: l.units.map(u => ({ n: u.n, k: u.k, d: u.d })), quit: l.quit, tops: l.tops, cambios: l.cambios, rapida: l.rapida });
 const isCustom = s => s.quit.length || topChoices(s.tops).length || s.cambios || s.units.some(u => u.k);
 const sigOf = (s, units) => JSON.stringify([s.pid, s.name, s.detail, units]);
 
 function pushLine(spec, units, qty = 1) {
   const sig = sigOf(spec, units), ex = cart.find(l => l.sig === sig);
   if (ex) ex.qty += qty;
-  else cart.push({ key: uid(), sig, pid: spec.pid, name: spec.name, detail: spec.detail, price: spec.price, qty, units, quit: spec.quit, tops: spec.tops, cambios: spec.cambios, rapida: spec.rapida });
+  else cart.push({ key: uid(), sig, noun: spec.noun, pid: spec.pid, name: spec.name, detail: spec.detail, price: spec.price, qty, units, quit: spec.quit, tops: spec.tops, cambios: spec.cambios, rapida: spec.rapida });
   save(); renderCart();
   toast(`${spec.name} agregado al pedido${qty > 1 ? " ×" + qty : ""}`);
 }
 // Si el producto admite cambios, se abren ahí mismo (en su tarjeta o en una hoja); si no, se agrega directo.
 function orderProduct(spec, host) {
   if (isCustom(spec)) openCfg(spec, host, null);
-  else pushLine(spec, spec.units.map(u => mkUnit(u.n, u.k)));
+  else pushLine(spec, spec.units.map(u => mkUnit(u.n, u.k, u.d)));
 }
 
 /* ---------- Cantidad visible en cada producto ---------- */
@@ -794,9 +803,10 @@ function toast(msg, ms = 1800) { const t = $("#toast"); t.textContent = msg; t.c
 /* ---------- Configurador: cambios por unidad, antes de agregar ---------- */
 // host: la tarjeta del producto (el configurador ocupa su lugar) o null (hoja inferior). edit: línea del pedido que se edita.
 function openCfg(spec, host, edit) {
-  const st = { units: edit ? JSON.parse(JSON.stringify(edit.units)) : spec.units.map(u => mkUnit(u.n, u.k)), qty: 1, open: {} };
+  const st = { units: edit ? JSON.parse(JSON.stringify(edit.units)) : spec.units.map(u => mkUnit(u.n, u.k, u.d)), qty: 1, sec: {} };
   const multi = st.units.length > 1;
   const tops = topChoices(spec.tops);
+  const noun = spec.noun || "producto";
   const root = el("div", { class: "cfg", role: "group", "aria-label": "Personaliza " + spec.name });
   const dlg = $("#cfgDlg");
   let closed = false;
@@ -806,46 +816,48 @@ function openCfg(spec, host, edit) {
     else { dlg.removeEventListener("close", close); if (dlg.open) dlg.close(); dlg.innerHTML = ""; }
   };
   const lineTotal = () => (spec.price + st.units.reduce((a, u) => a + uExtra(u), 0)) * (edit ? 1 : st.qty);
+  // Cada unidad: qué es y qué lleva, cómo quedará, y tres acciones que se despliegan de a una.
   const unitHtml = (u, i) => {
-    const mods = modsList(u);
-    const inner = `
-      ${spec.quit.length ? `<div class="sin" role="group" aria-label="Quitar ingredientes">${spec.quit.map(q => `<button type="button" class="chip" aria-pressed="${u.sin.includes(q)}" data-sin="${i}" data-q="${esc(q)}">Sin ${esc(q.toLowerCase())} <b aria-hidden="true">${u.sin.includes(q) ? "✓" : "?"}</b></button>`).join("")}</div>` : ""}
-      ${tops.length ? `<div><span class="lbl">Topping <small>· uno por ${multi ? "roll" : "producto"}</small></span><div class="chips">${tops.map(t => chip(esc(t[0]) + (t[0] === DESTACADO ? " ★" : ""), !!u.top && u.top.name === t[0], `data-top="${i}" data-n="${esc(t[0])}"`, "+" + clp(t[1]))).join("")}</div></div>` : ""}
-      ${u.k ? `<div class="kani${u.kani ? " on" : ""}"><label for="cfg-k${i}">¿Sin kanikama? Cámbialo por otra proteína</label><select id="cfg-k${i}" data-kani="${i}"><option value="">Mantener kanikama</option>${PROTEINAS.map(p => `<option value="${esc(p)}" ${u.kani === p ? "selected" : ""}>${esc(p)}${enPropuesta(p) ? " · sin costo" : " · +" + clp(KANI.price)}</option>`).join("")}</select></div>` : ""}
-      ${spec.cambios ? `<details class="cc" data-oc="${i}" ${st.open["c" + i] ? "open" : ""}><summary>Otro cambio${u.chg.length ? " (" + u.chg.length + ")" : ""}</summary>
-        ${u.chg.map((c, j) => `<div class="chg"><span>${esc(c.label)}${c.note ? ": " + esc(c.note) : ""} · ${c.price ? "+" + clp(c.price) : "gratis"}</span><button type="button" data-rmc="${i}|${j}" aria-label="Quitar cambio">✕</button></div>`).join("")}
-        <div class="chgform"><select data-ct="${i}" aria-label="Tipo de cambio">${CAMBIOS.filter(c => !(u.k && c.id === "kani-prot")).map(c => `<option value="${c.id}">${esc(c.label)} (${c.price ? "+" + clp(c.price) : "gratis"})</option>`).join("")}</select>
-          <div class="r"><input type="text" data-cn="${i}" placeholder="Ej: cebollín por salmón"><button class="btn btn-ghost" type="button" style="padding:7px 14px" data-addc="${i}">Agregar</button></div></div></details>` : ""}`;
-    if (!multi) return `<div class="cu">${inner}</div>`;
-    const open = st.open[i] !== undefined ? st.open[i] : st.units.length <= 3;
-    return `<details class="cu" data-ou="${i}" ${open ? "open" : ""}><summary><span class="nm"><b>${esc(u.n.split(" (")[0])}</b>${u.n.includes(" (") ? `<small>${esc(u.n.slice(u.n.indexOf(" (") + 2, -1))}</small>` : ""}</span><small class="${mods.length ? "on" : ""}">${mods.length ? esc(mods.join(" · ")) : "normal"}</small></summary>${inner}</details>`;
+    const mods = modsList(u), sec = st.sec[i];
+    const acts = [["sin", "Quitar ingrediente", spec.quit.length], ["top", "Agregar topping", tops.length], ["kani", "Cambiar kanikama", u.k], ["chg", "Otro cambio", spec.cambios]].filter(a => a[2]);
+    let body = "";
+    if (sec === "sin") body = `<div class="sin" role="group" aria-label="Quitar ingredientes">${spec.quit.map(q => `<button type="button" class="chip" aria-pressed="${u.sin.includes(q)}" data-sin="${i}" data-q="${esc(q)}">Sin ${esc(q.toLowerCase())} <b aria-hidden="true">${u.sin.includes(q) ? "✓" : "?"}</b></button>`).join("")}</div><button class="btn btn-ghost done" type="button" data-done="${i}">Listo</button>`;
+    if (sec === "top") body = `<span class="lbl">Un topping por ${esc(noun)}</span><div class="chips">${tops.map(t => chip(esc(t[0]) + (t[0] === DESTACADO ? " ★" : ""), !!u.top && u.top.name === t[0], `data-top="${i}" data-n="${esc(t[0])}"`, "+" + clp(t[1]))).join("")}</div>`;
+    if (sec === "kani") body = `<div class="kani${u.kani ? " on" : ""}"><label for="cfg-k${i}">Cámbialo por otra proteína</label><select id="cfg-k${i}" data-kani="${i}"><option value="">Mantener kanikama</option>${PROTEINAS.map(p => `<option value="${esc(p)}" ${u.kani === p ? "selected" : ""}>${esc(p)}${enPropuesta(p) ? " · sin costo" : " · +" + clp(KANI.price)}</option>`).join("")}</select></div>`;
+    if (sec === "chg") body = `${u.chg.map((c, j) => `<div class="chg"><span>${esc(c.label)}${c.note ? ": " + esc(c.note) : ""} · ${c.price ? "+" + clp(c.price) : "gratis"}</span><button type="button" data-rmc="${i}|${j}" aria-label="Quitar cambio">✕</button></div>`).join("")}
+      <div class="chgform"><select data-ct="${i}" aria-label="Tipo de cambio">${CAMBIOS.filter(c => !(u.k && c.id === "kani-prot")).map(c => `<option value="${c.id}">${esc(c.label)} (${c.price ? "+" + clp(c.price) : "gratis"})</option>`).join("")}</select>
+      <div class="r"><input type="text" data-cn="${i}" placeholder="Ej: cebollín por salmón"><button class="btn btn-ghost" type="button" style="padding:7px 14px" data-addc="${i}">Agregar</button></div></div><button class="btn btn-ghost done" type="button" data-done="${i}">Listo</button>`;
+    return `<div class="cu">
+      ${multi ? `<b class="cu-n">${esc(u.n)}</b>` : ""}
+      ${u.d ? `<p class="cu-d">${esc(u.d)}</p>` : ""}
+      <p class="cu-r${mods.length ? " on" : ""}">${mods.length ? "Quedará: <b>" + esc(mods.join(" · ")) + "</b>" : "Sin cambios"}</p>
+      <div class="cu-acts">${acts.map(([k, t]) => `<button type="button" class="act" aria-expanded="${sec === k}" data-sec="${i}|${k}">${t}</button>`).join("")}</div>
+      ${body ? `<div class="cu-sec">${body}</div>` : ""}
+    </div>`;
   };
   function render() {
-    const a = document.activeElement, fk = a && root.contains(a) ? a.closest("[data-sin],[data-top]") : null;
+    const a = document.activeElement, fk = a && root.contains(a) ? a.closest("[data-sin],[data-top],[data-sec]") : null;
     const sel = fk ? [...fk.attributes].filter(t => t.name.startsWith("data-")).map(t => `[${t.name}="${CSS.escape(t.value)}"]`).join("") : "";
     const sc = root.querySelector(".cfg-b"), top = sc ? sc.scrollTop : 0;
     root.innerHTML = `
-      <div class="cfg-h"><div><b>${esc(spec.name)}</b>${spec.detail ? `<small>${esc(spec.detail)}</small>` : ""}${multi ? `<small>Elige a cuál va cada cambio. Cada uno se cobra por separado.</small>` : ""}</div><button class="x" type="button" data-x aria-label="Cerrar">✕</button></div>
+      <div class="cfg-h"><div><b>${esc(spec.name)}</b>${spec.detail ? `<small>${esc(spec.detail)}</small>` : ""}${multi ? `<small>Elige en qué ${esc(noun)} va cada cambio. Cada modificación se calcula por separado.</small>` : ""}</div><button class="x" type="button" data-x aria-label="Cerrar">✕</button></div>
       <div class="cfg-b">${st.units.map(unitHtml).join("")}</div>
       <div class="cfg-f">${edit ? "" : `<span class="qty"><button type="button" data-qm aria-label="Menos">−</button><span>${st.qty}</span><button type="button" data-qp aria-label="Más">+</button></span>`}<button class="btn btn-red" type="button" data-ok>${edit ? "Guardar" : "Agregar"} · ${clp(lineTotal())}</button></div>`;
     const nsc = root.querySelector(".cfg-b"); if (nsc) nsc.scrollTop = top;
     if (sel) { const n = root.querySelector(sel); if (n) n.focus({ preventScroll: true }); }
   }
-  root.addEventListener("toggle", e => {
-    const d = e.target; if (!(d instanceof HTMLDetailsElement)) return;
-    if (d.dataset.ou !== undefined) st.open[d.dataset.ou] = d.open;
-    if (d.dataset.oc !== undefined) st.open["c" + d.dataset.oc] = d.open;
-  }, true);
   root.addEventListener("click", e => {
     const t = e.target.closest("button"); if (!t || !root.contains(t)) return;
     const d = t.dataset;
     if (d.x !== undefined) return close();
+    if (d.sec !== undefined) { const [i, k] = d.sec.split("|"); st.sec[i] = st.sec[i] === k ? undefined : k; return render(); }
+    if (d.done !== undefined) { st.sec[d.done] = undefined; return render(); }
     if (d.sin !== undefined) { const u = st.units[d.sin]; u.sin = u.sin.includes(d.q) ? u.sin.filter(x => x !== d.q) : [...u.sin, d.q]; return render(); }
-    if (d.top !== undefined) { const u = st.units[d.top]; u.top = u.top && u.top.name === d.n ? null : { name: d.n, price: TOPLIST.find(x => x[0] === d.n)[1] }; return render(); }
+    if (d.top !== undefined) { const u = st.units[d.top]; u.top = u.top && u.top.name === d.n ? null : { name: d.n, price: TOPLIST.find(x => x[0] === d.n)[1] }; st.sec[d.top] = undefined; return render(); }
     if (d.rmc !== undefined) { const [i, j] = d.rmc.split("|").map(Number); st.units[i].chg.splice(j, 1); return render(); }
     if (d.addc !== undefined) {
       const i = +d.addc, c = CAMBIOS.find(x => x.id === root.querySelector(`[data-ct="${i}"]`).value);
-      st.units[i].chg.push({ label: c.label, price: c.price, note: root.querySelector(`[data-cn="${i}"]`).value.trim() }); st.open["c" + i] = true; return render();
+      st.units[i].chg.push({ label: c.label, price: c.price, note: root.querySelector(`[data-cn="${i}"]`).value.trim() }); return render();
     }
     if (d.qm !== undefined) { st.qty = Math.max(1, st.qty - 1); return render(); }
     if (d.qp !== undefined) { st.qty = Math.min(20, st.qty + 1); return render(); }
@@ -858,7 +870,7 @@ function openCfg(spec, host, edit) {
       } else { pushLine(spec, st.units, st.qty); close(); }
     }
   });
-  root.addEventListener("change", e => { const s = e.target.closest("[data-kani]"); if (s) { st.units[s.dataset.kani].kani = s.value; render(); } });
+  root.addEventListener("change", e => { const s = e.target.closest("[data-kani]"); if (s) { st.units[s.dataset.kani].kani = s.value; st.sec[s.dataset.kani] = undefined; render(); } });
   render();
   if (host) { host.classList.add("cfgmode"); host.append(root); host.scrollIntoView({ block: "nearest", behavior: "smooth" }); }
   else { dlg.innerHTML = ""; dlg.append(root); dlg.addEventListener("close", close); dlg.showModal(); }
@@ -883,12 +895,12 @@ PROMOS.forEach(p => {
     </div>`);
   card.querySelector(".add").onclick = () => {
     const picks = p.opts ? [...card.querySelectorAll("[data-pick]")].map(s => s.value) : [];
-    const noun = UID_NOUN(p.id);
+    const noun = UID_NOUN(p.id), derivada = lleva(p.sin), d0 = /^trae/i.test(p.desc) ? derivada : p.desc;
     // Las unidades de la promo: los rolls de la lista, una por elección (cada una con su proteína), o N iguales.
-    const units = p.rolls.length ? p.rolls.map(r => ({ n: r, k: /kanikama/i.test(r) }))
-      : p.opts && picks.length > 1 ? picks.map((v, k) => ({ n: `${noun} ${k + 1} · ${v.toLowerCase()}`, k: false }))
-      : p.n > 1 ? Array.from({ length: p.n }, (_, k) => ({ n: `${noun} ${k + 1}`, k: false })) : undefined;
-    orderProduct(mkSpec({ pid: p.id, name: p.name, detail: p.opts ? pickDetail(picks) : "", price: p.price, units, quit: p.sin, cambios: !p.noChanges, tops: TOPCFG.completos.productos.includes(p.id) ? "completo" : "sushi", rapida: RAPIDA.productos.includes(p.id) }), card);
+    const units = p.rolls.length ? rollUnits(p.rolls)
+      : p.opts && picks.length > 1 ? picks.map((v, k) => ({ n: `${noun} ${k + 1} · ${v.toLowerCase()}`, k: false, d: derivada }))
+      : p.n > 1 ? Array.from({ length: p.n }, (_, k) => ({ n: `${noun} ${k + 1}`, k: false, d: d0 })) : undefined;
+    orderProduct(mkSpec({ pid: p.id, name: p.name, noun: nounOf(p.id), desc: d0, detail: p.opts ? pickDetail(picks) : "", price: p.price, units, quit: p.sin, cambios: !p.noChanges, tops: TOPCFG.completos.productos.includes(p.id) ? "completo" : "sushi", rapida: RAPIDA.productos.includes(p.id) }), card);
   };
   $("#promoGrid").append(card);
 });
@@ -932,7 +944,7 @@ CATS.forEach(c => {
   if (c.id === "especiales") {
     sec.innerHTML = catHead(c) + `<div class="list">${ESPECIALES.map((e, i) => `
       <div class="item"><div><h3>${e[0]}</h3><p>${e[1]}</p></div><span class="price">${clp(e[2])}</span>${adder(e[0], e[0])}</div>`).join("")}</div>`;
-    sec.querySelectorAll(".adder .add").forEach((b, i) => b.onclick = () => { const e = ESPECIALES[i]; orderProduct(mkSpec({ name: e[0], detail: "Roll especial", price: e[2], tops: "sushi", cambios: true }), null); });
+    sec.querySelectorAll(".adder .add").forEach((b, i) => b.onclick = () => { const e = ESPECIALES[i]; orderProduct(mkSpec({ name: e[0], detail: "Roll especial", desc: cap(e[1]), noun: nounOf("especiales"), price: e[2], tops: "sushi", cambios: true }), null); });
     menu.append(sec); return;
   }
   if (c.id === "picar") {
@@ -950,7 +962,7 @@ CATS.forEach(c => {
       <div class="item"><div><h3>${esc(it[0])}</h3></div><span class="price">${clp(it[1])}</span>${c.id === "toppings" ? "" : adder(it[0], it[0])}</div>`).join("")}</div>`;
   sec.querySelectorAll(".adder .add").forEach((b, i) => b.onclick = () => {
     const it = c.items[i], sushi = TOPCFG.categorias.includes(c.id);
-    orderProduct(mkSpec({ name: it[0], detail: c.cover ? "Cobertura " + $("#cov-" + c.id).value.toLowerCase() : "", price: it[1], quit: it[2], tops: sushi ? "sushi" : null, cambios: sushi }), null);
+    orderProduct(mkSpec({ name: it[0], detail: c.cover ? "Cobertura " + $("#cov-" + c.id).value.toLowerCase() : "", price: it[1], quit: it[2], desc: lleva(it[2]), noun: nounOf(c.id), tops: sushi ? "sushi" : null, cambios: sushi }), null);
   });
   menu.append(sec);
 });
@@ -963,7 +975,7 @@ function renderTablas(kind) {
       <div class="n"><b class="num">${t.n}</b><span>piezas${t.name ? " · " + t.name : ""}</span></div>
       <ul>${t.rolls.map(r => `<li><i>10</i><span>${r[0]} <small>${r[1]}</small></span></li>`).join("")}</ul>
       <div class="foot"><span class="price num">${clp(t.price)}</span>${adder(title, title)}</div>`);
-    card.querySelector(".add").onclick = () => orderProduct(mkSpec({ name: title, price: t.price, units: t.rolls.map(r => ({ n: `${r[0]} (${r[1]})`, k: /kanikama/i.test(r[1]) })), tops: TOPCFG.categorias.includes("tablas") ? "sushi" : null, cambios: true }), card);
+    card.querySelector(".add").onclick = () => orderProduct(mkSpec({ name: title, price: t.price, noun: nounOf("tablas"), units: rollUnits(t.rolls), tops: TOPCFG.categorias.includes("tablas") ? "sushi" : null, cambios: true }), card);
     g.append(card);
   });
   refreshCounts();
@@ -983,7 +995,7 @@ function openMini(g) {
   $("#miniList").innerHTML = g.platos.map(p => `<div class="item"><div><h3>${esc(p.nombre)}</h3>${p.descripcion ? `<p>${esc(p.descripcion)}</p>` : ""}</div><span class="price">${clp(p.precio)}</span>${adder(p.nombre, p.nombre)}</div>`).join("");
   $("#miniList").querySelectorAll(".adder .add").forEach((b, i) => b.onclick = () => {
     const p = g.platos[i];
-    orderProduct(mkSpec({ name: p.nombre, price: p.precio, quit: p.quitables, tops: TOPCFG.completos.productos.includes(g.id) ? "completo" : null, rapida: RAPIDA.productos.includes(g.id) }), null);
+    orderProduct(mkSpec({ name: p.nombre, desc: p.descripcion || "", noun: nounOf(g.id), price: p.precio, quit: p.quitables, tops: TOPCFG.completos.productos.includes(g.id) ? "completo" : null, rapida: RAPIDA.productos.includes(g.id) }), null);
   });
   refreshCounts();
   mini.showModal();
@@ -1118,7 +1130,7 @@ function renderCart() {
     <div class="line">
       <div class="t"><div><h4><b class="q">${l.qty}×</b> ${esc(l.name)}</h4>${l.detail ? `<div class="d">${esc(l.detail)}</div>` : ""}</div><span class="num">${clp(unit(l) * l.qty)}</span></div>
       ${l.units.map(u => { const m = modsList(u); return m.length ? `<div class="chg"><span>${l.units.length > 1 ? `<b>${esc(u.n)}:</b> ` : ""}${esc(m.join(" · "))}</span></div>` : ""; }).join("")}
-      ${hayCambios && l.qty > 1 ? `<div class="cart-note">Los cambios se repiten en cada una de las ${l.qty}.</div>` : ""}
+      ${hayCambios && l.qty > 1 ? `<div class="cart-note">Mismo pedido ×${l.qty}, con los mismos cambios.</div>` : ""}
       <div class="ctrl">
         <span class="qty"><button type="button" data-dec="${i}" aria-label="Quitar uno">${l.qty > 1 ? "−" : TRASH}</button><span>${l.qty}</span><button type="button" data-inc="${i}" aria-label="Agregar uno">+</button></span>
         ${isCustom(l) ? `<button class="linkish" type="button" data-edit="${i}">Editar cambios</button>` : ""}
@@ -1138,7 +1150,7 @@ function updateWa() {
     lines.push(`*${l.qty}×* ${l.name}${l.detail ? " (" + l.detail + ")" : ""}: ${clp(unit(l) * l.qty)}`);
     let hay = false;
     l.units.forEach(u => { const m = modsList(u); if (m.length) { hay = true; lines.push(`   _${l.units.length > 1 ? u.n + ": " : ""}${m.join(", ")}_`); } });
-    if (hay && l.qty > 1) lines.push(`   _(igual en cada una de las ${l.qty})_`);
+    if (hay && l.qty > 1) lines.push(`   _(mismo pedido ×${l.qty}, con los mismos cambios)_`);
   });
   const ops = ACOMP.opcionales.map(o => acomp.opcionales.includes(o) ? o.toLowerCase() : "sin " + o.toLowerCase());
   const rap = cart.some(l => l.rapida) ? `, ${RAPIDA.salsas.map(o => acomp.rapida.includes(o) ? o.toLowerCase() : "sin " + o.toLowerCase()).join(", ")}` : "";

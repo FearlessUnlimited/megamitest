@@ -242,5 +242,5 @@ insert into public.config (clave, valor) values
   ('acompanamientos', '{"salsas": ["Soya", "Unagi", "Ambas"], "palitos_por_defecto": 2, "opcionales": ["Jengibre", "Wasabi"], "extras": [{"nombre": "Papas al hilo", "precio": 1990}]}'::jsonb),
   ('topping_destacado', '"Acevichado"'::jsonb),
   ('comida_rapida', '{"salsas": ["Ketchup", "Mostaza"], "productos": ["promo-completo2", "mas-completos", "mas-hamburguesas", "mas-churrascos", "mas-chorrillana", "mas-papas-fritas", "mas-fajitas"]}'::jsonb),
-  ('unidades_nombres', '{"promo-hand3": "Handroll", "promo-burger2": "Sushi burger", "promo-completo2": "Completo"}'::jsonb),
+  ('unidades_nombres', '{"promo-hand3":"Handroll","promo-burger2":"Sushi burger","promo-completo2":"Completo","promo-tabla70":"Roll","tablas":"Roll","especiales":"Roll","handrolls":"Handroll","gohan":"Gohan","burger":"Sushi burger","mas-completos":"Completo","mas-hamburguesas":"Hamburguesa","mas-churrascos":"Churrasco","mas-chorrillana":"Chorrillana","mas-papas-fritas":"Porción","mas-empanadas":"Empanada","mas-fajitas":"Fajita"}'::jsonb),
   ('toppings', '{"categorias": ["tablas", "especiales", "handrolls", "gohan", "burger"], "completos": {"topping": "Guacamole", "productos": ["promo-completo2", "mas-completos"]}}'::jsonb);
