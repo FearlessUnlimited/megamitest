@@ -347,7 +347,12 @@ body:has(.cfgmode) .cartbar { display: none; }
 details.cu > summary { flex-wrap: wrap; }
 details.cu > summary .nm { display: grid; min-width: 0; }
 details.cu > summary .nm small { text-align: left; }
-.promo-grid, .tabla-grid { align-items: start; }
+.promo-grid:has(.cfgmode), .tabla-grid:has(.cfgmode) { align-items: start; }
+.promo-grid:not(:has(.cfgmode)) { grid-auto-rows: 1fr; }
+.promo { grid-template-rows: 170px 1fr; }
+.promo .body { grid-template-rows: auto 1fr auto; align-content: stretch; }
+.cu-p { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); }
+.cu-p select { flex: 1; min-width: 0; }
 .cfg-f .btn { flex: 1; }
 .cfg-f .qty button { width: 36px; height: 36px; font-size: 18px; }
 .cfg-f .qty span { min-width: 22px; font-weight: 700; }
@@ -734,7 +739,8 @@ const kaniCost = v => !v ? 0 : (enPropuesta(v) ? PROP.precio : KANI.price);
 
 /* ---------- Unidades: cada una cobra sus propios cambios ---------- */
 const TOPLIST = CATS.find(c => c.id === "toppings").items; // [nombre, precio]
-const mkUnit = (n = "", k = false, d = "") => ({ n, k, d, sin: [], top: null, kani: "", chg: [] });
+const mkUnit = (n = "", k = false, d = "", o = null) => ({ n, k, d, o, prot: o ? o[0] : "", sin: [], top: null, kani: "", chg: [] });
+const unitLabel = u => u.prot ? `${u.n} · ${u.prot.toLowerCase()}` : u.n;
 const lista = a => a.length > 1 ? a.slice(0, -1).join(", ") + " y " + a[a.length - 1] : a.join("");
 const cap = t => t.charAt(0).toUpperCase() + t.slice(1);
 const nounOf = id => (UNID[id] || "producto").toLowerCase();
@@ -754,11 +760,14 @@ const modsList = u => [
 const topChoices = tops => tops === "sushi" ? TOPLIST : tops === "completo" ? TOPLIST.filter(t => t[0] === TOPCFG.completos.topping) : [];
 // spec: lo que se pide. units: [{n, k}] (nombre de cada unidad y si trae kanikama), quit: ingredientes que se pueden quitar.
 const mkSpec = o => ({ pid: o.pid || o.name, name: o.name, detail: o.detail || "", price: o.price, noun: o.noun || "producto", units: o.units || [{ n: "", k: false, d: o.desc || "" }], quit: o.quit || [], tops: o.tops || null, cambios: !!o.cambios, rapida: !!o.rapida });
-const specOf = l => ({ pid: l.pid, name: l.name, detail: l.detail, price: l.price, noun: l.noun, units: l.units.map(u => ({ n: u.n, k: u.k, d: u.d })), quit: l.quit, tops: l.tops, cambios: l.cambios, rapida: l.rapida });
+const specOf = l => ({ pid: l.pid, name: l.name, detail: l.detail, price: l.price, noun: l.noun, units: l.units.map(u => ({ n: u.n, k: u.k, d: u.d, o: u.o })), quit: l.quit, tops: l.tops, cambios: l.cambios, rapida: l.rapida });
 const isCustom = s => s.quit.length || topChoices(s.tops).length || s.cambios || s.units.some(u => u.k);
 const sigOf = (s, units) => JSON.stringify([s.pid, s.name, s.detail, units]);
 
+// Si cada unidad elige su proteína (2x1 de burger), el detalle del pedido resume lo elegido.
+const detailOf = (spec, units) => units.some(u => u.o) ? pickDetail(units.map(u => u.prot)) : spec.detail;
 function pushLine(spec, units, qty = 1) {
+  spec = { ...spec, detail: detailOf(spec, units) };
   const sig = sigOf(spec, units), ex = cart.find(l => l.sig === sig);
   if (ex) ex.qty += qty;
   else cart.push({ key: uid(), sig, noun: spec.noun, pid: spec.pid, name: spec.name, detail: spec.detail, price: spec.price, qty, units, quit: spec.quit, tops: spec.tops, cambios: spec.cambios, rapida: spec.rapida });
@@ -768,7 +777,7 @@ function pushLine(spec, units, qty = 1) {
 // Si el producto admite cambios, se abren ahí mismo (en su tarjeta o en una hoja); si no, se agrega directo.
 function orderProduct(spec, host) {
   if (isCustom(spec)) openCfg(spec, host, null);
-  else pushLine(spec, spec.units.map(u => mkUnit(u.n, u.k, u.d)));
+  else pushLine(spec, spec.units.map(u => mkUnit(u.n, u.k, u.d, u.o)));
 }
 
 /* ---------- Cantidad visible en cada producto ---------- */
@@ -803,7 +812,7 @@ function toast(msg, ms = 1800) { const t = $("#toast"); t.textContent = msg; t.c
 /* ---------- Configurador: cambios por unidad, antes de agregar ---------- */
 // host: la tarjeta del producto (el configurador ocupa su lugar) o null (hoja inferior). edit: línea del pedido que se edita.
 function openCfg(spec, host, edit) {
-  const st = { units: edit ? JSON.parse(JSON.stringify(edit.units)) : spec.units.map(u => mkUnit(u.n, u.k, u.d)), qty: 1, sec: {} };
+  const st = { units: edit ? JSON.parse(JSON.stringify(edit.units)) : spec.units.map(u => mkUnit(u.n, u.k, u.d, u.o)), qty: 1, sec: {} };
   const multi = st.units.length > 1;
   const tops = topChoices(spec.tops);
   const noun = spec.noun || "producto";
@@ -829,6 +838,7 @@ function openCfg(spec, host, edit) {
       <div class="r"><input type="text" data-cn="${i}" placeholder="Ej: cebollín por salmón"><button class="btn btn-ghost" type="button" style="padding:7px 14px" data-addc="${i}">Agregar</button></div></div><button class="btn btn-ghost done" type="button" data-done="${i}">Listo</button>`;
     return `<div class="cu">
       ${multi ? `<b class="cu-n">${esc(u.n)}</b>` : ""}
+      ${u.o ? `<label class="cu-p">Proteína <select data-prot="${i}">${u.o.map(o => `<option ${u.prot === o ? "selected" : ""}>${esc(o)}</option>`).join("")}</select></label>` : ""}
       ${u.d ? `<p class="cu-d">${esc(u.d)}</p>` : ""}
       ${mods.length || !multi ? `<p class="cu-r${mods.length ? " on" : ""}">${mods.length ? "Quedará: <b>" + esc(mods.join(" · ")) + "</b>" : "Sin cambios"}</p>` : ""}
       <div class="cu-acts">${acts.map(([k, t]) => `<button type="button" class="act" aria-expanded="${sec === k}" data-sec="${i}|${k}">${t}</button>`).join("")}</div>
@@ -865,14 +875,14 @@ function openCfg(spec, host, edit) {
     if (d.qp !== undefined) { st.qty = Math.min(20, st.qty + 1); return render(); }
     if (d.ok !== undefined) {
       if (edit) {
-        edit.units = st.units; edit.sig = sigOf(spec, st.units);
+        edit.units = st.units; edit.detail = detailOf(spec, st.units); edit.sig = sigOf({ ...spec, detail: edit.detail }, st.units);
         const otra = cart.find(l => l !== edit && l.sig === edit.sig);
         if (otra) { otra.qty += edit.qty; cart.splice(cart.indexOf(edit), 1); }
         save(); renderCart(); close(); toast("Cambios guardados");
       } else { pushLine(spec, st.units, st.qty); close(); }
     }
   });
-  root.addEventListener("change", e => { const s = e.target.closest("[data-kani]"); if (s) { st.units[s.dataset.kani].kani = s.value; st.sec[s.dataset.kani] = undefined; render(); } });
+  root.addEventListener("change", e => { const p = e.target.closest("[data-prot]"); if (p) { st.units[p.dataset.prot].prot = p.value; return render(); } const s = e.target.closest("[data-kani]"); if (s) { st.units[s.dataset.kani].kani = s.value; st.sec[s.dataset.kani] = undefined; render(); } });
   render();
   if (host) { host.classList.add("cfgmode"); host.append(root); host.scrollIntoView({ block: "nearest", behavior: "smooth" }); }
   else { dlg.innerHTML = ""; dlg.append(root); dlg.addEventListener("close", close); dlg.showModal(); }
@@ -888,21 +898,19 @@ function pickDetail(vals) {
   return Object.entries(n).map(([v, c]) => `${c} de ${v.toLowerCase()}`).join(" y ");
 }
 PROMOS.forEach(p => {
-  const sel = p.opts ? `<div class="picks">${Array.from({ length: p.picks }, (_, k) => `<label>${p.picks > 1 ? `<span>${k + 1}.</span>` : ""}<select data-pick aria-label="Opción ${k + 1}">${p.opts.map(o => `<option>${o}</option>`).join("")}</select></label>`).join("")}</div>` : "";
   const card = el("article", { class: "promo" }, `
     <div class="pic"><img class="photo${p.cover ? " cover" : ""}" src="${p.img}" alt="${esc(p.name)}" loading="lazy"></div>
     <div class="body">
-      <h3>${p.name}</h3><p>${p.desc}</p>${sel}
+      <h3>${p.name}</h3><p>${p.desc}</p>
       <div class="row foot"><span class="price num">${clp(p.price)}</span>${adder(p.id, p.name)}</div>
     </div>`);
   card.querySelector(".add").onclick = () => {
-    const picks = p.opts ? [...card.querySelectorAll("[data-pick]")].map(s => s.value) : [];
     const noun = UID_NOUN(p.id), derivada = lleva(p.sin), d0 = /^trae/i.test(p.desc) ? derivada : p.desc;
     // Las unidades de la promo: los rolls de la lista, una por elección (cada una con su proteína), o N iguales.
     const units = p.rolls.length ? rollUnits(p.rolls)
-      : p.opts && picks.length > 1 ? picks.map((v, k) => ({ n: `${noun} ${k + 1} · ${v.toLowerCase()}`, k: false, d: derivada }))
+      : p.opts && p.picks > 1 ? Array.from({ length: p.picks }, (_, k) => ({ n: `${noun} ${k + 1}`, k: false, d: derivada, o: p.opts }))
       : p.n > 1 ? Array.from({ length: p.n }, (_, k) => ({ n: `${noun} ${k + 1}`, k: false, d: d0 })) : undefined;
-    orderProduct(mkSpec({ pid: p.id, name: p.name, noun: nounOf(p.id), desc: d0, detail: p.opts ? pickDetail(picks) : "", price: p.price, units, quit: p.sin, cambios: !p.noChanges, tops: TOPCFG.completos.productos.includes(p.id) ? "completo" : "sushi", rapida: RAPIDA.productos.includes(p.id) }), card);
+    orderProduct(mkSpec({ pid: p.id, name: p.name, noun: nounOf(p.id), desc: d0, price: p.price, units, quit: p.sin, cambios: !p.noChanges, tops: TOPCFG.completos.productos.includes(p.id) ? "completo" : "sushi", rapida: RAPIDA.productos.includes(p.id) }), card);
   };
   $("#promoGrid").append(card);
 });
@@ -1131,7 +1139,7 @@ function renderCart() {
     return `
     <div class="line">
       <div class="t"><div><h4><b class="q">${l.qty}×</b> ${esc(l.name)}</h4>${l.detail ? `<div class="d">${esc(l.detail)}</div>` : ""}</div><span class="num">${clp(unit(l) * l.qty)}</span></div>
-      ${l.units.map(u => { const m = modsList(u); return m.length ? `<div class="chg"><span>${l.units.length > 1 ? `<b>${esc(u.n)}:</b> ` : ""}${esc(m.join(" · "))}</span></div>` : ""; }).join("")}
+      ${l.units.map(u => { const m = modsList(u); return m.length ? `<div class="chg"><span>${l.units.length > 1 ? `<b>${esc(unitLabel(u))}:</b> ` : ""}${esc(m.join(" · "))}</span></div>` : ""; }).join("")}
       ${hayCambios && l.qty > 1 ? `<div class="cart-note">Mismo pedido ×${l.qty}, con los mismos cambios.</div>` : ""}
       <div class="ctrl">
         <span class="qty"><button type="button" data-dec="${i}" aria-label="Quitar uno">${l.qty > 1 ? "−" : TRASH}</button><span>${l.qty}</span><button type="button" data-inc="${i}" aria-label="Agregar uno">+</button></span>
@@ -1149,20 +1157,20 @@ let pedidoEnviado = { mensaje: null, id: null }; // mismo mensaje = mismo pedido
 function updateWa() {
   const lines = ["Hola Megami, quiero hacer un pedido:", ""];
   cart.forEach(l => {
-    lines.push(`*${l.qty}×* ${l.name}${l.detail ? " (" + l.detail + ")" : ""}: ${clp(unit(l) * l.qty)}`);
+    lines.push(`${l.qty}× ${l.name}${l.detail ? " (" + l.detail + ")" : ""}: ${clp(unit(l) * l.qty)}`);
     let hay = false;
-    l.units.forEach(u => { const m = modsList(u); if (m.length) { hay = true; lines.push(`   _${l.units.length > 1 ? u.n + ": " : ""}${m.join(", ")}_`); } });
-    if (hay && l.qty > 1) lines.push(`   _(mismo pedido ×${l.qty}, con los mismos cambios)_`);
+    l.units.forEach(u => { const m = modsList(u); if (m.length) { hay = true; lines.push(`   · ${l.units.length > 1 ? unitLabel(u) + ": " : ""}${m.join(", ")}`); } });
+    if (hay && l.qty > 1) lines.push(`   · (mismo pedido ×${l.qty}, con los mismos cambios)`);
   });
   const ops = ACOMP.opcionales.map(o => acomp.opcionales.includes(o) ? o.toLowerCase() : "sin " + o.toLowerCase());
   const rap = cart.some(l => l.rapida) ? `, ${RAPIDA.salsas.map(o => acomp.rapida.includes(o) ? o.toLowerCase() : "sin " + o.toLowerCase()).join(", ")}` : "";
-  lines.push("", `*Para acompañar (incluido):* salsa ${acomp.salsa === "Ambas" ? "soya y unagi" : acomp.salsa.toLowerCase()}, ${acomp.palitos ? acomp.palitos + " pares de palitos" : "sin palitos"}, ${ops.join(", ")}${rap}`);
-  lines.push("", `*Total: ${clp(total())}* _(despacho aparte según zona)_`);
+  lines.push("", `Para acompañar (incluido): salsa ${acomp.salsa === "Ambas" ? "soya y unagi" : acomp.salsa.toLowerCase()}, ${acomp.palitos ? acomp.palitos + " pares de palitos" : "sin palitos"}, ${ops.join(", ")}${rap}`);
+  lines.push("", `Total: ${clp(total())} (despacho aparte según zona)`);
   const addr = $("#addr").value.trim(), nm = $("#cname").value.trim(), note = $("#cnote").value.trim();
-  lines.push(ship === "delivery" ? `*Entrega:* delivery${addr ? " a " + addr : ""}` : "*Entrega:* retiro en el local");
-  if (nm) lines.push(`*Nombre:* ${nm}`);
-  if (note) lines.push(`*Nota:* _${note}_`);
-  if (CFG.PEDIDOS_DE_PRUEBA) lines.push("", "*PEDIDO DE PRUEBA: NO ES REAL. Enviado desde la maqueta de la landing, no preparar.*");
+  lines.push(ship === "delivery" ? `Entrega: delivery${addr ? " a " + addr : ""}` : "Entrega: retiro en el local");
+  if (nm) lines.push(`Nombre: ${nm}`);
+  if (note) lines.push(`Nota: ${note}`);
+  if (CFG.PEDIDOS_DE_PRUEBA) lines.push("", "Pedido de prueba: no es real. Enviado desde la maqueta de la landing, no preparar.");
   mensajeActual = lines.join("\n");
   $("#sendWa").href = `https://wa.me/${WA}?text=${encodeURIComponent(mensajeActual)}`;
   $("#sendWa").setAttribute("aria-disabled", cart.length ? "false" : "true");
@@ -1198,7 +1206,7 @@ $("#sendWa").addEventListener("click", () => {
       cantidad: l.qty, nombre: l.name, detalle: l.detail || null,
       precio_unitario: unit(l), subtotal: unit(l) * l.qty,
       cambios: [], sin: [], va_en: null,
-      unidades: l.units.filter(u => modsList(u).length).map(u => ({ unidad: u.n || null, sin: u.sin, topping: u.top ? { nombre: u.top.name, precio: u.top.price } : null, kanikama: u.kani ? { por: u.kani, precio: kaniCost(u.kani) } : null, cambios: u.chg })),
+      unidades: l.units.filter(u => modsList(u).length).map(u => ({ unidad: unitLabel(u) || null, sin: u.sin, topping: u.top ? { nombre: u.top.name, precio: u.top.price } : null, kanikama: u.kani ? { por: u.kani, precio: kaniCost(u.kani) } : null, cambios: u.chg })),
     })),
     acompanamientos: acomp,
     total: total(),
