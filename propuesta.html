@@ -74,6 +74,7 @@ section { padding-block: clamp(48px, 7vw, 88px); border-bottom: 1px solid var(--
 @media (max-width: 780px) { .block { grid-template-columns: 1fr; gap: 20px; } .block.flip > :first-child { order: 0; } }
 
 .ba { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; }
+@media (max-width: 600px) { .ba { grid-template-columns: 1fr; } }
 .ba figure { margin: 0; display: grid; gap: 8px; align-content: start; }
 .ba figcaption { font-size: 12px; letter-spacing: .1em; text-transform: uppercase; font-weight: 700; color: var(--muted); }
 .ba figure:last-child figcaption { color: var(--shu-hi); }
