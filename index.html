@@ -1097,7 +1097,10 @@ function openMini(g) {
   $("#miniList").innerHTML = g.platos.map(p => `<div class="item"><div><h3>${esc(p.nombre)}</h3>${p.descripcion ? `<p>${esc(p.descripcion)}</p>` : ""}</div><span class="price">${clp(p.precio)}</span>${adder(p.nombre, p.nombre)}</div>`).join("");
   $("#miniList").querySelectorAll(".adder .add").forEach((b, i) => b.onclick = () => {
     const p = g.platos[i];
-    orderProduct(mkSpec({ name: p.nombre, desc: p.descripcion || "", noun: nounOf(g.id), price: p.precio, quit: p.quitables, tops: TOPCFG.completos.productos.includes(g.id) ? "completo" : null, rapida: RAPIDA.productos.includes(g.id) }), null);
+    const spec = mkSpec({ name: p.nombre, desc: p.descripcion || "", noun: nounOf(g.id), price: p.precio, quit: p.quitables, tops: TOPCFG.completos.productos.includes(g.id) ? "completo" : null, rapida: RAPIDA.productos.includes(g.id) });
+    // El configurador reemplaza la hoja del mini menú (sin "Ver mi pedido" debajo).
+    if (isCustom(spec)) mini.close();
+    orderProduct(spec, null);
   });
   refreshCounts();
   mini.showModal();
