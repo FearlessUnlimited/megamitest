@@ -354,6 +354,30 @@ details.cu > summary .nm small { text-align: left; }
 .cu-p { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); }
 .cu-p select { flex: 1; min-width: 0; }
 .cfg-f .btn { flex: 1; }
+.cfg-f [data-ok] { flex-direction: column; gap: 0; line-height: 1.15; padding: 9px 14px; white-space: nowrap; }
+.cfg-f [data-ok] small { font-size: 13px; font-weight: 500; opacity: .9; }
+.btn-ok { background: var(--ok); color: var(--ink); }
+.btn-ok:hover { background: #8ee0a8; }
+.cfg-mod { width: 100%; }
+.cu-foot { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding-top: 4px; }
+.cu-mod { padding: 8px 18px; font-size: 14px; }
+.tick { width: 42px; height: 42px; flex: none; border-radius: 50%; border: 1.5px solid var(--line); background: transparent; color: var(--muted); display: grid; place-items: center; cursor: pointer; transition: background .15s, color .15s, border-color .15s; }
+.tick:hover { border-color: var(--ok); color: var(--ok); }
+.tick.on { background: var(--ok); border-color: var(--ok); color: var(--ink); }
+.tick.need { border-color: var(--ok); color: var(--ok); animation: hinchar .9s ease-in-out infinite; }
+.tick.nudge { animation: temblar .45s ease-in-out 2; }
+.cfg-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.cfg .cfg-list li { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 8px; grid-template-columns: none; font-size: 15px; }
+.cfg .cfg-list li .cu-p { flex-basis: 100%; }
+.cfg-list li span { color: var(--muted); font-size: 13px; }
+.cfg-modh { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 4px 12px; font-size: 13px; color: var(--muted); }
+.cfg-modh .act { font-size: 13px; }
+.cfg-f { flex-wrap: wrap; }
+.cfg-warn { flex-basis: 100%; font-size: 13px; font-weight: 700; color: var(--shu-hi); line-height: 1.35; }
+@keyframes hinchar { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.06); box-shadow: 0 0 0 6px color-mix(in srgb, var(--ok) 30%, transparent); } }
+@keyframes temblar { 0%, 100% { transform: translateX(0); } 20% { transform: translateX(-7px); } 40% { transform: translateX(7px); } 60% { transform: translateX(-5px); } 80% { transform: translateX(5px); } }
+.btn.pop { animation: hinchar .45s ease-in-out 2; }
+.btn.nudge { animation: temblar .45s ease-in-out, hinchar .45s ease-in-out .45s 2; }
 .cfg-f .qty button { width: 36px; height: 36px; font-size: 18px; }
 .cfg-f .qty span { min-width: 22px; font-weight: 700; }
 dialog.sheet { border: 1px solid var(--line); border-radius: 16px; background: var(--ink-2); color: var(--rice); padding: 0; width: min(520px, calc(100% - 24px)); max-height: 88vh; overflow: hidden; }
@@ -811,21 +835,71 @@ function toast(msg, ms = 1800) { const t = $("#toast"); t.textContent = msg; t.c
 
 /* ---------- Configurador: cambios por unidad, antes de agregar ---------- */
 // host: la tarjeta del producto (el configurador ocupa su lugar) o null (hoja inferior). edit: línea del pedido que se edita.
+// Un solo configurador abierto a la vez. Si tiene cambios sin confirmar, pide "¡Así lo quiero!" antes de seguir.
+let activeCfg = null;
+const cfgBloquea = () => { if (activeCfg && activeCfg.pending()) { activeCfg.nudge(); return true; } return false; };
 function openCfg(spec, host, edit) {
-  const st = { units: edit ? JSON.parse(JSON.stringify(edit.units)) : spec.units.map(u => mkUnit(u.n, u.k, u.d, u.o)), qty: 1, sec: {} };
+  if (activeCfg) { if (activeCfg.pending()) return activeCfg.nudge(); activeCfg.close(); }
+  const st = { units: edit ? JSON.parse(JSON.stringify(edit.units)) : spec.units.map(u => mkUnit(u.n, u.k, u.d, u.o)), qty: 1, sec: {}, open: {}, ok: {}, mod: !!edit, warned: false, pop: false, nudgeI: null };
+  const orig = JSON.stringify(st.units);
   const multi = st.units.length > 1;
+  // Al editar, los rolls que ya tienen cambios quedan aprobados y desplegados.
+  if (edit && multi) st.units.forEach((u, i) => { if (modsList(u).length) { st.ok[i] = true; st.open[i] = true; } });
   const tops = topChoices(spec.tops);
   const noun = spec.noun || "producto";
   const root = el("div", { class: "cfg", role: "group", "aria-label": "Personaliza " + spec.name });
   const dlg = $("#cfgDlg");
+  const hasMods = () => st.units.some(u => modsList(u).length);
+  // Pendiente: hay cambios que el cliente aún no aprueba con "¡Así lo quiero!".
+  const pending = () => multi ? st.units.some((u, i) => modsList(u).length && !st.ok[i]) : edit ? JSON.stringify(st.units) !== orig : st.mod && hasMods();
   let closed = false;
   const close = () => {
     if (closed) return; closed = true;
+    if (activeCfg === api) activeCfg = null;
     if (host) { root.remove(); host.classList.remove("cfgmode"); }
-    else { dlg.removeEventListener("close", close); if (dlg.open) dlg.close(); dlg.innerHTML = ""; }
+    else { dlg.removeEventListener("close", close); dlg.removeEventListener("cancel", onCancel); if (dlg.open) dlg.close(); dlg.innerHTML = ""; }
   };
+  // Llama la atención sobre el botón de aprobación: tiembla y aparece el aviso.
+  const nudge = () => {
+    st.warned = true; st.nudgeI = multi ? st.units.findIndex((u, i) => modsList(u).length && !st.ok[i]) : null; render();
+    const b = multi ? root.querySelector(".tick.nudge") : root.querySelector("[data-ok]");
+    if (b) { b.scrollIntoView({ block: "center", behavior: "smooth" }); if (!multi) b.classList.add("nudge"); }
+  };
+  const tryClose = () => { if (pending() && !st.warned) nudge(); else close(); };
+  const onCancel = e => { if (pending() && !st.warned) { e.preventDefault(); nudge(); } };
+  const api = { pending, nudge, close, tryClose };
   const lineTotal = () => (spec.price + st.units.reduce((a, u) => a + uExtra(u), 0)) * (edit ? 1 : st.qty);
-  // Cada unidad: qué es y qué lleva, cómo quedará, y tres acciones que se despliegan de a una.
+  const protSel = (u, i) => u.o ? `<label class="cu-p">Proteína <select data-prot="${i}">${u.o.map(o => `<option ${u.prot === o ? "selected" : ""}>${esc(o)}</option>`).join("")}</select></label>` : "";
+  // Vista inicial: qué es el producto y qué lleva; las alternativas quedan bajo "Modificar".
+  const summaryHtml = () => {
+    const iguales = multi && st.units.every(u => u.d === st.units[0].d && !u.o);
+    if (!multi) return `${protSel(st.units[0], 0)}${st.units[0].d ? `<p class="cu-d">${esc(st.units[0].d)}</p>` : ""}`;
+    if (iguales) return st.units[0].d ? `<p class="cu-d">Cada ${esc(noun)}: ${esc(st.units[0].d.charAt(0).toLowerCase() + st.units[0].d.slice(1))}</p>` : "";
+    return `<ul class="cfg-list">${st.units.map((u, i) => `<li><b>${esc(u.n)}</b>${protSel(u, i)}${u.d ? `<span>${esc(u.d)}</span>` : ""}</li>`).join("")}</ul>`;
+  };
+  // Unidad en un producto con varias: nombre y contenido; "Modificar" (izquierda) revela sus opciones y el ✓ (derecha) la aprueba.
+  const CHECK = `<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>`;
+  // Contenido de cada opción desplegable.
+  const secBody = (u, i, sec) => {
+    let body = "";
+    if (sec === "sin") body = `<div class="sin" role="group" aria-label="Quitar ingredientes">${spec.quit.map(q => `<button type="button" class="chip" aria-pressed="${u.sin.includes(q)}" data-sin="${i}" data-q="${esc(q)}">Sin ${esc(q.toLowerCase())} <b aria-hidden="true">${u.sin.includes(q) ? "✓" : "?"}</b></button>`).join("")}</div><button class="btn btn-ghost done" type="button" data-done="${i}">Listo</button>`;
+    if (sec === "top") body = `<span class="lbl">Un topping por ${esc(noun)}</span><div class="chips">${tops.map(t => chip(esc(t[0]) + (t[0] === DESTACADO ? " ★" : ""), !!u.top && u.top.name === t[0], `data-top="${i}" data-n="${esc(t[0])}"`, "+" + clp(t[1]))).join("")}</div>`;
+    if (sec === "kani") body = `<div class="kani${u.kani ? " on" : ""}"><label for="cfg-k${i}">Cámbialo por otra proteína</label><select id="cfg-k${i}" data-kani="${i}"><option value="">Mantener kanikama</option>${PROTEINAS.map(p => `<option value="${esc(p)}" ${u.kani === p ? "selected" : ""}>${esc(p)}${enPropuesta(p) ? " · sin costo" : " · +" + clp(KANI.price)}</option>`).join("")}</select></div>`;
+    if (sec === "chg") body = `${u.chg.map((c, j) => `<div class="chg"><span>${esc(c.label)}${c.note ? ": " + esc(c.note) : ""} · ${c.price ? "+" + clp(c.price) : "gratis"}</span><button type="button" data-rmc="${i}|${j}" aria-label="Quitar cambio">✕</button></div>`).join("")}
+      <div class="chgform"><select data-ct="${i}" aria-label="Tipo de cambio">${CAMBIOS.filter(c => !(u.k && c.id === "kani-prot")).map(c => `<option value="${c.id}">${esc(c.label)} (${c.price ? "+" + clp(c.price) : "gratis"})</option>`).join("")}</select>
+      <div class="r"><input type="text" data-cn="${i}" placeholder="Ej: cebollín por salmón"><button class="btn btn-ghost" type="button" style="padding:7px 14px" data-addc="${i}">Agregar</button></div></div><button class="btn btn-ghost done" type="button" data-done="${i}">Listo</button>`;
+    return body;
+  };
+  const multiHtml = (u, i) => {
+    const mods = modsList(u), sec = st.sec[i], abierto = !!st.open[i], need = mods.length && !st.ok[i];
+    const acts = [["sin", "Quitar ingrediente", spec.quit.length], ["top", "Agregar topping", tops.length], ["kani", "Cambiar kanikama", u.k], ["chg", "Otro cambio", spec.cambios]].filter(a => a[2]);
+    return `<div class="cu"><b class="cu-n">${esc(u.n)}</b>${protSel(u, i)}${u.d ? `<p class="cu-d">${esc(u.d)}</p>` : ""}
+      ${mods.length ? `<p class="cu-r on">Quedará: <b>${esc(mods.join(" · "))}</b></p>` : ""}
+      ${abierto ? `<div class="cu-acts">${acts.map(([k, t]) => `<button type="button" class="act" aria-expanded="${sec === k}" data-sec="${i}|${k}">${t}</button>`).join("")}</div>${sec ? `<div class="cu-sec">${secBody(u, i, sec)}</div>` : ""}` : ""}
+      <div class="cu-foot"><button type="button" class="btn btn-ghost cu-mod" aria-expanded="${abierto}" data-umod="${i}">${abierto ? "Cerrar opciones" : "Modificar"}</button><button type="button" class="tick${st.ok[i] ? " on" : ""}${need ? " need" : ""}${st.nudgeI === i ? " nudge" : ""}" aria-pressed="${!!st.ok[i]}" aria-label="${need ? "Aprobar los cambios de " : "Está bien: "}${esc(u.n)}" data-tick="${i}">${CHECK}</button></div>
+    </div>`;
+  };
+  // Vista de modificación (producto de una sola unidad): sus cambios, que se despliegan de a uno.
   const unitHtml = (u, i) => {
     const mods = modsList(u), sec = st.sec[i];
     const acts = [["sin", "Quitar ingrediente", spec.quit.length], ["top", "Agregar topping", tops.length], ["kani", "Cambiar kanikama", u.k], ["chg", "Otro cambio", spec.cambios]].filter(a => a[2]);
@@ -838,9 +912,9 @@ function openCfg(spec, host, edit) {
       <div class="r"><input type="text" data-cn="${i}" placeholder="Ej: cebollín por salmón"><button class="btn btn-ghost" type="button" style="padding:7px 14px" data-addc="${i}">Agregar</button></div></div><button class="btn btn-ghost done" type="button" data-done="${i}">Listo</button>`;
     return `<div class="cu">
       ${multi ? `<b class="cu-n">${esc(u.n)}</b>` : ""}
-      ${u.o ? `<label class="cu-p">Proteína <select data-prot="${i}">${u.o.map(o => `<option ${u.prot === o ? "selected" : ""}>${esc(o)}</option>`).join("")}</select></label>` : ""}
+      ${protSel(u, i)}
       ${u.d ? `<p class="cu-d">${esc(u.d)}</p>` : ""}
-      ${mods.length || !multi ? `<p class="cu-r${mods.length ? " on" : ""}">${mods.length ? "Quedará: <b>" + esc(mods.join(" · ")) + "</b>" : "Sin cambios"}</p>` : ""}
+      ${mods.length ? `<p class="cu-r on">Quedará: <b>${esc(mods.join(" · "))}</b></p>` : ""}
       <div class="cu-acts">${acts.map(([k, t]) => `<button type="button" class="act" aria-expanded="${sec === k}" data-sec="${i}|${k}">${t}</button>`).join("")}</div>
       ${body ? `<div class="cu-sec">${body}</div>` : ""}
     </div>`;
@@ -849,31 +923,44 @@ function openCfg(spec, host, edit) {
     const a = document.activeElement, fk = a && root.contains(a) ? a.closest("[data-sin],[data-top],[data-sec]") : null;
     const sel = fk ? [...fk.attributes].filter(t => t.name.startsWith("data-")).map(t => `[${t.name}="${CSS.escape(t.value)}"]`).join("") : "";
     const sc = root.querySelector(".cfg-b"), top = sc ? sc.scrollTop : 0;
+    const ok = hasMods();
     root.innerHTML = `
-      <div class="cfg-h"><div><b>${esc(spec.name)}</b>${spec.detail ? `<small>${esc(spec.detail)}</small>` : ""}${multi ? `<small>Elige en qué ${esc(noun)} va cada cambio. Cada modificación se calcula por separado.</small>` : ""}</div><button class="x" type="button" data-x aria-label="Cerrar">✕</button></div>
-      <div class="cfg-b">${st.units.map(unitHtml).join("")}</div>
-      <div class="cfg-f">${edit ? "" : `<span class="qty"><button type="button" data-qm aria-label="Menos">−</button><span>${st.qty}</span><button type="button" data-qp aria-label="Más">+</button></span>`}<button class="btn btn-red" type="button" data-ok>${edit ? "Guardar" : "Agregar"} · ${clp(lineTotal())}</button></div>`;
+      <div class="cfg-h"><div><b>${esc(spec.name)}</b>${spec.detail ? `<small>${esc(spec.detail)}</small>` : ""}</div><button class="x" type="button" data-x aria-label="Cerrar">✕</button></div>
+      <div class="cfg-b">${multi
+        ? `<div class="cfg-modh"><span>Toca Modificar solo en el ${esc(noun)} que quieras cambiar. Cada modificación se calcula por separado.</span>${hasMods() ? `<button type="button" class="act" data-reset>Volver a como viene</button>` : ""}</div>${st.units.map(multiHtml).join("")}`
+        : st.mod
+        ? `<div class="cfg-modh"><span>${multi ? `Elige en qué ${esc(noun)} va cada cambio. Cada modificación se calcula por separado.` : "Elige tus cambios. Cada uno se calcula por separado."}</span><button type="button" class="act" data-reset>Volver a como viene</button></div>${st.units.map(unitHtml).join("")}`
+        : `${summaryHtml()}<button class="btn btn-ghost cfg-mod" type="button" data-mod>Modificar</button>`}</div>
+      <div class="cfg-f">${st.warned && pending() ? `<p class="cfg-warn" role="alert">Confirma con «¡Así lo quiero!» o toca ✕ otra vez para descartar los cambios.</p>` : ""}${edit ? "" : `<span class="qty"><button type="button" data-qm aria-label="Menos">−</button><span>${st.qty}</span><button type="button" data-qp aria-label="Más">+</button></span>`}<button class="btn ${ok ? "btn-ok" : "btn-red"}${st.pop ? " pop" : ""}" type="button" data-ok><span>${ok ? "¡Así lo quiero!" : "Perfecto"}</span><small class="num">${clp(lineTotal())}</small></button></div>`;
+    st.pop = false; st.nudgeI = null;
     const nsc = root.querySelector(".cfg-b"); if (nsc) nsc.scrollTop = top;
     if (sel) { const n = root.querySelector(sel); if (n) n.focus({ preventScroll: true }); }
-    // Al desplegar una sección, se asegura de que quede a la vista sobre el botón Agregar.
+    // Al desplegar una sección, se asegura de que quede a la vista sobre el botón de aprobación.
     if (st.reveal != null) { const sc2 = root.querySelectorAll(".cu")[st.reveal]?.querySelector(".cu-sec"); st.reveal = null; if (sc2) sc2.scrollIntoView({ block: "nearest", behavior: "smooth" }); }
   }
+  // Cambia el estado y vuelve a dibujar; si es la primera modificación, el botón aparece con un salto.
+  const update = (fn, i) => { const antes = hasMods(); fn(); if (i != null) st.ok[i] = false; if (!antes && hasMods()) st.pop = true; render(); };
   root.addEventListener("click", e => {
     const t = e.target.closest("button"); if (!t || !root.contains(t)) return;
     const d = t.dataset;
-    if (d.x !== undefined) return close();
+    if (d.x !== undefined) return tryClose();
+    if (d.mod !== undefined) { st.mod = true; return render(); }
+    if (d.umod !== undefined) { st.open[d.umod] = !st.open[d.umod]; if (!st.open[d.umod]) st.sec[d.umod] = undefined; return render(); }
+    if (d.tick !== undefined) { const i = d.tick; st.ok[i] = !st.ok[i]; if (st.ok[i]) { st.open[i] = false; st.sec[i] = undefined; } return render(); }
+    if (d.reset !== undefined) { st.units.forEach(u => { u.sin = []; u.top = null; u.kani = ""; u.chg = []; }); st.mod = false; st.sec = {}; st.open = {}; st.ok = {}; st.warned = false; return render(); }
     if (d.sec !== undefined) { const [i, k] = d.sec.split("|"); st.sec[i] = st.sec[i] === k ? undefined : k; st.reveal = st.sec[i] ? i : null; return render(); }
     if (d.done !== undefined) { st.sec[d.done] = undefined; return render(); }
-    if (d.sin !== undefined) { const u = st.units[d.sin]; u.sin = u.sin.includes(d.q) ? u.sin.filter(x => x !== d.q) : [...u.sin, d.q]; return render(); }
-    if (d.top !== undefined) { const u = st.units[d.top]; u.top = u.top && u.top.name === d.n ? null : { name: d.n, price: TOPLIST.find(x => x[0] === d.n)[1] }; st.sec[d.top] = undefined; return render(); }
-    if (d.rmc !== undefined) { const [i, j] = d.rmc.split("|").map(Number); st.units[i].chg.splice(j, 1); return render(); }
-    if (d.addc !== undefined) {
+    if (d.sin !== undefined) return update(() => { const u = st.units[d.sin]; u.sin = u.sin.includes(d.q) ? u.sin.filter(x => x !== d.q) : [...u.sin, d.q]; }, d.sin);
+    if (d.top !== undefined) return update(() => { const u = st.units[d.top]; u.top = u.top && u.top.name === d.n ? null : { name: d.n, price: TOPLIST.find(x => x[0] === d.n)[1] }; st.sec[d.top] = undefined; }, d.top);
+    if (d.rmc !== undefined) return update(() => { const [i, j] = d.rmc.split("|").map(Number); st.units[i].chg.splice(j, 1); }, d.rmc.split("|")[0]);
+    if (d.addc !== undefined) return update(() => {
       const i = +d.addc, c = CAMBIOS.find(x => x.id === root.querySelector(`[data-ct="${i}"]`).value);
-      st.units[i].chg.push({ label: c.label, price: c.price, note: root.querySelector(`[data-cn="${i}"]`).value.trim() }); return render();
-    }
+      st.units[i].chg.push({ label: c.label, price: c.price, note: root.querySelector(`[data-cn="${i}"]`).value.trim() });
+    }, d.addc);
     if (d.qm !== undefined) { st.qty = Math.max(1, st.qty - 1); return render(); }
     if (d.qp !== undefined) { st.qty = Math.min(20, st.qty + 1); return render(); }
     if (d.ok !== undefined) {
+      if (multi && pending()) return nudge();
       if (edit) {
         edit.units = st.units; edit.detail = detailOf(spec, st.units); edit.sig = sigOf({ ...spec, detail: edit.detail }, st.units);
         const otra = cart.find(l => l !== edit && l.sig === edit.sig);
@@ -882,12 +969,16 @@ function openCfg(spec, host, edit) {
       } else { pushLine(spec, st.units, st.qty); close(); }
     }
   });
-  root.addEventListener("change", e => { const p = e.target.closest("[data-prot]"); if (p) { st.units[p.dataset.prot].prot = p.value; return render(); } const s = e.target.closest("[data-kani]"); if (s) { st.units[s.dataset.kani].kani = s.value; st.sec[s.dataset.kani] = undefined; render(); } });
+  root.addEventListener("change", e => {
+    const p = e.target.closest("[data-prot]"); if (p) { st.units[p.dataset.prot].prot = p.value; return render(); }
+    const s = e.target.closest("[data-kani]"); if (s) update(() => { st.units[s.dataset.kani].kani = s.value; st.sec[s.dataset.kani] = undefined; }, s.dataset.kani);
+  });
+  activeCfg = api;
   render();
   if (host) { host.classList.add("cfgmode"); host.append(root); host.scrollIntoView({ block: "nearest", behavior: "smooth" }); }
-  else { dlg.innerHTML = ""; dlg.append(root); dlg.addEventListener("close", close); dlg.showModal(); }
+  else { dlg.innerHTML = ""; dlg.append(root); dlg.addEventListener("close", close); dlg.addEventListener("cancel", onCancel); dlg.showModal(); }
 }
-$("#cfgDlg").addEventListener("click", e => { if (e.target === e.currentTarget) e.currentTarget.close(); });
+$("#cfgDlg").addEventListener("click", e => { if (e.target === e.currentTarget && activeCfg) activeCfg.tryClose(); });
 
 /* ---------- Promos ---------- */
 const UID_NOUN = id => UNID[id] || "Unidad";
@@ -1001,6 +1092,7 @@ groups.forEach(([p, , , list]) => {
 /* ---------- Más allá del sushi ---------- */
 const mini = $("#mini");
 function openMini(g) {
+  if (cfgBloquea()) return;
   $("#miniTitle").textContent = g.name;
   $("#miniList").innerHTML = g.platos.map(p => `<div class="item"><div><h3>${esc(p.nombre)}</h3>${p.descripcion ? `<p>${esc(p.descripcion)}</p>` : ""}</div><span class="price">${clp(p.precio)}</span>${adder(p.nombre, p.nombre)}</div>`).join("");
   $("#miniList").querySelectorAll(".adder .add").forEach((b, i) => b.onclick = () => {
@@ -1143,7 +1235,7 @@ function renderCart() {
       ${hayCambios && l.qty > 1 ? `<div class="cart-note">Mismo pedido ×${l.qty}, con los mismos cambios.</div>` : ""}
       <div class="ctrl">
         <span class="qty"><button type="button" data-dec="${i}" aria-label="Quitar uno">${l.qty > 1 ? "−" : TRASH}</button><span>${l.qty}</span><button type="button" data-inc="${i}" aria-label="Agregar uno">+</button></span>
-        ${isCustom(l) ? `<button class="linkish" type="button" data-edit="${i}">Editar cambios</button>` : ""}
+        ${isCustom(l) ? `<button class="linkish" type="button" data-edit="${i}">${hayCambios ? "Editar cambios" : "Editar"}</button>` : ""}
       </div>
     </div>`; }).join("") + extrasHtml();
   wireExtras(L);
@@ -1214,7 +1306,7 @@ $("#sendWa").addEventListener("click", () => {
     es_prueba: CFG.PEDIDOS_DE_PRUEBA,
   });
 });
-function openDrawer() { $("#drawer").hidden = false; $("#drawerBg").hidden = false; renderCart(); $("#closeCart").focus(); }
+function openDrawer() { if (cfgBloquea()) return; $("#drawer").hidden = false; $("#drawerBg").hidden = false; renderCart(); $("#closeCart").focus(); }
 function closeDrawer() { $("#drawer").hidden = true; $("#drawerBg").hidden = true; renderCart(); }
 let resetArmed;
 $("#resetCart").onclick = e => {
