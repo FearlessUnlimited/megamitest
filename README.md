@@ -5,6 +5,7 @@ Propuesta de landing para Megami Sushi (Av. Alemania #6762, Valparaíso), prepar
 - `index.html`: landing con carta completa, armador de rolls, cambios y pedido por WhatsApp.
 - `propuesta.html`: explicación del trabajo, flujo de pedidos y lo que se puede construir después.
 - `pedidos.html`: panel interno con el registro de pedidos (requiere usuario del local).
+- `negocio.html`: plan de negocio interno, protegido con clave (enlazado desde el navbar de la landing). Ver abajo.
 - `config.js`: configuración compartida (fuente de la carta, Supabase, WhatsApp, modo prueba).
 - `img/`: logo y fotos recortadas desde las láminas de la carta de Instagram.
 
@@ -38,3 +39,13 @@ El público solo puede registrar pedidos; leerlos exige iniciar sesión en `pedi
 2. En el SQL Editor, inscribirlo: `insert into public.personal (user_id, nombre) values ('<id del usuario>', 'Nombre');`
 
 Mientras Supabase no esté conectado, el panel ofrece un modo con pedidos de ejemplo.
+
+## Plan de negocio protegido
+
+El repo es público, así que `negocio.html` se publica cifrado: la página muestra un acceso con clave y descifra el contenido en el navegador (AES-GCM con clave derivada por PBKDF2).
+La fuente en texto plano está fuera del repo, en `../privado/negocio.html`; nunca copiarla dentro de esta carpeta.
+Después de editar la fuente, regenera la página con la clave (el script la pide sin mostrarla):
+
+```
+node scripts/cifrar-negocio.js
+```
