@@ -1024,13 +1024,13 @@ CATS.forEach(c => {
   if (c.id === "tablas") {
     sec.innerHTML = `${catHead(c)}
       <div class="tabs" role="tablist" aria-label="Tipo de tabla">${Object.entries(TABLAS).map(([k, v], i) => `<button role="tab" type="button" data-tab="${k}" aria-selected="${i === 0}">${v.label}</button>`).join("")}</div>
+      <div class="tabla-grid" id="tablaGrid"></div>
       <div class="proposal">
         <span class="tag">Propuesta para el local</span>
         <b>Tablas sin kanikama, al mismo precio</b>
         <p>Hoy cambiar el kanikama cuesta +$1.500. La idea es que quien no quiere kanikama pueda pedir pollo en su lugar sin pagar más, en todas las tablas y promos.</p>
         <button type="button" class="btn btn-ghost" id="propToggle" aria-pressed="false">Ver cómo quedaría</button>
-      </div>
-      <div class="tabla-grid" id="tablaGrid"></div>`;
+      </div>`;
     menu.append(sec);
     $("#propToggle").onclick = e => {
       PROPOSAL = !PROPOSAL;
