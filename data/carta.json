@@ -1730,7 +1730,7 @@
     },
     {
      "nombre": "Hamburguesa doble",
-     "descripcion": "Doble carne, doble queso",
+     "descripcion": "Doble carne, doble queso, tomate y mayo",
      "precio": 5490,
      "quitables": [
       "Tomate",
@@ -1785,7 +1785,7 @@
     },
     {
      "nombre": "Churrasco queso",
-     "descripcion": "Carne y queso derretido",
+     "descripcion": "Carne, queso derretido y mayo",
      "precio": 4790,
      "quitables": [
       "Mayo"
