@@ -183,6 +183,35 @@ section { padding-block: clamp(48px, 7vw, 88px); border-bottom: 1px solid var(--
   .d-shake, .d-rolls li.mark, .d-grow { animation: none; }
 }
 
+/* Ilustraciones B y C de mejoras visuales */
+.mock.guide { position: relative; }
+.mock.guide .sel { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mock.guide::after { content: ""; position: absolute; top: 8px; bottom: 8px; right: 36px; border-left: 2px dashed var(--shu-hi); opacity: .7; pointer-events: none; }
+.ba .demo-stage { padding: 0; margin: 0; overflow: hidden; order: 0; }
+.d-press { animation: d-press 9s ease-in-out infinite; }
+@keyframes d-press { 0%, 20% { background: transparent; } 26%, 33% { background: var(--shu); border-color: var(--shu); } 34%, 100% { background: transparent; } } 80%, 100% { background: var(--shu); border-color: var(--shu); } }
+@media (prefers-reduced-motion: reduce) { .d-press { animation: none; } }
+
+/* Ilustración A: contador de unidades */
+.d-s { grid-area: 1 / 1; opacity: 0; display: grid; gap: 8px; animation: d-s 12s infinite; animation-delay: calc(var(--i) * 1.5s); }
+@keyframes d-s { 0% { opacity: 0; } 1%, 12% { opacity: 1; } 12.5%, 100% { opacity: 0; } }
+.d-qty { display: inline-flex; align-items: center; gap: 6px; }
+.d-qty b { font-family: var(--display); font-weight: 400; font-size: 18px; min-width: 16px; text-align: center; }
+.d-sub, .d-plus { width: 30px; height: 30px; border-radius: 50%; background: var(--ink-3); display: grid; place-items: center; font-size: 17px; line-height: 1; }
+.d-plus.on { background: var(--shu); }
+.d-cap { color: var(--muted); font-size: 12px; }
+.mock .d-cap { display: block; }
+@media (prefers-reduced-motion: reduce) { .d-s { animation: none; } .d-s[style*="--i:3"] { opacity: 1; } }
+/* Animaciones de 5 cuadros (15 s) */
+.d-f5 { grid-area: 1 / 1; opacity: 0; animation: d-frame5 15s infinite; animation-delay: calc(var(--i) * 3s); }
+@keyframes d-frame5 { 0% { opacity: 0; transform: translateY(6px); } 2.5%, 18% { opacity: 1; transform: none; } 20%, 100% { opacity: 0; transform: none; } }
+.demo-steps.s5 li { animation: d-step5 15s infinite; animation-delay: calc(var(--i) * 3s); }
+@keyframes d-step5 { 0%, 19% { opacity: 1; border-color: var(--shu); background: color-mix(in srgb, var(--shu) 10%, var(--ink)); } 20%, 100% { opacity: .55; border-color: var(--line); background: var(--ink-2); } }
+@media (prefers-reduced-motion: reduce) {
+  .d-f5 { animation: none; } .d-f5[style*="--i:3"] { opacity: 1; }
+  .demo-steps.s5 li { animation: none; opacity: 1; }
+  .ba .d-f[style*="--i:2"] { opacity: 0; } .ba .d-f[style*="--i:3"] { opacity: 1; }
+}
 .flow-next { margin-top: 28px; max-width: 70ch; color: var(--muted); font-size: 15px; }
 .flow { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; }
 .flow > div { border-radius: 14px; padding: 22px; display: grid; gap: 14px; align-content: start; }
@@ -487,12 +516,22 @@ Nombre: Camila</div>
               <div class="mock">
                 <div><b>Handroll pollo</b></div>
                 <div class="row"><span class="pill">$4.590</span><span>＋</span></div>
+                <small class="d-cap">Sin contador: había que recordar cuántas veces tocaste ＋.</small>
               </div>
             </figure>
             <figure><figcaption>Ahora</figcaption>
-              <div class="mock">
+              <div class="mock" role="img" aria-label="Animación de ejemplo: el contador sube de 1 a 3 unidades con el botón más, baja con el botón menos, y al quedar una unidad el menos se vuelve un basurero que saca el producto del pedido.">
                 <div><b>Handroll pollo</b></div>
-                <div class="row"><span class="pill">$4.590</span><span>− <b>2</b> ＋</span></div>
+                <div class="demo-stage">
+                  <div class="d-s" style="--i:0"><div class="row"><span class="pill">$4.590</span><span class="d-qty"><span class="d-plus">＋</span></span></div><small class="d-cap">Aún no lo agregas</small></div>
+                  <div class="d-s" style="--i:1"><div class="row"><span class="pill">$4.590</span><span class="d-qty"><span class="d-sub"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14M10 11v5M14 11v5"/></svg></span><b>1</b><span class="d-plus on">＋</span></span></div><small class="d-cap">Tocas ＋: 1 unidad, y el − ya es basurero</small></div>
+                  <div class="d-s" style="--i:2"><div class="row"><span class="pill">$4.590</span><span class="d-qty"><span class="d-sub">−</span><b>2</b><span class="d-plus on">＋</span></span></div><small class="d-cap">Tocas ＋ otra vez: 2 unidades</small></div>
+                  <div class="d-s" style="--i:3"><div class="row"><span class="pill">$4.590</span><span class="d-qty"><span class="d-sub">−</span><b>3</b><span class="d-plus on">＋</span></span></div><small class="d-cap">Tocas ＋ otra vez: 3 unidades</small></div>
+                  <div class="d-s" style="--i:4"><div class="row"><span class="pill">$4.590</span><span class="d-qty"><span class="d-sub">−</span><b>2</b><span class="d-plus on">＋</span></span></div><small class="d-cap">Tocas −: vuelve a 2</small></div>
+                  <div class="d-s" style="--i:5"><div class="row"><span class="pill">$4.590</span><span class="d-qty"><span class="d-sub"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14M10 11v5M14 11v5"/></svg></span><b>1</b><span class="d-plus on">＋</span></span></div><small class="d-cap">Tocas −: queda 1, y el − pasa a basurero</small></div>
+                  <div class="d-s" style="--i:6"><div class="row"><span class="pill">$4.590</span><span class="d-qty"><span class="d-plus">＋</span></span></div><small class="d-cap">Tocas el basurero: sale del pedido</small></div>
+                  <div class="d-s" style="--i:7"><div class="row"><span class="pill">$4.590</span><span class="d-qty"><span class="d-plus">＋</span></span></div><small class="d-cap">Aún no lo agregas</small></div>
+                </div>
               </div>
             </figure>
           </div>
@@ -502,19 +541,50 @@ Nombre: Camila</div>
           <div>
             <p class="tagline">B · Cambios</p>
             <h3>Perfecto o Modificar, y el ✓ por unidad</h3>
-            <p class="muted">Las opciones aparecen solo al tocar Modificar. En productos con varias unidades, cada una se aprueba con su ✓ y el botón de abajo agrega todo.</p>
+            <p class="muted">Antes, todas las opciones de cada completo estaban siempre a la vista y nada pedía confirmación. Ahora la tarjeta es corta: cada unidad muestra qué lleva, y las opciones aparecen solo al tocar Modificar. Cada una se aprueba con su ✓, y el botón de abajo agrega todo.</p>
           </div>
           <div class="ba">
             <figure><figcaption>Antes</figcaption>
               <div class="mock">
                 <div><b>Completo 1</b></div>
-                <ul><li><span>Sin vienesa ?</span></li><li><span>Sin tomate ?</span></li><li><span>Sin palta ?</span></li><li><span>Sin mayo ?</span></li></ul>
+                <div class="d-chips"><span class="d-chip">Sin vienesa ?</span><span class="d-chip">Sin tomate ?</span><span class="d-chip">Sin palta ?</span><span class="d-chip">Sin mayo ?</span></div>
+                <div class="row"><span></span><span></span></div>
+                <div><b>Completo 2</b></div>
+                <div class="d-chips"><span class="d-chip">Sin vienesa ?</span><span class="d-chip">Sin tomate ?</span><span class="d-chip">Sin palta ?</span><span class="d-chip">Sin mayo ?</span></div>
+                <div class="row"><span class="pill">Agregar · $4.000</span></div>
+                <small>Todas las opciones siempre abiertas, sin pedir confirmación.</small>
               </div>
             </figure>
             <figure><figcaption>Ahora</figcaption>
-              <div class="mock">
-                <div><b>Completo 1</b> <small>Lleva vienesa, tomate, palta y mayo</small></div>
-                <div class="row"><span>Modificar</span><span class="tick">✓</span></div>
+              <div class="demo-stage" role="img" aria-label="Animación de ejemplo: la tarjeta del 2x1 de completos está compacta; el cliente aprueba el Completo 1 con el check, toca Modificar en el Completo 2, quita el tomate y lo aprueba con el check.">
+                <div class="d-f" style="--i:0">
+                  <div class="d-card">
+                    <div class="d-u"><b>Completo 1</b><small>Lleva vienesa, tomate, palta y mayo</small><div class="d-foot"><span class="d-btn">Modificar</span><span class="d-tick">✓</span></div></div>
+                    <div class="d-u"><b>Completo 2</b><small>Lleva vienesa, tomate, palta y mayo</small><div class="d-foot"><span class="d-btn">Modificar</span><span class="d-tick">✓</span></div></div>
+                    <span class="d-cta">Perfecto · $4.000</span>
+                  </div>
+                </div>
+                <div class="d-f" style="--i:1">
+                  <div class="d-card">
+                    <div class="d-u"><b>Completo 1</b><small>Lleva vienesa, tomate, palta y mayo</small><div class="d-foot"><span class="d-btn">Modificar</span><span class="d-tick on">✓</span></div></div>
+                    <div class="d-u"><b>Completo 2</b><small>Lleva vienesa, tomate, palta y mayo</small><div class="d-foot"><span class="d-btn">Modificar</span><span class="d-tick">✓</span></div></div>
+                    <span class="d-cta">Perfecto · $4.000</span>
+                  </div>
+                </div>
+                <div class="d-f" style="--i:2">
+                  <div class="d-card">
+                    <div class="d-u"><b>Completo 1</b><small>Lleva vienesa, tomate, palta y mayo</small><div class="d-foot"><span class="d-btn">Modificar</span><span class="d-tick on">✓</span></div></div>
+                    <div class="d-u open"><b>Completo 2</b><div class="d-chips"><span class="d-chip">Sin vienesa ?</span><span class="d-chip on">Sin tomate ✓</span><span class="d-chip">Sin palta ?</span><span class="d-chip">Sin mayo ?</span></div><div class="d-foot"><span class="d-btn">Cerrar opciones</span><span class="d-tick need">✓</span></div></div>
+                    <span class="d-cta ok">¡Así lo quiero! · $4.000</span>
+                  </div>
+                </div>
+                <div class="d-f" style="--i:3">
+                  <div class="d-card">
+                    <div class="d-u"><b>Completo 1</b><small>Lleva vienesa, tomate, palta y mayo</small><div class="d-foot"><span class="d-btn">Modificar</span><span class="d-tick on">✓</span></div></div>
+                    <div class="d-u"><b>Completo 2</b><small class="d-q">Quedará: <b>sin tomate</b></small><div class="d-foot"><span class="d-btn">Modificar</span><span class="d-tick on">✓</span></div></div>
+                    <span class="d-cta ok">¡Así lo quiero! · $4.000</span>
+                  </div>
+                </div>
               </div>
             </figure>
           </div>
@@ -524,19 +594,21 @@ Nombre: Camila</div>
           <div>
             <p class="tagline">C · Para picar</p>
             <h3>Precios y botones alineados entre tarjetas</h3>
-            <p class="muted">Antes el selector de sabor cambiaba de ancho según el texto, y el precio y el + quedaban desalineados. Ahora todos miden lo mismo.</p>
+            <p class="muted">Antes el selector de sabor cambiaba de ancho según el texto, así que el precio y el + saltaban de una tarjeta a otra. Ahora todos los selectores miden lo mismo y el precio y el + caen siempre en la misma columna, como marca la línea roja.</p>
           </div>
           <div class="ba">
             <figure><figcaption>Antes</figcaption>
-              <div class="mock">
-                <div class="row" style="justify-content:flex-start;gap:8px"><span class="sel" style="width:140px">Primavera ▾</span><span class="pill">$3.490</span><span>＋</span></div>
-                <div class="row" style="justify-content:flex-start;gap:8px"><span class="sel" style="width:96px">Pollo ▾</span><span class="pill">$4.490</span><span>＋</span></div>
+              <div class="mock guide">
+                <div class="row" style="justify-content:flex-start;gap:8px"><span class="sel" style="width:50%">Primavera ▾</span><span class="pill">$3.490</span><span>＋</span></div>
+                <div class="row" style="justify-content:flex-start;gap:8px"><span class="sel" style="width:26%">Pollo ▾</span><span class="pill">$4.490</span><span>＋</span></div>
+                <div class="row" style="justify-content:flex-start;gap:8px"><span class="sel" style="width:38%">Camarón ▾</span><span class="pill">$3.990</span><span>＋</span></div>
               </div>
             </figure>
             <figure><figcaption>Ahora</figcaption>
-              <div class="mock">
+              <div class="mock guide">
                 <div class="row"><span class="sel" style="flex:1 1 0;width:0">Primavera ▾</span><span class="pill">$3.490</span><span>＋</span></div>
                 <div class="row"><span class="sel" style="flex:1 1 0;width:0">Pollo ▾</span><span class="pill">$4.490</span><span>＋</span></div>
+                <div class="row"><span class="sel" style="flex:1 1 0;width:0">Camarón ▾</span><span class="pill">$3.990</span><span>＋</span></div>
               </div>
             </figure>
           </div>
@@ -555,15 +627,16 @@ Nombre: Camila</div>
       </div>
 
       <div class="demo">
-        <ol class="demo-steps" aria-label="Pasos del pedido">
+        <ol class="demo-steps s5" aria-label="Pasos del pedido">
           <li style="--i:0"><b>Tocas +</b><span>Ves qué lleva cada completo, ahí mismo en la tarjeta.</span></li>
-          <li style="--i:1"><b>Modificas solo el que quieres</b><span>Las opciones aparecen al tocar Modificar, en el completo exacto.</span></li>
-          <li style="--i:2"><b>El cambio y su precio quedan a la vista</b><span>«Quedará: sin tomate» y el total se actualiza al instante.</span></li>
-          <li style="--i:3"><b>Apruebas con «¡Así lo quiero!»</b><span>Nada queda a medio elegir. El carrito solo sirve para revisar.</span></li>
+          <li style="--i:1"><b>Apruebas el que está bien con ✓</b><span>El Completo 1 viene como lo quieres: un toque y queda aprobado.</span></li>
+          <li style="--i:2"><b>Modificas solo el que quieres</b><span>Las opciones aparecen al tocar Modificar, en el completo exacto.</span></li>
+          <li style="--i:3"><b>El cambio y su precio quedan a la vista</b><span>«Quedará: sin tomate» y el total se actualiza al instante.</span></li>
+          <li style="--i:4"><b>Apruebas con «¡Así lo quiero!»</b><span>Nada queda a medio elegir. El carrito solo sirve para revisar.</span></li>
         </ol>
 
-        <div class="demo-stage" role="img" aria-label="Animación de ejemplo: un cliente pide una promo 2x1 de completos, quita el tomate a uno, agrega guacamole al otro y aprueba el pedido.">
-          <div class="d-f" style="--i:0">
+        <div class="demo-stage" role="img" aria-label="Animación de ejemplo: un cliente pide una promo 2x1 de completos, aprueba el Completo 1 con el check, quita el tomate al Completo 2, agrega guacamole y aprueba el pedido.">
+          <div class="d-f5" style="--i:0">
             <div class="d-card">
               <b class="d-title">Promo 2x1 completos</b>
               <div class="d-u"><b>Completo 1</b><small>Lleva vienesa, tomate, palta y mayo</small><div class="d-foot"><span class="d-btn">Modificar</span><span class="d-tick">✓</span></div></div>
@@ -571,25 +644,31 @@ Nombre: Camila</div>
               <span class="d-cta">Perfecto · $4.000</span>
             </div>
           </div>
-          <div class="d-f" style="--i:1">
+          <div class="d-f5" style="--i:1">
             <div class="d-card">
               <b class="d-title">Promo 2x1 completos</b>
-              <div class="d-u"><b>Completo 1</b><small>Lleva vienesa, tomate, palta y mayo</small><div class="d-foot"><span class="d-btn">Modificar</span><span class="d-tick">✓</span></div></div>
-              <div class="d-u open"><b>Completo 2</b>
-                <div class="d-chips"><span class="d-chip">Sin vienesa ?</span><span class="d-chip on">Sin tomate ✓</span><span class="d-chip">Sin palta ?</span><span class="d-chip">Sin mayo ?</span></div>
-              </div>
+              <div class="d-u"><b>Completo 1</b><small>Lleva vienesa, tomate, palta y mayo</small><div class="d-foot"><span class="d-btn">Modificar</span><span class="d-tick on">✓</span></div></div>
+              <div class="d-u"><b>Completo 2</b><small>Lleva vienesa, tomate, palta y mayo</small><div class="d-foot"><span class="d-btn">Modificar</span><span class="d-tick">✓</span></div></div>
               <span class="d-cta">Perfecto · $4.000</span>
             </div>
           </div>
-          <div class="d-f" style="--i:2">
+          <div class="d-f5" style="--i:2">
             <div class="d-card">
               <b class="d-title">Promo 2x1 completos</b>
-              <div class="d-u"><b>Completo 1</b><small>Lleva vienesa, tomate, palta y mayo</small><div class="d-foot"><span class="d-btn">Modificar</span><span class="d-tick">✓</span></div></div>
+              <div class="d-u"><b>Completo 1</b><small>Lleva vienesa, tomate, palta y mayo</small><div class="d-foot"><span class="d-btn">Modificar</span><span class="d-tick on">✓</span></div></div>
+              <div class="d-u open"><b>Completo 2</b><div class="d-chips"><span class="d-chip">Sin vienesa ?</span><span class="d-chip on">Sin tomate ✓</span><span class="d-chip">Sin palta ?</span><span class="d-chip">Sin mayo ?</span></div></div>
+              <span class="d-cta">Perfecto · $4.000</span>
+            </div>
+          </div>
+          <div class="d-f5" style="--i:3">
+            <div class="d-card">
+              <b class="d-title">Promo 2x1 completos</b>
+              <div class="d-u"><b>Completo 1</b><small>Lleva vienesa, tomate, palta y mayo</small><div class="d-foot"><span class="d-btn">Modificar</span><span class="d-tick on">✓</span></div></div>
               <div class="d-u"><b>Completo 2</b><small class="d-q">Quedará: <b>sin tomate · topping guacamole (+$2.990)</b></small><div class="d-foot"><span class="d-btn">Cerrar opciones</span><span class="d-tick need">✓</span></div></div>
               <span class="d-cta ok">¡Así lo quiero! · $6.990</span>
             </div>
           </div>
-          <div class="d-f" style="--i:3">
+          <div class="d-f5" style="--i:4">
             <div class="d-card d-done">
               <b class="d-title">Promo 2x1 completos</b>
               <div class="d-added"><span class="d-big">✓</span><b>Agregado a tu pedido</b><small>Completo 2: sin tomate · topping guacamole</small></div>
@@ -651,7 +730,6 @@ Nombre: Camila</div>
               </div>
             </div>
           </div>
-          <p class="demo-note">Maqueta de ejemplo, no una captura del sitio.</p>
         </div>
 
         <div class="duo-item">
@@ -683,7 +761,6 @@ Nombre: Camila</div>
               </div>
             </div>
           </div>
-          <p class="demo-note">Maqueta de ejemplo, no una captura del sitio.</p>
         </div>
       </div>
     </div>
