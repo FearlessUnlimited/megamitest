@@ -333,7 +333,7 @@ footer.site img { height: 40px; width: auto; }
 .cu-acts { display: flex; flex-wrap: wrap; gap: 6px 14px; padding-top: 2px; }
 .act { border: 0; background: none; padding: 4px 0; color: var(--shu-hi); font-weight: 700; font-size: 14px; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: color-mix(in srgb, var(--shu-hi) 40%, transparent); }
 .act[aria-expanded="true"] { color: var(--rice); text-decoration-color: var(--rice); }
-.cu-sec { border-top: 1px dashed var(--line); padding-top: 10px; display: grid; gap: 10px; }
+.cu-sec { scroll-margin-bottom: 96px; border-top: 1px dashed var(--line); padding-top: 10px; display: grid; gap: 10px; }
 .cu-sec .lbl { margin: 0; }
 .cu-sec .chip { padding: 6px 12px; font-size: 13px; }
 .cu-sec .done { justify-self: start; padding: 6px 16px; font-size: 14px; }
@@ -830,7 +830,7 @@ function openCfg(spec, host, edit) {
     return `<div class="cu">
       ${multi ? `<b class="cu-n">${esc(u.n)}</b>` : ""}
       ${u.d ? `<p class="cu-d">${esc(u.d)}</p>` : ""}
-      <p class="cu-r${mods.length ? " on" : ""}">${mods.length ? "Quedará: <b>" + esc(mods.join(" · ")) + "</b>" : "Sin cambios"}</p>
+      ${mods.length || !multi ? `<p class="cu-r${mods.length ? " on" : ""}">${mods.length ? "Quedará: <b>" + esc(mods.join(" · ")) + "</b>" : "Sin cambios"}</p>` : ""}
       <div class="cu-acts">${acts.map(([k, t]) => `<button type="button" class="act" aria-expanded="${sec === k}" data-sec="${i}|${k}">${t}</button>`).join("")}</div>
       ${body ? `<div class="cu-sec">${body}</div>` : ""}
     </div>`;
@@ -845,12 +845,14 @@ function openCfg(spec, host, edit) {
       <div class="cfg-f">${edit ? "" : `<span class="qty"><button type="button" data-qm aria-label="Menos">−</button><span>${st.qty}</span><button type="button" data-qp aria-label="Más">+</button></span>`}<button class="btn btn-red" type="button" data-ok>${edit ? "Guardar" : "Agregar"} · ${clp(lineTotal())}</button></div>`;
     const nsc = root.querySelector(".cfg-b"); if (nsc) nsc.scrollTop = top;
     if (sel) { const n = root.querySelector(sel); if (n) n.focus({ preventScroll: true }); }
+    // Al desplegar una sección, se asegura de que quede a la vista sobre el botón Agregar.
+    if (st.reveal != null) { const sc2 = root.querySelectorAll(".cu")[st.reveal]?.querySelector(".cu-sec"); st.reveal = null; if (sc2) sc2.scrollIntoView({ block: "nearest", behavior: "smooth" }); }
   }
   root.addEventListener("click", e => {
     const t = e.target.closest("button"); if (!t || !root.contains(t)) return;
     const d = t.dataset;
     if (d.x !== undefined) return close();
-    if (d.sec !== undefined) { const [i, k] = d.sec.split("|"); st.sec[i] = st.sec[i] === k ? undefined : k; return render(); }
+    if (d.sec !== undefined) { const [i, k] = d.sec.split("|"); st.sec[i] = st.sec[i] === k ? undefined : k; st.reveal = st.sec[i] ? i : null; return render(); }
     if (d.done !== undefined) { st.sec[d.done] = undefined; return render(); }
     if (d.sin !== undefined) { const u = st.units[d.sin]; u.sin = u.sin.includes(d.q) ? u.sin.filter(x => x !== d.q) : [...u.sin, d.q]; return render(); }
     if (d.top !== undefined) { const u = st.units[d.top]; u.top = u.top && u.top.name === d.n ? null : { name: d.n, price: TOPLIST.find(x => x[0] === d.n)[1] }; st.sec[d.top] = undefined; return render(); }
