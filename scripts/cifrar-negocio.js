@@ -1,18 +1,25 @@
-// Genera negocio.html con su contenido cifrado, para publicarlo en un repo público.
-// La fuente en texto plano vive fuera del repo: ../privado/negocio.html (carpeta Megami).
-// Se cifra lo que está entre <!-- protegido:inicio --> y <!-- protegido:fin -->; el resto
-// (estilos y barra superior) queda público. La página lo descifra en el navegador con la clave.
+// Genera negocio.html, el archivo de estudios de Fearless, con su contenido cifrado para
+// publicarlo en un repo público. Las fuentes en texto plano viven fuera del repo (carpeta Megami):
+// - ../privado/negocio.html: la cáscara (estilos, barra superior y JS de pestañas), con las
+//   marcas <!-- protegido:inicio --> y <!-- protegido:fin -->.
+// - ../privado/estudios/*.html: un estudio por archivo, en orden de nombre (01-…, 02-…). Cada uno
+//   es un <article class="estudio" id="…" data-titulo="…">; el título va en su pestaña.
+// Entre las marcas se arma la barra de pestañas con los estudios y eso es lo que se cifra; el
+// resto queda público. La página lo descifra en el navegador con la clave.
 //
 // Cifrado: AES-GCM de 256 bits con clave derivada por PBKDF2-SHA256 (600.000 iteraciones)
 // y sal e IV aleatorios en cada ejecución. La seguridad depende de que la clave sea larga.
 //
-// Uso: node scripts/cifrar-negocio.js   (pide la clave dos veces y muestra asteriscos)
+// Uso: node scripts/cifrar-negocio.js           (pide la clave dos veces y muestra asteriscos)
+//      node scripts/cifrar-negocio.js --vista   (sin cifrar, en ../privado/vista.html, para revisar)
 const fs = require("fs");
 const path = require("path");
 const { webcrypto } = require("crypto");
 
 const root = path.join(__dirname, "..");
 const srcFile = path.join(root, "../privado/negocio.html");
+const estudiosDir = path.join(root, "../privado/estudios");
+const vistaFile = path.join(root, "../privado/vista.html");
 const outFile = path.join(root, "negocio.html");
 const ITERACIONES = 600000;
 const LARGO_MINIMO = 12;
@@ -78,8 +85,8 @@ function acceso(paquete) {
 <div class="acceso">
   <form id="formAcceso" autocomplete="off">
     <p class="eyebrow">Documento interno</p>
-    <h1>Plan de negocio</h1>
-    <p>Ingresa la clave para ver el documento.</p>
+    <h1>Estudios Fearless</h1>
+    <p>Ingresa la clave para ver los estudios.</p>
     <label for="clave">Clave</label>
     <input id="clave" type="password" autocomplete="current-password" required autofocus>
     <p class="error" id="errorAcceso" role="alert"></p>
@@ -100,7 +107,7 @@ function acceso(paquete) {
   async function abrir(llave) {
     const plano = await crypto.subtle.decrypt({ name: "AES-GCM", iv: bytes(paquete.iv) }, llave, bytes(paquete.datos));
     document.getElementById("protegido").outerHTML = new TextDecoder().decode(plano);
-    if (location.hash) document.querySelector(location.hash)?.scrollIntoView();
+    document.dispatchEvent(new Event("protegido:abierto"));
   }
 
   async function llaveDesdeClave(clave) {
@@ -150,13 +157,40 @@ function acceso(paquete) {
 </script>`;
 }
 
+// Une los estudios en orden de nombre, con la barra de pestañas al inicio.
+function armarEstudios() {
+  const archivos = fs.readdirSync(estudiosDir).filter(n => n.endsWith(".html")).sort();
+  if (!archivos.length) throw new Error(`No hay estudios en ${estudiosDir}`);
+  const ids = new Set();
+  const estudios = archivos.map(nombre => {
+    const html = fs.readFileSync(path.join(estudiosDir, nombre), "utf8").trim();
+    const apertura = html.match(/^<article\b[^>]*>/);
+    const id = apertura?.[0].match(/\bid="([^"]+)"/)?.[1];
+    const titulo = apertura?.[0].match(/\bdata-titulo="([^"]+)"/)?.[1];
+    if (!apertura || !/\bclass="estudio"/.test(apertura[0]) || !id || !titulo)
+      throw new Error(`${nombre} debe empezar con <article class="estudio" id="…" data-titulo="…">`);
+    if (ids.has(id)) throw new Error(`El id "${id}" se repite en ${nombre}`);
+    ids.add(id);
+    return { id, titulo, html };
+  });
+  const pestanas = estudios.map(e => `<a href="#${e.id}" data-tab="${e.id}">${e.titulo}</a>`).join("\n    ");
+  return `<nav class="tabs" aria-label="Estudios">\n  <div class="wrap">\n    ${pestanas}\n  </div>\n</nav>\n\n`
+    + estudios.map(e => e.html).join("\n\n");
+}
+
 (async () => {
   const fuente = fs.readFileSync(srcFile, "utf8");
   const i = fuente.indexOf(INICIO), f = fuente.indexOf(FIN);
   if (i < 0 || f < i) throw new Error(`No encontré las marcas ${INICIO} y ${FIN} en ${srcFile}`);
-  const protegido = fuente.slice(i + INICIO.length, f).trim();
+  const protegido = armarEstudios();
 
-  const clave = await pedirClave("Clave para el plan de negocio: ");
+  if (process.argv.includes("--vista")) {
+    fs.writeFileSync(vistaFile, fuente.slice(0, i) + protegido + fuente.slice(f + FIN.length));
+    console.log(`Vista sin cifrar: ${path.relative(process.cwd(), vistaFile)} (fuera del repo; no la copies dentro).`);
+    return;
+  }
+
+  const clave = await pedirClave("Clave de los estudios: ");
   if (clave.length < LARGO_MINIMO) throw new Error(`La clave debe tener al menos ${LARGO_MINIMO} caracteres.`);
   if (await pedirClave("Repite la clave: ") !== clave) throw new Error("Las claves no coinciden.");
 
